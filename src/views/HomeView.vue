@@ -1,8 +1,67 @@
-<script setup lang="ts">
-import MusicList from "@/components/music/MusicList.vue";
-</script>
+<script setup lang="ts"></script>
 <template>
-  <MusicList></MusicList>
+  <div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+    <div>d</div>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss"></style>
