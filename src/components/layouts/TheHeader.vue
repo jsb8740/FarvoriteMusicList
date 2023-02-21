@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" role="search">
     <RouterLink :to="{ name: 'Home' }">
       <div>홈</div>
     </RouterLink>
