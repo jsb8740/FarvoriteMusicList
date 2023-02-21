@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="@/assets/test/test1.jpg" />
+    <img src="@/assets/test/test1.jpg" class="" />
     <div>
       <slot name="title">title</slot>
     </div>
@@ -9,4 +9,9 @@
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped>
+img {
+  width: 200px;
+  height: 200px;
+}
+</style>
