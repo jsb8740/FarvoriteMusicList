@@ -25,5 +25,6 @@
   font-size: x-large;
   position: sticky;
   top: 8px;
+  margin-bottom: 30px;
 }
 </style>
