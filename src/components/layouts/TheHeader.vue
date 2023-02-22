@@ -8,23 +8,22 @@
     </RouterLink>
 
     <div>TOP100</div>
-    <div>
-      <input type="text" />
-      검색
-    </div>
+    <AppSearchingBox></AppSearchingBox>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppSearchingBox from "../AppSearchingBox.vue";
+</script>
 
 <style scoped lang="scss">
 .header {
   display: flex;
-  gap: 30px;
+  gap: 3rem;
   justify-content: center;
   font-size: x-large;
   position: sticky;
   top: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 4rem;
 }
 </style>

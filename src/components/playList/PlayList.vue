@@ -26,8 +26,8 @@ import RightArrow from "@/components/icons/RightArrow.vue";
 .playListItem {
   width: 100%;
   display: flex;
-  margin-top: 20px;
-  margin-bottom: 100px;
+  margin-top: 1.5rem;
+  margin-bottom: 6.5rem;
 }
 
 .PlayList {
@@ -39,11 +39,11 @@ import RightArrow from "@/components/icons/RightArrow.vue";
     gap: 10px;
     align-items: end;
     button {
-      margin-right: 20px;
+      margin-right: 2rem;
     }
   }
   .PlayListTitle {
-    font-size: 40px;
+    font-size: 2.4rem;
     font-weight: bold;
   }
 }
