@@ -9,6 +9,6 @@
 <style scoped lang="scss">
 #container {
   margin: 0 auto;
-  width: 1130px;
+  max-width: 1130px;
 }
 </style>
