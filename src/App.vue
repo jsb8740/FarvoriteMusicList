@@ -7,4 +7,4 @@ import TheHeader from "./components/layouts/TheHeader.vue";
 import TheView from "./components/layouts/TheView.vue";
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>
