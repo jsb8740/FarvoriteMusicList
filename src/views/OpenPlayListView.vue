@@ -1,19 +1,11 @@
 <template>
   <div>
-    <PlayList>
-      <div v-for="index in 4" :key="index">
-        <PlayListItem></PlayListItem>
-      </div>
-    </PlayList>
+    <div>
+      <h1>저장한 플레이리스트</h1>
+      <div>플레이리스트들</div>
+    </div>
 
-    <hr />
-
-    <PlayList>
-      <template #playListTitle>저장한 플레이리스트</template>
-      <div v-for="index in 4" :key="index">
-        <PlayListItem></PlayListItem>
-      </div>
-    </PlayList>
+    <!-- 컴포넌트화 해야할듯 -->
 
     <hr />
 
@@ -24,9 +16,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import PlayList from "@/components/playList/PlayList.vue";
-import PlayListItem from "@/components/playList/PlayListItem.vue";
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
