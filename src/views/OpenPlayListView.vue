@@ -6,6 +6,9 @@
       </div>
     </PlayList>
 
+    <!-- 왁타버스 디자인 참고 -->
+    <!-- iframe으로 display none -->
+    <!-- or 서버에 음악을 저장 흠.. -->
     <hr />
 
     <PlayList>
