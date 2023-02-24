@@ -1,15 +1,14 @@
 <template>
-  <main role="main">
+  <div id="container" role="main">
     <RouterView></RouterView>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
-main {
-  background-color: rgb(249, 249, 249);
-  width: 100%;
-  height: 100%;
+#container {
+  margin: 0 auto;
+  max-width: 1130px;
 }
 </style>
