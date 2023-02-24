@@ -37,3 +37,7 @@ a,
 /* body {
   background: linear-gradient(270deg, rgb(150, 121, 121), rgb(85, 82, 82));
 } */
+
+body {
+  margin: 0px;
+}
