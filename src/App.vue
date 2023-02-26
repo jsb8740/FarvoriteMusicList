@@ -1,10 +1,18 @@
 <template>
-  <TheHeader></TheHeader>
-  <TheView></TheView>
+  <div id="container">
+    <TheSide></TheSide>
+    <TheView></TheView>
+  </div>
 </template>
 <script setup lang="ts">
-import TheHeader from "./components/layouts/TheHeader.vue";
+import TheSide from "./components/layouts/TheSide.vue";
 import TheView from "./components/layouts/TheView.vue";
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+#container {
+  display: flex;
+  height: 100dvh;
+  width: 100dvw;
+}
+</style>
