@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <AppSearchingBox></AppSearchingBox>
-  </div>
+  <TheViewLayout>
+    <template #default>
+      <div>d</div>
+    </template>
+  </TheViewLayout>
 </template>
 
 <script setup lang="ts">
-import AppSearchingBox from "@/components/AppSearchingBox.vue";
+import TheViewLayout from "@/components/layouts/TheViewLayout.vue";
 </script>
 <style scoped lang="scss"></style>
