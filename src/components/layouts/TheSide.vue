@@ -1,36 +1,59 @@
 <template>
   <aside class="header" role="navigation">
-    <img src="@/assets/test/Logo-Test.png" alt="" />
+    <img src="@/assets/test/Logo-Test.png" alt="TestLogo" />
 
     <div>
       <div class="category">Menu</div>
 
-      <RouterLink :to="{ name: 'Home' }">
-        <div>홈</div>
+      <RouterLink :to="{ name: 'Home' }" @click="checkClicked">
+        <Home :clicked="true"></Home>
+        홈
       </RouterLink>
 
-      <div>카테고리</div>
+      <RouterLink :to="{ name: 'OpenPlayList' }"> 카테고리 </RouterLink>
 
-      <div>TOP100</div>
+      <RouterLink :to="{ name: 'Home' }" class=""> TOP100 </RouterLink>
     </div>
 
     <div>
       <div class="category">Playlists</div>
 
-      <RouterLink :to="{ name: 'OpenPlayList' }">
-        <div>공개된 플레이리스트</div>
-      </RouterLink>
+      <RouterLink :to="{ name: 'OpenPlayList' }"> Open PlayList </RouterLink>
     </div>
   </aside>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Home from "@/components/icons/Home.vue";
+
+import { ref, computed } from "vue";
+const propsClicked = ref(false);
+
+const checkClicked = (event: InputEvent) => {
+  propsClicked.value = event.target!.classList.contains(
+    "router-link-exact-active"
+  );
+};
+
+// const computed(() => '');
+</script>
 
 <style scoped lang="scss">
+@import "@/assets/color.scss";
+.router-link-exact-active {
+  border-radius: 0.8rem;
+  width: 100%;
+
+  background-color: white;
+  color: $orangeColor;
+  >>> svg.fill {
+    fill: $orangeColor;
+  }
+}
+
 .header {
   display: flex;
   flex-direction: column;
-
   max-width: 12rem;
 
   gap: 2rem;
@@ -44,6 +67,19 @@
   .category {
     color: rgb(164, 164, 174);
     margin: 1em 0;
+    font-weight: 700;
   }
+}
+
+a {
+  display: flex !important;
+  gap: 0.7rem;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  width: 100%;
+  display: block;
+  padding: 0.5rem;
+  margin: 0.4rem 0;
 }
 </style>
