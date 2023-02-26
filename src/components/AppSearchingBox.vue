@@ -1,46 +1,41 @@
 <template>
-  <div class="searchingBox" @click="visible = !visible">
+  <div class="searchingBox">
     <Search></Search>
 
     <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
     <!-- transition 애니메이션 넣기 -->
-    <input type="text" :hidden="visible" placeholder="검색" @click.stop />
-
-    <div>검색</div>
+    <input type="text" placeholder="Search" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import Search from "./icons/Search.vue";
-
-const visible = ref(true);
 </script>
 
 <style scoped lang="scss">
 .searchingBox {
-  cursor: pointer;
   display: flex;
-
+  justify-content: center;
   align-items: center;
-  &:hover,
-  :focus {
+  width: 30rem;
+  background-color: white;
+  border-radius: 1.5rem;
+  padding: 0.7rem;
+
+  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.12);
+  &:focus {
+    border: 1px solid #ef7330;
   }
 
   input {
+    padding-left: 1rem;
     font-size: 1rem;
-    // border: none;
+    border: none;
+    outline: none;
+    width: 100%;
 
-    animation: inputWidth ease-in;
-  }
-}
-
-@keyframes inputWidth {
-  0% {
-    max-width: 10px;
-  }
-  100% {
-    max-width: 100px;
+    &:focus {
+    }
   }
 }
 </style>
