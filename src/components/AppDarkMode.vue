@@ -18,27 +18,34 @@ const mode = ref(false);
   #switch {
     appearance: none;
     display: block;
-  }
-
-  #switch:checked + .switchLabel {
-    background-color: black;
+    &:checked + .switchLabel {
+      background-color: black;
+      .switchButton {
+        transform: translateX(100%);
+        background-color: black;
+      }
+    }
   }
 
   .switchLabel {
     cursor: pointer;
-    width: 4rem;
+    width: 3.4rem;
     height: 2rem;
-    border: 1px solid black;
+    padding: 0 0.4rem;
+    border: 2px solid black;
     border-radius: 20px;
     display: flex;
     align-items: center;
-    padding: 0 0.4rem;
+    position: relative;
+    transition: 1s;
 
     .switchButton {
+      position: absolute;
+      transition: 1s;
       border-radius: 1.5rem;
       height: 1.5rem;
       width: 1.5rem;
-      border: 1px solid red;
+      border: 2px solid red;
     }
   }
 }
