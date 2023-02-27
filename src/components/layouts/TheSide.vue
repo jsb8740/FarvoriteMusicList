@@ -6,7 +6,7 @@
       <div class="category">Menu</div>
 
       <RouterLink :to="{ name: 'Home' }" @click="checkClicked">
-        <Home :clicked="true"></Home>
+        <Home :clicked="propsClicked"></Home>
         홈
       </RouterLink>
 
@@ -30,9 +30,10 @@ import { ref, computed } from "vue";
 const propsClicked = ref(false);
 
 const checkClicked = (event: InputEvent) => {
-  propsClicked.value = event.target!.classList.contains(
+  propsClicked.value = (event.target as HTMLInputElement).classList.contains(
     "router-link-exact-active"
   );
+  console.log(propsClicked.value);
 };
 
 // const computed(() => '');
@@ -46,9 +47,9 @@ const checkClicked = (event: InputEvent) => {
 
   background-color: white;
   color: $orangeColor;
-  >>> svg.fill {
-    fill: $orangeColor;
-  }
+  // >>> svg.fill {
+  //   fill: $orangeColor;
+  // }
 }
 
 .header {
