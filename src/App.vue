@@ -2,9 +2,11 @@
   <div id="container">
     <TheSide></TheSide>
     <TheView></TheView>
+    <TheMusicController></TheMusicController>
   </div>
 </template>
 <script setup lang="ts">
+import TheMusicController from "./components/layouts/TheMusicController.vue";
 import TheSide from "./components/layouts/TheSide.vue";
 import TheView from "./components/layouts/TheView.vue";
 </script>
