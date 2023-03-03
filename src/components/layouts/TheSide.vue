@@ -1,5 +1,5 @@
 <template>
-  <aside class="header" role="navigation">
+  <aside class="side" role="navigation">
     <img src="@/assets/test/Logo-Test.png" alt="TestLogo" />
 
     <div>
@@ -43,7 +43,7 @@ const checkClicked = (event: InputEvent) => {
 @import "@/assets/color.scss";
 .router-link-exact-active {
   border-radius: 0.8rem;
-  width: 100%;
+  // width: 100%;
 
   background-color: white;
   color: $orangeColor;
@@ -52,15 +52,13 @@ const checkClicked = (event: InputEvent) => {
   // }
 }
 
-.header {
+.side {
   display: flex;
   flex-direction: column;
-  max-width: 12rem;
+  min-width: 10rem;
 
   gap: 2rem;
   font-size: 1.4rem;
-  position: sticky;
-  top: 0px;
 
   background-color: rgb(242, 241, 246);
   padding: 0 2.4rem;
