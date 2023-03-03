@@ -41,3 +41,8 @@ body {
 * {
   color: #3e3a41;
 }
+svg {
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
