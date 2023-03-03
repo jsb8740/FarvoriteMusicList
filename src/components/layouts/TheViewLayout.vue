@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="header">
+  <div class="contentLayout">
+    <div class="searching">
       <AppSearchingBox></AppSearchingBox>
       <AppDarkMode></AppDarkMode>
     </div>
@@ -14,9 +14,14 @@ import AppSearchingBox from "../AppSearchingBox.vue";
 </script>
 
 <style scoped lang="scss">
-.header {
+.contentLayout {
+  padding: 2rem 3rem;
+  //   height: 100%;
+}
+.searching {
   display: flex;
   justify-content: space-between;
-  padding: 2rem;
+  margin-bottom: 3rem;
+  //
 }
 </style>
