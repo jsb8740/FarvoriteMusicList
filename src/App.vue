@@ -2,7 +2,8 @@
   <div id="container">
     <TheSide></TheSide>
     <TheView></TheView>
-    <TheMusicController></TheMusicController>
+
+    <TheMusicController class="controller"></TheMusicController>
   </div>
 </template>
 <script setup lang="ts">
@@ -13,8 +14,18 @@ import TheView from "./components/layouts/TheView.vue";
 
 <style scoped lang="scss">
 #container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+  grid-template-rows: 7fr auto;
   height: 100dvh;
-  width: 100dvw;
+
+  .controller {
+    grid-column: 1 / 3; // === grid-area: 2 / 1 / span 1 / span 2;
+    // display: none;
+  }
+
+  main {
+    overflow: hidden scroll;
+  }
 }
 </style>
