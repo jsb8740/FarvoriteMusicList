@@ -1,19 +1,13 @@
-<script setup lang="ts">
-import LeftArrow from "@/components/icons/LeftArrow.vue";
-import RightArrow from "@/components/icons/RightArrow.vue";
-</script>
 <template>
   <div>
     <div class="PlayList">
-      <div class="PlayListTitle">
+      <h1>
         <slot name="playListTitle">PlayList</slot>
-      </div>
+      </h1>
 
-      <div class="ListButton">
-        <button>더보기</button>
-        <LeftArrow></LeftArrow>
-        <RightArrow></RightArrow>
-      </div>
+      <RouterLink :to="{ name: 'MorePlayList' }" class="moreView">
+        Show More →
+      </RouterLink>
     </div>
 
     <div class="playListItem">
@@ -22,29 +16,29 @@ import RightArrow from "@/components/icons/RightArrow.vue";
   </div>
 </template>
 
+<script setup lang="ts"></script>
 <style scoped lang="scss">
 .playListItem {
-  width: 100%;
   display: flex;
+  flex-wrap: wrap;
   margin-top: 1.5rem;
   margin-bottom: 6.5rem;
-}
 
+  &:deep(.listItem):nth-child(1) {
+    margin-left: 0;
+  }
+
+  &:deep(.listItem):nth-last-child(1) {
+    margin-right: 0;
+  }
+}
 .PlayList {
   display: flex;
   justify-content: space-between;
 
-  .ListButton {
-    display: flex;
-    gap: 10px;
-    align-items: end;
-    button {
-      margin-right: 2rem;
-    }
-  }
-  .PlayListTitle {
-    font-size: 2.4rem;
-    font-weight: bold;
+  .moreView {
+    align-self: center;
+    text-decoration: none;
   }
 }
 </style>
