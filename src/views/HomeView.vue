@@ -2,7 +2,12 @@
   <TheViewLayout>
     <template #default>
       <div>
-        <PlayListItem></PlayListItem>
+        <PlayList>
+          <PlayListItem></PlayListItem>
+          <PlayListItem></PlayListItem>
+          <PlayListItem></PlayListItem>
+          <PlayListItem></PlayListItem>
+        </PlayList>
       </div>
     </template>
   </TheViewLayout>
@@ -11,6 +16,7 @@
 <script setup lang="ts">
 import TheViewLayout from "@/components/layouts/TheViewLayout.vue";
 import PlayListItem from "@/components/playList/PlayListItem.vue";
+import PlayList from "@/components/playList/PlayList.vue";
 </script>
 <style scoped lang="scss">
 img {
