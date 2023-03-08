@@ -34,12 +34,53 @@ a,
   }
 } */
 
+// Fonts
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Thin.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: NotoSansKR;
+  src: url("/fonts/NotoSansKR-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
 body {
   margin: 0;
 }
 
 * {
   color: #3e3a41;
+  font-family: NotoSansKR;
 }
 svg {
   image-rendering: -webkit-optimize-contrast;
