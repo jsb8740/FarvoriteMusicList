@@ -10,6 +10,7 @@
       <div class="test">ff</div>
       <div class="soundControl">
         <Heart></Heart>
+        <SoundController></SoundController>
       </div>
     </div>
   </div>
@@ -17,6 +18,7 @@
 
 <script setup lang="ts">
 import Heart from "../icons/Heart.vue";
+import SoundController from "../music-controller/SoundController.vue";
 </script>
 
 <style scoped lang="scss">
