@@ -13,6 +13,11 @@ const router = createRouter({
       name: "OpenPlayList",
       component: () => import("@/views/OpenPlayListView.vue"),
     },
+    {
+      path: "/moreplaylist",
+      name: "MorePlayList",
+      component: () => import("@/views/MorePlayListView.vue"),
+    },
   ],
 });
 
