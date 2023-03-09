@@ -87,3 +87,13 @@ svg {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+button {
+  background: inherit;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  border: 0;
+}
