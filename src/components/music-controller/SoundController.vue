@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class="soundController">
     <button class="iconView" @click="soundMute">
       <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
       <img v-show="soundLowImg" src="@/assets/volumeLow-white.png" />
       <img v-show="soundHighImg" src="@/assets/volumeHigh-white.png" />
     </button>
+
     <div class="soundWrap">
       <div
         class="soundBar"
-        @drag="volumeDrag"
-        @click="volumeClick"
-        @wheel="volumeHandler"
+        @mousedown="onMouseClick"
+        @mouseup="onMouseRelease"
+        @mousemove="onMouseMove"
+        @wheel="onMouseWheel"
         :style="{ '--soundWidth': dynamicWidth }"
       ></div>
     </div>
@@ -20,7 +22,15 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+enum VolumeControllerState {
+  IDLE,
+  DRAGGING,
+}
+
 const volume = ref(100);
+const volumeControllerState = ref<VolumeControllerState>(
+  VolumeControllerState.IDLE
+);
 
 const dynamicWidth = computed(() => `${volume.value}%`);
 
@@ -53,10 +63,10 @@ const soundMute = () => {
 };
 
 // 볼륨 핸들러
-const volumeHandler = (e: WheelEvent) => {
+const onMouseWheel = (e: WheelEvent) => {
   volume.value += volumeUpDown(e.deltaY);
   volumeLimit();
-  console.log("현재볼륨", volume.value);
+  // console.log("현재볼륨", volume.value);
 };
 
 //볼륨 0, 100 밖으로 안벗어나게
@@ -87,30 +97,57 @@ const volumeUpDown = (upDown: number): number => {
   return 0;
 };
 
-const volumeClick = (e: MouseEvent) => {
-  // console.log("click", e);
-  // 마우스 클릭
-  muteFlag.value = false;
-  volumeTmp.value = 0;
-  volume.value = Math.round((e.offsetX / 200) * 100);
+const onMouseClick = (e: MouseEvent) => {
+  // 클릭시 볼륨 컨트롤 상태 -> 드래그
+  if (volumeControllerState.value === VolumeControllerState.IDLE) {
+    volumeControllerState.value = VolumeControllerState.DRAGGING;
+  }
+
+  // 클릭시 마우스 체크
+  updateVolume(e.offsetX);
 };
 
-const volumeDrag = (e: DragEvent) => {
-  console.log("drag", e.offsetX);
+const onMouseRelease = (e: MouseEvent) => {
+  if (
+    volumeControllerState.value === VolumeControllerState.DRAGGING ||
+    e.offsetY <= 0 ||
+    e.offsetY > 10
+  ) {
+    volumeControllerState.value = VolumeControllerState.IDLE;
+  }
+};
+
+const onMouseMove = (e: MouseEvent) => {
+  //mouseMove 상태이고 드래그인 상태
+  console.log(e.offsetY);
+
+  if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
+    updateVolume(e.offsetX);
+  }
+};
+
+const updateVolume = (offsetX: number) => {
   muteFlag.value = false;
   volumeTmp.value = 0;
-  volume.value = Math.round((e.offsetX / 200) * 100);
-
-  // 할것 드래그하면 이미지 사라지는것 고치기
-  // 드래그 할때 pointer로 교체
+  volume.value = Math.round((offsetX / 200) * 100);
 };
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/color.scss";
+
+.soundController {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
 .iconView {
+  $imgSize: 1.5rem;
   position: relative;
-  height: 2rem;
-  width: 2rem;
+  height: $imgSize;
+  width: $imgSize;
   img {
     inset: 0;
     position: absolute;
@@ -123,20 +160,23 @@ const volumeDrag = (e: DragEvent) => {
   overflow: hidden;
   position: relative;
   width: 200px;
-  height: 10px;
+  height: 12px;
   cursor: pointer;
 
+  $radius: 0.5rem;
   .soundBar {
-    background-color: gray;
+    background-color: $progressBackColor;
     width: 100%;
     height: 100%;
+    border-radius: $radius;
 
     &::before {
       content: "";
       position: absolute;
-      background-color: red;
+      background-color: $orangeColor;
       width: var(--soundWidth);
       height: 100%;
+      border-radius: $radius;
     }
   }
 }
