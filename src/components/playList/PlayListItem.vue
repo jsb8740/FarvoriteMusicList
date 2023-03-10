@@ -20,12 +20,13 @@ import Heart from "@/components/icons/Heart.vue";
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/color.scss";
 .listItem {
   margin: 0 2rem;
   display: inline-block;
   .byWriter {
     margin-top: 0.3rem;
-    color: rgb(158, 158, 159);
+    color: $greyColor;
   }
 
   .title {

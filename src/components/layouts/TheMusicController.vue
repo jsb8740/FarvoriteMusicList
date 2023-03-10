@@ -4,10 +4,21 @@
       <svg></svg>
     </div>
 
-    <div class="MusicPlayer">
-      <img src="@/assets/test/test1.jpg" alt="" />
+    <div class="musicPlayer">
+      <div class="musicInfo">
+        <img src="@/assets/test/test1.jpg" alt="" />
 
-      <div class="test">ff</div>
+        <div class="music">
+          <!-- 전광판 효과 추가 -->
+          <div class="title">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          </div>
+          <div class="artist">artist</div>
+        </div>
+      </div>
+
+      <MusicPlayer></MusicPlayer>
+
       <div class="soundControl">
         <Heart></Heart>
         <SoundController></SoundController>
@@ -18,6 +29,7 @@
 
 <script setup lang="ts">
 import Heart from "../icons/Heart.vue";
+import MusicPlayer from "../music-controller/MusicPlayer.vue";
 import SoundController from "../music-controller/SoundController.vue";
 </script>
 
@@ -28,14 +40,42 @@ import SoundController from "../music-controller/SoundController.vue";
   // height: 6.5rem;
   // padding-right: 3rem;
 
-  .MusicPlayer {
+  .musicPlayer {
     display: flex;
     align-items: center;
-    .test {
+    user-select: none;
+    justify-content: space-between;
+
+    & div {
+      flex-basis: 33.3%;
+    }
+
+    .musicInfo {
       display: flex;
-      width: 100%;
-      justify-content: center;
-      background-color: greenyellow;
+      gap: 3rem;
+    }
+
+    .soundControl {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .music {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      padding-top: 0.6rem;
+
+      &:nth-child(1) div {
+        user-select: text;
+      }
+
+      .title {
+        width: 24rem;
+      }
+      .artist {
+        color: $greyColor;
+      }
     }
   }
 
