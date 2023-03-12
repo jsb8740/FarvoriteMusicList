@@ -29,8 +29,8 @@
 
 <script setup lang="ts">
 import Heart from "../icons/Heart.vue";
-import MusicPlayer from "../music-controller/MusicPlayer.vue";
-import SoundController from "../music-controller/SoundController.vue";
+import MusicPlayer from "../musicController/MusicPlayer.vue";
+import SoundController from "../musicController/SoundController.vue";
 </script>
 
 <style scoped lang="scss">
@@ -71,7 +71,7 @@ import SoundController from "../music-controller/SoundController.vue";
       }
 
       .title {
-        width: 24rem;
+        width: 10rem;
       }
       .artist {
         color: $greyColor;
