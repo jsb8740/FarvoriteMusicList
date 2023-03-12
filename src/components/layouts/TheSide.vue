@@ -10,6 +10,11 @@
         홈
       </RouterLink>
 
+      <RouterLink :to="{ name: 'FavoriteMusic' }">
+        <MenuHeart></MenuHeart>
+        Favorites
+      </RouterLink>
+
       <RouterLink :to="{ name: 'OpenPlayList' }"> 카테고리 </RouterLink>
 
       <RouterLink :to="{ name: 'Home' }" class=""> TOP100 </RouterLink>
@@ -25,6 +30,7 @@
 
 <script setup lang="ts">
 import Home from "@/components/icons/Home.vue";
+import MenuHeart from "@/components/icons/MenuHeart.vue";
 
 import { ref, computed } from "vue";
 const propsClicked = ref(false);
@@ -35,8 +41,6 @@ const checkClicked = (event: InputEvent) => {
   );
   console.log(propsClicked.value);
 };
-
-// const computed(() => '');
 </script>
 
 <style scoped lang="scss">
