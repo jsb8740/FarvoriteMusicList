@@ -18,6 +18,11 @@ const router = createRouter({
       name: "MorePlayList",
       component: () => import("@/views/MorePlayListView.vue"),
     },
+    {
+      path: "/favoritemusic",
+      name: "FavoriteMusic",
+      component: () => import("@/views/FavoriteMusicList.vue"),
+    },
   ],
 });
 
