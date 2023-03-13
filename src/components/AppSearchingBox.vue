@@ -1,5 +1,5 @@
 <template>
-  <div class="searchingBox">
+  <div class="searchingBox" @input="test">
     <Search></Search>
 
     <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
@@ -10,6 +10,13 @@
 
 <script setup lang="ts">
 import Search from "./icons/Search.vue";
+import axios from "axios";
+
+const test = () => {
+  axios.get("/api/search").then((req) => {
+    console.log(req.data);
+  });
+};
 </script>
 
 <style scoped lang="scss">
