@@ -1,21 +1,40 @@
 <template>
-  <div class="searchingBox" @input="test">
+  <div class="searchingBox">
     <Search></Search>
 
     <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
     <!-- transition 애니메이션 넣기 -->
-    <input type="text" placeholder="Search" />
+    <input
+      type="text"
+      placeholder="Search"
+      :value="keyWord"
+      @input="changeKeyEvent"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import Search from "./icons/Search.vue";
 import axios from "axios";
+import { ref } from "vue";
 
-const test = () => {
-  axios.get("/api/search").then((req) => {
-    console.log(req.data);
-  });
+const keyWord = ref("");
+
+let timer: number | undefined;
+const changeKeyEvent = (event: Event) => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+  // 디바운싱
+  timer = setTimeout(() => {
+    keyWord.value = (event.target as HTMLInputElement).value;
+    const params = {
+      keyword: keyWord.value,
+    };
+    axios.get("/api/search", { params }).then((req) => {
+      console.log(req.data);
+    });
+  }, 1000);
 };
 </script>
 
