@@ -21,7 +21,12 @@ const router = createRouter({
     {
       path: "/favoritemusic",
       name: "FavoriteMusic",
-      component: () => import("@/views/FavoriteMusicList.vue"),
+      component: () => import("@/views/FavoriteMusicListView.vue"),
+    },
+    {
+      path: "/searchingresult",
+      name: "SearchingResult",
+      component: () => import("@/views/SearchingResultView.vue"),
     },
   ],
 });
