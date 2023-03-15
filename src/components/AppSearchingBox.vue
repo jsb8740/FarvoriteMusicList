@@ -9,6 +9,7 @@
       placeholder="Search"
       :value="keyWord"
       @keypress.enter="enterKeyEvent"
+      @input="test"
     />
   </div>
 </template>
@@ -22,13 +23,33 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const keyWord = ref("");
 
-let timer: number | undefined;
 const enterKeyEvent = (event: Event) => {
+  if (keyWord.value !== "") {
+    router.push({
+      name: "SearchingResult",
+      query: {
+        keyword: keyWord.value,
+      },
+    });
+
+    const params = {
+      keyword: keyWord.value,
+    };
+    axios.get("/api/search", { params }).then((req) => {
+      console.log(req.data);
+    });
+  }
+};
+
+let timer: number | undefined;
+const test = (event: Event) => {
   keyWord.value = (event.target as HTMLInputElement).value;
+
   if (timer) {
     clearTimeout(timer);
   }
   // 디바운싱
+
   if (keyWord.value !== "") {
     timer = setTimeout(() => {
       // const params = {
@@ -37,14 +58,8 @@ const enterKeyEvent = (event: Event) => {
       // axios.get("/api/search", { params }).then((req) => {
       //   console.log(req.data);
       // });
+      console.log(keyWord.value);
     }, 1000);
-
-    router.push({
-      name: "SearchingResult",
-      query: {
-        keyword: keyWord.value,
-      },
-    });
   }
 };
 </script>
