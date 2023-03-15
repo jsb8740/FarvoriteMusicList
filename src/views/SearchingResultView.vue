@@ -2,6 +2,7 @@
   <TheViewLayout>
     <template #default>
       <div>test입니다</div>
+      <img src="https://i.ytimg.com/vi/U5TTMeIadME/default.jpg" />
     </template>
   </TheViewLayout>
 </template>
