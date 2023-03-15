@@ -35,8 +35,8 @@ const enterKeyEvent = (event: Event) => {
     const params = {
       keyword: keyWord.value,
     };
-    axios.get("/api/search", { params }).then((req) => {
-      console.log(req.data);
+    axios.get("/api/search", { params }).then((res) => {
+      console.log(res.data);
     });
   }
 };
