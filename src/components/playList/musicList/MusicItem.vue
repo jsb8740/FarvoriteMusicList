@@ -31,8 +31,8 @@
   background-color: white;
   border-radius: 0.7rem;
   img {
-    height: 100%;
-    width: auto;
+    /*height: 100%;
+    width: auto;*/
     border-radius: 0.3rem;
   }
 }
