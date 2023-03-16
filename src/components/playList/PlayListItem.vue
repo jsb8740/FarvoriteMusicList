@@ -9,9 +9,9 @@
       <slot name="title">title</slot>
     </div>
 
-    <div class="byWriter">
+    <!-- <div class="byWriter">
       <slot name="by">by test</slot>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -36,8 +36,8 @@ import Heart from "@/components/icons/Heart.vue";
   .thumbnail {
     position: relative;
     img {
-      width: 250px;
-      height: 250px;
+      /*width: 250px;
+      height: 250px;*/
 
       border-radius: 1rem;
     }
