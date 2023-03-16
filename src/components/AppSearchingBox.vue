@@ -37,21 +37,27 @@ onMounted(async () => {
 
 const enterKeyEvent = (event: Event) => {
   if (keyWord.value !== "") {
-    if (route.name === "SearchingResult") {
-      router.replace({
-        name: "SearchingResult",
-        query: {
-          keyword: keyWord.value,
-        },
-      });
-    } else {
-      router.push({
-        name: "SearchingResult",
-        query: {
-          keyword: keyWord.value,
-        },
-      });
-    }
+    // if (route.name === "SearchingResult") {
+    //   router.replace({
+    //     name: "SearchingResult",
+    //     query: {
+    //       keyword: keyWord.value,
+    //     },
+    //   });
+    // } else {
+    //   router.push({
+    //     name: "SearchingResult",
+    //     query: {
+    //       keyword: keyWord.value,
+    //     },
+    //   });
+    // }
+    router.replace({
+      name: "SearchingResult",
+      query: {
+        keyword: keyWord.value,
+      },
+    });
   }
 };
 
