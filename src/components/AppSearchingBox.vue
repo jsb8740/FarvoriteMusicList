@@ -4,40 +4,54 @@
 
     <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
     <!-- transition 애니메이션 넣기 -->
-    <input
+    <AppInput
       type="text"
       placeholder="Search"
-      :value="keyWord"
+      v-model="keyWord"
       @keypress.enter="enterKeyEvent"
-      @input="test"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import Search from "./icons/Search.vue";
-import axios from "axios";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useSearchStore } from "@/stores/search";
+import { storeToRefs } from "pinia";
+import AppInput from "./common/AppInput.vue";
 
 const router = useRouter();
-const keyWord = ref("");
+const route = useRoute();
+const keyWord = ref<string>("");
+
+const store = useSearchStore();
+const { searchResult } = storeToRefs(store);
+
+onMounted(async () => {
+  await router.isReady();
+  if (route.name === "SearchingResult") {
+    keyWord.value = (route.query?.keyword as string | null) ?? "";
+  }
+});
 
 const enterKeyEvent = (event: Event) => {
   if (keyWord.value !== "") {
-    router.push({
-      name: "SearchingResult",
-      query: {
-        keyword: keyWord.value,
-      },
-    });
-
-    const params = {
-      keyword: keyWord.value,
-    };
-    axios.get("/api/search", { params }).then((res) => {
-      console.log(res.data);
-    });
+    if (route.name === "SearchingResult") {
+      router.replace({
+        name: "SearchingResult",
+        query: {
+          keyword: keyWord.value,
+        },
+      });
+    } else {
+      router.push({
+        name: "SearchingResult",
+        query: {
+          keyword: keyWord.value,
+        },
+      });
+    }
   }
 };
 
