@@ -14,6 +14,7 @@ export const useSearchStore = defineStore("search", () => {
       };
 
       searchResult.value = await axios.get("/api/search", { params });
+      console.log(searchResult.value);
     } catch (err) {
       console.error(err);
     } finally {
