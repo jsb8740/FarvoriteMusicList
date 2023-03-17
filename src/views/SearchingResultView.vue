@@ -3,14 +3,21 @@
     <template #default>
       <!-- <img src="https://i.ytimg.com/vi/U5TTMeIadME/default.jpg" /> -->
       <!-- {{ searchResult }} -->
-      <PlayListItem v-for="(item, index) in searchResult?.data.items">
-        <template #thumbnail>
-          <img :src="item.snippet.thumbnails.default.url" />
-        </template>
-        <template #title>
-          {{ item.snippet.title }}
-        </template>
-      </PlayListItem>
+      <template v-if="!searchResult"> <PlayListItem></PlayListItem></template>
+      <template v-else>
+        <PlayListItem
+          v-for="(item, index) in searchResult?.data.items"
+          :video-id="item.id.videoId"
+        >
+          <!-- <template #thumbnail>
+          :width="item.snippet.thumbnails.thumbnails.width"  
+          </template> -->
+          <template #title>
+            {{ item.snippet.title }}
+          </template>
+        </PlayListItem>
+      </template>
+
       <!-- playList로 교체 item마다 id값을 props로 받아서 저장 -->
       <!-- 유튜브 할당량이 정해져있어서 어쩔 수업슴 -->
       <!-- 시간도 뮤직 컨트롤로에만 있게 -->
@@ -52,7 +59,7 @@ onUpdated(() => {
 });
 
 const search = () => {
-  store.searchYoutube(queryString.value.keyword as string);
+  // store.searchYoutube(queryString.value.keyword as string);
 };
 </script>
 

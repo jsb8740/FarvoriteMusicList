@@ -1,12 +1,18 @@
 <template>
   <div class="listItem">
     <div class="thumbnail">
-      <img src="@/assets/test/test1.jpg" class="" />
+      <img :src="thumbnailURL" class="" />
       <Heart class="favorite" />
     </div>
 
+    <!-- <img :src="item.snippet.thumbnails.default.url" /> -->
     <div class="title">
-      <slot name="title">title</slot>
+      <slot name="title"
+        >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum quam
+        officia iure asperiores maiores perspiciatis quia ex possimus
+        consequatur dignissimos? Aperiam mollitia cumque recusandae veritatis
+        veniam nulla libero maiores quae.</slot
+      >
     </div>
 
     <!-- <div class="byWriter">
@@ -17,6 +23,16 @@
 
 <script setup lang="ts">
 import Heart from "@/components/icons/Heart.vue";
+import { computed } from "vue";
+export interface Props {
+  videoId: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  videoId: "undefined",
+});
+const thumbnailURL = computed(
+  () => `https://i.ytimg.com/vi/${props.videoId}/mqdefault.jpg`
+);
 </script>
 
 <style scoped lang="scss">
@@ -24,27 +40,22 @@ import Heart from "@/components/icons/Heart.vue";
 .listItem {
   margin: 0 2rem;
   display: inline-block;
-  .byWriter {
-    margin-top: 0.3rem;
-    color: $greyColor;
-  }
-
+  width: 120px;
   .title {
     margin-top: 0.3rem;
+    height: 1.5rem;
+    overflow: hidden;
+    width: 1000px;
   }
 
   .thumbnail {
     position: relative;
     img {
-      /*width: 250px;
-      height: 250px;*/
-
       border-radius: 1rem;
     }
     .favorite {
       position: absolute;
-      right: 10px;
-      top: 10px;
+      inset: 5% 70%;
     }
   }
 }
