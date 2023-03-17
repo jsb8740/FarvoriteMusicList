@@ -17,12 +17,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-
+import { ref, computed, onMounted } from "vue";
+import DataBase from "@/indexedDB/index";
 const favorite = ref(false);
+
+onMounted(() => {});
 
 const favoriteClick = () => {
   favorite.value = !favorite.value;
+
+  if (favorite.value === true && true) {
+  }
 };
 const favoriteCheck = computed(() => (favorite.value ? "#ef7330" : "#fff"));
 </script>
@@ -34,8 +39,8 @@ $svg-size: 2.2em;
   // background-color: rgba($color: #000, $alpha: 0.3);
   //   background-color: black;
   border: 0;
-  width: $svg-size * 2;
-  height: $svg-size * 2;
+  width: $svg-size;
+  height: $svg-size;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
