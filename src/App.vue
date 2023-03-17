@@ -10,6 +10,12 @@
 import TheMusicController from "./components/layouts/TheMusicController.vue";
 import TheSide from "./components/layouts/TheSide.vue";
 import TheView from "./components/layouts/TheView.vue";
+import DataBase from "@/indexedDB/index";
+import { onMounted } from "vue";
+
+onMounted(() => {
+  const indexedDB = new DataBase();
+});
 </script>
 
 <style scoped lang="scss">
