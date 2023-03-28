@@ -12,7 +12,7 @@ export default class DataBase {
   constructor() {
     console.log("db 시작");
 
-    this.request = indexedDB.open("favoritesDB");
+    this.request = indexedDB.open("favoritesDB", 3.0);
     // this.request.onerror = function (event) {};
 
     // this.createStore();
@@ -82,7 +82,7 @@ export default class DataBase {
       keyPath: "myKey",
       autoIncrement: true,
     });
-    store.createIndex("videoId", "videoId", { unique: true });
+    // store.createIndex("videoId", "videoId", { unique: true });
   }
 
   public static getInstance() {
@@ -112,14 +112,46 @@ export default class DataBase {
 
   deleteData(videoId: string) {
     const transaction = DataBase.db.transaction("favorites", "readwrite");
-    transaction.objectStore("favorites").delete(videoId);
+
+    const objectStore = transaction.objectStore("favorites");
+
     transaction.oncomplete = function (event: Event) {
       console.log("transaction delete complete", event);
     };
     transaction.onerror = function (event: Event) {
       console.log("transaction delete error", event);
     };
-    console.log(this.objectStore.indexNames);
+
+    // objectStore.delete(1);
+    // const t = objectStore.getKey("2");
+    // t.onsuccess = (event) => {
+    //   const key = (event.target as IDBOpenDBRequest).result;
+    //   console.log(key);
+    // };
+
+    // const t = objectStore.getAll();
+    // t.onsuccess = (event) => {
+    //   const dd = (event.target as IDBOpenDBRequest).result;
+    //   console.log(dd);
+    // };
+
+    //getall 보단 cursor로 1개씩 오픈하면서 비교하는게 좋을듯
+    //처음 데이터 확인일때는 getall로 다가져오고
+
+    // const req = objectStore.openCursor();
+    // req.onsuccess = (event) => {
+    //   const cursor = (event.target as IDBRequest).result;
+    //   if (cursor) {
+    //     let key = cursor.primaryKey;
+    //     let value = cursor.value;
+
+    //     console.log(key, value);
+
+    //     // cursor.continue();
+    //   }
+    // };
+
+    // console.log(this.objectStore.indexNames);
   }
 
   createStore() {

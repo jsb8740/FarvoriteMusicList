@@ -31,7 +31,7 @@ const favoriteClick = () => {
 
   //클릭을 했는데 추가인 상태이면
   if (favorite.value === true) {
-    dataBase.addData("df");
+    dataBase.addData("dff");
   } else {
     //클릭을 했는데 해제하는 상태
     dataBase.deleteData("df");
