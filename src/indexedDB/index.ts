@@ -1,6 +1,6 @@
 export default class DataBase {
   private request;
-  private db!: IDBDatabase;
+  private static db: IDBDatabase;
   private transaction!: IDBTransaction;
   private objectStore!: IDBObjectStore;
 
@@ -19,9 +19,6 @@ export default class DataBase {
     this.test();
   }
   test() {
-    const test2 = [{ myKey: "1234", videoId: "ygiNcIBl1LU" }];
-
-    const test22 = [{ myKey: "123423", videoId: "KqFAs5d3Yl8" }];
     this.request.onerror = (event) => {
       alert("IndedxedDB Error");
     };
@@ -31,25 +28,25 @@ export default class DataBase {
       console.log("연결 성공");
       // const db = this.request.result;
       // const testDB = (event.target as IDBOpenDBRequest).result;
-      this.db = (event.target as IDBOpenDBRequest).result;
+      DataBase.db = (event.target as IDBOpenDBRequest).result;
       // console.log("1", db);
       // console.log("2", testDB);
-      console.log("3", this.db);
+      console.log("3", DataBase.db);
 
-      this.transaction = this.db.transaction("favorites", "readwrite");
-      this.transaction.oncomplete = function (event: Event) {
-        console.log("transaction complete", event);
-      };
-      this.transaction.onerror = function (event: Event) {
-        console.log("transaction error", event);
-      };
+      // this.transaction = DataBase.db.transaction("favorites", "readwrite");
+      // this.transaction.oncomplete = function (event: Event) {
+      //   console.log("transaction complete", event);
+      // };
+      // this.transaction.onerror = function (event: Event) {
+      //   console.log("transaction error", event);
+      // };
 
-      this.objectStore = this.transaction.objectStore("favorites");
+      // this.objectStore = this.transaction.objectStore("favorites");
 
-      const t = {
-        videoId: "dfff",
-      };
-      this.objectStore.add(t);
+      // const t = {
+      //   videoId: "dfff",
+      // };
+      // this.objectStore.add(t);
       // for (var i in test22) {
       //   let reqTest = this.objectStore.add(test22[i]);
       //   reqTest.onsuccess = function (event) {
@@ -62,8 +59,8 @@ export default class DataBase {
     this.request.onupgradeneeded = (event) => {
       console.log("Table생성 or 버전업");
 
-      this.db = (event.target as IDBOpenDBRequest).result;
-      console.log("4", this.db);
+      DataBase.db = (event.target as IDBOpenDBRequest).result;
+      console.log("4", DataBase.db);
 
       this.makeDb();
       // let objectStore = this.db.createObjectStore("favorites", { keyPath: "myKey" });
@@ -81,13 +78,49 @@ export default class DataBase {
   }
 
   makeDb() {
-    const store = this.db.createObjectStore("favorites", {
+    const store = DataBase.db.createObjectStore("favorites", {
       keyPath: "myKey",
       autoIncrement: true,
     });
     store.createIndex("videoId", "videoId", { unique: true });
   }
-  pushData(videoId: string) {}
+
+  public static getInstance() {
+    if (!DataBase.instance) {
+      DataBase.instance = new DataBase();
+    }
+    return DataBase.instance;
+  }
+  addData(videoId: string) {
+    const data = {
+      videoId,
+    };
+
+    console.log("add test", data);
+
+    this.transaction = DataBase.db.transaction("favorites", "readwrite");
+    this.transaction.oncomplete = function (event: Event) {
+      console.log("transaction complete", event);
+    };
+    this.transaction.onerror = function (event: Event) {
+      console.log("transaction error", event);
+    };
+
+    this.objectStore = this.transaction.objectStore("favorites");
+    this.objectStore.add(data);
+  }
+
+  deleteData(videoId: string) {
+    const transaction = DataBase.db.transaction("favorites", "readwrite");
+    transaction.objectStore("favorites").delete(videoId);
+    transaction.oncomplete = function (event: Event) {
+      console.log("transaction delete complete", event);
+    };
+    transaction.onerror = function (event: Event) {
+      console.log("transaction delete error", event);
+    };
+    console.log(this.objectStore.indexNames);
+  }
 
   createStore() {
     this.request.onupgradeneeded = function (event) {

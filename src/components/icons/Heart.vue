@@ -19,14 +19,22 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import DataBase from "@/indexedDB/index";
+
 const favorite = ref(false);
 
 onMounted(() => {});
 
+const dataBase = DataBase.getInstance();
+
 const favoriteClick = () => {
   favorite.value = !favorite.value;
 
-  if (favorite.value === true && true) {
+  //클릭을 했는데 추가인 상태이면
+  if (favorite.value === true) {
+    dataBase.addData("df");
+  } else {
+    //클릭을 했는데 해제하는 상태
+    dataBase.deleteData("df");
   }
 };
 const favoriteCheck = computed(() => (favorite.value ? "#ef7330" : "#fff"));
