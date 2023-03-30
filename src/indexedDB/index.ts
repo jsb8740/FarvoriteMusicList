@@ -86,6 +86,11 @@ export default class DataBase {
         reject((event.target as IDBRequest).error);
       };
     });
+
+    // pinia에서 조절하는걸로
+    //  watcheffect로 확인?
+    // 일단 table 생성하는 부분은 따로 분리를 하기
+    // createIndex부분도 필요함
   }
 
   public checkFavorite(videoId: string): boolean {
