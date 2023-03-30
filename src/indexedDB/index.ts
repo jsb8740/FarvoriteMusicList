@@ -1,5 +1,5 @@
 export default class DataBase {
-  private db!: IDBDatabase;
+  private _db!: IDBDatabase;
   private transaction!: IDBTransaction;
   private objectStore!: IDBObjectStore;
 
@@ -18,8 +18,8 @@ export default class DataBase {
   constructor() {
     console.log("db 시작");
 
-    this.openDatabase("favoritesDB", 3.0).then((res) => {
-      this.db = res;
+    this.openDatabase("MusicListDB", 1.0).then((res) => {
+      this._db = res;
     });
   }
 
@@ -35,10 +35,10 @@ export default class DataBase {
       // dbOpen 성공시
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        db.onversionchange = () => {
-          db.close();
-          alert("낮은 버전 DB 사용중 새로고침 해주세요!");
-        };
+        // db.onversionchange = () => {
+        //   db.close();
+        //   alert("낮은 버전 DB 사용중 새로고침 해주세요!");
+        // };
 
         resolve(db);
       };
@@ -64,19 +64,20 @@ export default class DataBase {
     return new Promise(async (resolve, reject) => {
       // this.db = await this.openDatabase("favoritesDB", 3.0);
       // console.log("checkDB", this.db);
+      if (!this._db) {
+        this._db = await this.openDatabase("MusicListDB", 1.0);
+      }
 
-      const transaction = this.db.transaction("favorites", "readwrite");
+      const transaction = this._db.transaction("favorites", "readwrite");
 
       console.log(transaction);
 
       const objectStore = transaction.objectStore("favorites");
 
-      // const store = useIndexedDBStore();
       const getRequest = objectStore.getAll();
       getRequest.onsuccess = (event) => {
         const dataList = (event.target as IDBOpenDBRequest).result;
         console.log(dataList);
-        // store.favSongLists = dataList;
 
         resolve(dataList);
       };
@@ -88,7 +89,7 @@ export default class DataBase {
   }
 
   public checkFavorite(videoId: string): boolean {
-    const transaction = this.db.transaction("favorites", "readwrite");
+    const transaction = this._db.transaction("favorites", "readwrite");
 
     const objectStore = transaction.objectStore("favorites");
 
@@ -132,7 +133,7 @@ export default class DataBase {
 
     // console.log("add test", data);
 
-    const transaction = this.db.transaction("favorites", "readwrite");
+    const transaction = this._db.transaction("favorites", "readwrite");
     transaction.oncomplete = (event) => {
       console.log("transaction addData complete");
     };
@@ -149,7 +150,7 @@ export default class DataBase {
   }
 
   public deleteData(videoId: string) {
-    const transaction = this.db.transaction("favorites", "readwrite");
+    const transaction = this._db.transaction("favorites", "readwrite");
 
     const objectStore = transaction.objectStore("favorites");
 
