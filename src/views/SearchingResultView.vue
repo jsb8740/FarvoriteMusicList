@@ -3,7 +3,10 @@
     <template #default>
       <!-- <img src="https://i.ytimg.com/vi/U5TTMeIadME/default.jpg" /> -->
       <!-- {{ searchResult }} -->
-      <template v-if="!searchResult"> <PlayListItem></PlayListItem></template>
+      <template v-if="!searchResult">
+        test
+        <!-- <PlayListItem></PlayListItem> -->
+      </template>
       <template v-else>
         <PlayListItem
           v-for="(item, index) in searchResult?.data.items"
@@ -59,7 +62,7 @@ onUpdated(() => {
 });
 
 const search = () => {
-  // store.searchYoutube(queryString.value.keyword as string);
+  store.searchYoutube(queryString.value.keyword as string);
 };
 </script>
 

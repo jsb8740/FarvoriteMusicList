@@ -20,7 +20,7 @@
       <MusicPlayer></MusicPlayer>
 
       <div class="soundControl">
-        <Heart></Heart>
+        <!-- <Heart video-id="undefined"></Heart> -->
         <SoundController></SoundController>
       </div>
     </div>

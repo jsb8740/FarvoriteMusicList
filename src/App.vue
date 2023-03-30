@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div v-if="initialized" id="container">
     <TheSide></TheSide>
     <TheView></TheView>
 
@@ -10,12 +10,37 @@
 import TheMusicController from "./components/layouts/TheMusicController.vue";
 import TheSide from "./components/layouts/TheSide.vue";
 import TheView from "./components/layouts/TheView.vue";
-import DataBase from "@/indexedDB/index";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { Connector, type TableProperties } from "@/indexedDB/connector";
+
+const initialized = ref(false);
+
+const tables = [
+  { name: "favorites" },
+  { name: "playlists" },
+  { name: "sams" },
+] as TableProperties[];
 
 onMounted(() => {
-  const indexedDB = new DataBase();
+  initialize();
 });
+
+const initialize = async () => {
+  try {
+    await Promise.all([initializeIndexedDB()]);
+  } finally {
+    initialized.value = true;
+  }
+};
+
+const initializeIndexedDB = async () => {
+  await Connector.create({
+    database: "favorite_music",
+    tables,
+    version: 1,
+    sync: true,
+  });
+};
 </script>
 
 <style scoped lang="scss">

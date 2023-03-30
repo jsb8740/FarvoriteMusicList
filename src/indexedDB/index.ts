@@ -1,6 +1,5 @@
 export default class DataBase {
-  private request;
-  private static db: IDBDatabase;
+  private db!: IDBDatabase;
   private transaction!: IDBTransaction;
   private objectStore!: IDBObjectStore;
 
@@ -9,117 +8,160 @@ export default class DataBase {
     videoId: ["VOUK-xFAyk", "KqFAs5d3Yl8"],
   };
 
-  constructor() {
-    console.log("db 시작");
-
-    this.request = indexedDB.open("favoritesDB", 3.0);
-    // this.request.onerror = function (event) {};
-
-    // this.createStore();
-    this.test();
-  }
-  test() {
-    this.request.onerror = (event) => {
-      alert("IndedxedDB Error");
-    };
-
-    this.request.onsuccess = (event) => {
-      // arrow functions의 this는 상위의 this
-      console.log("연결 성공");
-      // const db = this.request.result;
-      // const testDB = (event.target as IDBOpenDBRequest).result;
-      DataBase.db = (event.target as IDBOpenDBRequest).result;
-      // console.log("1", db);
-      // console.log("2", testDB);
-      console.log("3", DataBase.db);
-
-      // this.transaction = DataBase.db.transaction("favorites", "readwrite");
-      // this.transaction.oncomplete = function (event: Event) {
-      //   console.log("transaction complete", event);
-      // };
-      // this.transaction.onerror = function (event: Event) {
-      //   console.log("transaction error", event);
-      // };
-
-      // this.objectStore = this.transaction.objectStore("favorites");
-
-      // const t = {
-      //   videoId: "dfff",
-      // };
-      // this.objectStore.add(t);
-      // for (var i in test22) {
-      //   let reqTest = this.objectStore.add(test22[i]);
-      //   reqTest.onsuccess = function (event) {
-      //     console.log("test!! ", i);
-      //   };
-      // }
-    };
-
-    //
-    this.request.onupgradeneeded = (event) => {
-      console.log("Table생성 or 버전업");
-
-      DataBase.db = (event.target as IDBOpenDBRequest).result;
-      console.log("4", DataBase.db);
-
-      this.makeDb();
-      // let objectStore = this.db.createObjectStore("favorites", { keyPath: "myKey" });
-      // objectStore.createIndex("videoId", "videoId", { unique: true });
-
-      // objectStore.transaction.oncomplete = function (event) {
-      //   var customerObjectStore = db
-      //     .transaction("favorites", "readwrite")
-      //     .objectStore("favorites");
-
-      //   console.log(customerObjectStore);
-      //   test2.forEach((t) => customerObjectStore.add(t));
-      // };
-    };
-  }
-
-  makeDb() {
-    const store = DataBase.db.createObjectStore("favorites", {
-      keyPath: "myKey",
-      autoIncrement: true,
-    });
-    // store.createIndex("videoId", "videoId", { unique: true });
-  }
-
   public static getInstance() {
     if (!DataBase.instance) {
       DataBase.instance = new DataBase();
     }
     return DataBase.instance;
   }
-  addData(videoId: string) {
+
+  constructor() {
+    console.log("db 시작");
+
+    this.openDatabase("favoritesDB", 3.0).then((res) => {
+      this.db = res;
+    });
+  }
+
+  private openDatabase(dbName: string, version: number) {
+    return new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open(dbName, version);
+
+      // error handling
+      request.onerror = (event) => {
+        reject((event.target as IDBOpenDBRequest).error);
+      };
+
+      // dbOpen 성공시
+      request.onsuccess = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        db.onversionchange = () => {
+          db.close();
+          alert("낮은 버전 DB 사용중 새로고침 해주세요!");
+        };
+
+        resolve(db);
+      };
+
+      // 클라이언트에 DB가 없거나 버전이 낮은경우에 실행
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+
+        // store 생성
+        const store = db.createObjectStore("favorites", {
+          keyPath: "myKey",
+          autoIncrement: true,
+        });
+
+        resolve(db);
+      };
+    });
+  }
+
+  private openDBDatabase() {}
+
+  public getFavList(): unknown {
+    return new Promise(async (resolve, reject) => {
+      // this.db = await this.openDatabase("favoritesDB", 3.0);
+      // console.log("checkDB", this.db);
+
+      const transaction = this.db.transaction("favorites", "readwrite");
+
+      console.log(transaction);
+
+      const objectStore = transaction.objectStore("favorites");
+
+      // const store = useIndexedDBStore();
+      const getRequest = objectStore.getAll();
+      getRequest.onsuccess = (event) => {
+        const dataList = (event.target as IDBOpenDBRequest).result;
+        console.log(dataList);
+        // store.favSongLists = dataList;
+
+        resolve(dataList);
+      };
+
+      getRequest.onerror = (event) => {
+        reject((event.target as IDBRequest).error);
+      };
+    });
+  }
+
+  public checkFavorite(videoId: string): boolean {
+    const transaction = this.db.transaction("favorites", "readwrite");
+
+    const objectStore = transaction.objectStore("favorites");
+
+    // transaction.oncomplete = (event: Event) => {
+    //   console.log("transaction check complete", event);
+    // };
+    // transaction.onerror = (event: Event) => {
+    //   console.log("transaction delete error", event);
+    // };
+
+    let check = false;
+    // objectStore.openCursor().onsuccess = (event) => {
+    //   const cursor = (event.target as IDBRequest).result;
+    //   if (cursor) {
+    //     let key = cursor.primaryKey;
+    //     let value = cursor.value;
+
+    //     // console.log(key, value.videoId);
+    //     console.log("d", videoId);
+
+    //     if (value.videoId == videoId) {
+    //       check = true;
+    //     } else {
+    //       cursor.continue();
+    //     }
+    //   }
+    // };
+
+    const getRequest = objectStore.getAll();
+    getRequest.onsuccess = (event: Event) => {
+      const data = (event.target as IDBOpenDBRequest).result;
+      console.log(data);
+    };
+    return check;
+  }
+
+  public addData(videoId: string) {
     const data = {
       videoId,
     };
 
-    console.log("add test", data);
+    // console.log("add test", data);
 
-    this.transaction = DataBase.db.transaction("favorites", "readwrite");
-    this.transaction.oncomplete = function (event: Event) {
-      console.log("transaction complete", event);
+    const transaction = this.db.transaction("favorites", "readwrite");
+    transaction.oncomplete = (event) => {
+      console.log("transaction addData complete");
     };
-    this.transaction.onerror = function (event: Event) {
-      console.log("transaction error", event);
+    transaction.onerror = (event) => {
+      // console.log("transaction error", event);
+      console.log(
+        "transaction addData error",
+        (event.target as IDBTransaction).error
+      );
     };
 
-    this.objectStore = this.transaction.objectStore("favorites");
-    this.objectStore.add(data);
+    const objectStore = transaction.objectStore("favorites");
+    objectStore.add(data);
   }
 
-  deleteData(videoId: string) {
-    const transaction = DataBase.db.transaction("favorites", "readwrite");
+  public deleteData(videoId: string) {
+    const transaction = this.db.transaction("favorites", "readwrite");
 
     const objectStore = transaction.objectStore("favorites");
 
-    transaction.oncomplete = function (event: Event) {
-      console.log("transaction delete complete", event);
+    transaction.oncomplete = (event) => {
+      console.log("transaction deleteData complete");
     };
-    transaction.onerror = function (event: Event) {
-      console.log("transaction delete error", event);
+    transaction.onerror = (event) => {
+      // console.log("transaction error", event);
+      console.log(
+        "transaction deleteData error",
+        (event.target as IDBTransaction).error
+      );
     };
 
     // objectStore.delete(1);
@@ -138,45 +180,21 @@ export default class DataBase {
     //getall 보단 cursor로 1개씩 오픈하면서 비교하는게 좋을듯
     //처음 데이터 확인일때는 getall로 다가져오고
 
-    // const req = objectStore.openCursor();
-    // req.onsuccess = (event) => {
-    //   const cursor = (event.target as IDBRequest).result;
-    //   if (cursor) {
-    //     let key = cursor.primaryKey;
-    //     let value = cursor.value;
+    objectStore.openCursor().onsuccess = (event) => {
+      const cursor = (event.target as IDBRequest).result;
+      if (cursor) {
+        let key = cursor.primaryKey;
+        let value = cursor.value;
 
-    //     console.log(key, value);
-
-    //     // cursor.continue();
-    //   }
-    // };
+        // console.log(key, value.videoId);
+        if (value.videoId === videoId) {
+          objectStore.delete(key);
+        } else {
+          cursor.continue();
+        }
+      }
+    };
 
     // console.log(this.objectStore.indexNames);
-  }
-
-  createStore() {
-    this.request.onupgradeneeded = function (event) {
-      const db = (event.target as IDBOpenDBRequest).result;
-      console.log(typeof event.target);
-      const objectStore = db.createObjectStore("favorites", {
-        keyPath: "key",
-      });
-
-      objectStore.transaction.oncomplete = () => {
-        let favoritesObjectStore = db
-          .transaction("favorites", "readwrite")
-          .objectStore("customers");
-
-        favoritesObjectStore.add({ videoId: "231d" });
-      };
-    };
-    this.request.onsuccess = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      console.log("연결 성공");
-
-      // 트랜잭션 추가
-      const transaction = db.transaction(["favorites"], "readwrite");
-      const objectStore = transaction.objectStore("favorites");
-    };
   }
 }

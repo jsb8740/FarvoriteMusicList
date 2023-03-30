@@ -2,7 +2,7 @@
   <div class="listItem">
     <div class="thumbnail">
       <img :src="thumbnailURL" class="" />
-      <Heart class="favorite" />
+      <Heart class="favorite" :video-id="props.videoId" />
     </div>
 
     <!-- <img :src="item.snippet.thumbnails.default.url" /> -->
@@ -33,6 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
 const thumbnailURL = computed(
   () => `https://i.ytimg.com/vi/${props.videoId}/mqdefault.jpg`
 );
+
+// console.log("playlistitem", props.videoId);
 </script>
 
 <style scoped lang="scss">
@@ -40,12 +42,12 @@ const thumbnailURL = computed(
 .listItem {
   margin: 0 2rem;
   display: inline-block;
-  width: 120px;
+  width: 320px;
   .title {
     margin-top: 0.3rem;
     height: 1.5rem;
     overflow: hidden;
-    width: 1000px;
+    width: 320px;
   }
 
   .thumbnail {
@@ -55,7 +57,7 @@ const thumbnailURL = computed(
     }
     .favorite {
       position: absolute;
-      inset: 5% 70%;
+      inset: 5% 85%;
     }
   }
 }
