@@ -1,26 +1,42 @@
+export interface TableProperties {
+  name: string;
+  indexproperties: TableIndexProperties;
+}
+export interface TableIndexProperties {
+  name: string;
+  keypath: string;
+  options?: IDBIndexParameters;
+}
+
 export default class DataBase {
   private _db!: IDBDatabase;
-  private transaction!: IDBTransaction;
-  private objectStore!: IDBObjectStore;
 
-  private static instance: DataBase;
+  private static _instance: DataBase;
   testData = {
     videoId: ["VOUK-xFAyk", "KqFAs5d3Yl8"],
   };
 
   public static getInstance() {
-    if (!DataBase.instance) {
-      DataBase.instance = new DataBase();
+    if (!this._instance) {
+      this._instance = new DataBase();
     }
-    return DataBase.instance;
+    return this._instance;
   }
 
   constructor() {
     console.log("db 시작");
 
-    this.openDatabase("MusicListDB", 1.0).then((res) => {
-      this._db = res;
-    });
+    // this.openDatabase("MusicListDB", 1.0).then((res) => {
+    //   this._db = res;
+    // });
+    this.checkDB();
+  }
+
+  // 다른 함수 실행 할 때 이 함수를 실행해줘야함
+  private async checkDB() {
+    if (!this._db) {
+      this._db = await this.openDatabase("MusicListDB", 1.0);
+    }
   }
 
   private openDatabase(dbName: string, version: number) {
@@ -35,10 +51,10 @@ export default class DataBase {
       // dbOpen 성공시
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        // db.onversionchange = () => {
-        //   db.close();
-        //   alert("낮은 버전 DB 사용중 새로고침 해주세요!");
-        // };
+        db.onabort = () => {};
+        db.onclose = () => {};
+        db.onerror = () => {};
+        db.onversionchange = () => {};
 
         resolve(db);
       };
@@ -47,37 +63,53 @@ export default class DataBase {
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
 
-        // store 생성
+        // table 생성
         const store = db.createObjectStore("favorites", {
-          keyPath: "myKey",
+          keyPath: "id",
           autoIncrement: true,
         });
 
-        resolve(db);
+        store.createIndex("videoId", "videoId", {
+          unique: true,
+        });
+        // const properties: TableProperties = {
+        //   name: "favorites",
+        //   indexproperties: {
+        //     name: "videoId",
+        //     keypath: "videoId",
+        //     options: {
+        //       unique: true,
+        //     },
+        //   },
+        // };
+        // this.createTable(properties);
       };
     });
   }
 
-  private openDBDatabase() {}
+  // table 만드는 함수 index도 같이 만듦
+  public async createTable(options: TableProperties) {
+    await this.checkDB();
+    const store = this._db.createObjectStore(options.name, {
+      keyPath: "id",
+      autoIncrement: true,
+    });
+
+    const { indexproperties: index } = options;
+    store.createIndex(index.name, index.keypath, index.options);
+  }
 
   public getFavList(): unknown {
     return new Promise(async (resolve, reject) => {
-      // this.db = await this.openDatabase("favoritesDB", 3.0);
-      // console.log("checkDB", this.db);
-      if (!this._db) {
-        this._db = await this.openDatabase("MusicListDB", 1.0);
-      }
-
+      await this.checkDB();
       const transaction = this._db.transaction("favorites", "readwrite");
-
-      console.log(transaction);
-
+      // console.log(transaction);
       const objectStore = transaction.objectStore("favorites");
 
       const getRequest = objectStore.getAll();
       getRequest.onsuccess = (event) => {
         const dataList = (event.target as IDBOpenDBRequest).result;
-        console.log(dataList);
+        // console.log(dataList);
 
         resolve(dataList);
       };
