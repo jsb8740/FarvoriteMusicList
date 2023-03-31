@@ -1,5 +1,6 @@
 <template>
-  <div v-if="initialized" id="container">
+  <!-- <div v-if="initialized" id="container"> -->
+  <div id="container">
     <TheSide></TheSide>
     <TheView></TheView>
 
@@ -12,6 +13,11 @@ import TheSide from "./components/layouts/TheSide.vue";
 import TheView from "./components/layouts/TheView.vue";
 import { onMounted, ref } from "vue";
 import { Connector, type TableProperties } from "@/indexedDB/connector";
+import { useIndexedDBStore } from "@/stores/indexedDB";
+import { storeToRefs } from "pinia";
+
+const store = useIndexedDBStore();
+const { favSongList } = storeToRefs(store);
 
 const initialized = ref(false);
 
@@ -22,7 +28,8 @@ const tables = [
 ] as TableProperties[];
 
 onMounted(() => {
-  initialize();
+  // initialize();
+  store.getFavList();
 });
 
 const initialize = async () => {
@@ -40,6 +47,9 @@ const initializeIndexedDB = async () => {
     version: 1,
     sync: true,
   });
+
+  let database = await Connector.instance.getDatabase();
+  // database.transaction(
 };
 </script>
 
