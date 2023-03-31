@@ -3,13 +3,13 @@ import { defineStore } from "pinia";
 import DataBase from "@/indexedDB/index";
 
 export const useIndexedDBStore = defineStore("indexedDB", () => {
-  const favSongLists = ref();
+  const favSongList = ref();
   const webDB = DataBase.getInstance();
 
-  async function getFavLists() {
-    favSongLists.value = await webDB.getFavList();
-    console.log(favSongLists.value);
+  async function getFavList() {
+    favSongList.value = await webDB.getFavList();
+    console.log(favSongList.value);
   }
 
-  return { getFavLists, favSongLists };
+  return { getFavList, favSongList };
 });
