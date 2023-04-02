@@ -19,22 +19,34 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import DataBase from "@/indexedDB/index";
+import { useIndexedDBStore } from "@/stores/indexedDB";
+import { storeToRefs } from "pinia";
 export interface Props {
   videoId: string;
+}
+export interface DbField {
+  videoId: string;
+  id: number;
 }
 
 const props = defineProps<Props>();
 
+const store = useIndexedDBStore();
+const { favSongList } = storeToRefs(store);
+
 const dataBase = DataBase.getInstance();
 const favorite = ref(false);
-const t = () => {
-  favorite.value = dataBase.checkFavorite(props.videoId);
+
+const checkFavSong = () => {
+  favSongList.value.forEach((el: DbField) => {
+    // console.log(el.videoId);
+    if (el.videoId === props.videoId) favorite.value = true;
+  });
 };
 
 onMounted(() => {
   // console.log("heart", props.videoId);
-  // t();
-  // dataBase.getFavList();
+  checkFavSong();
 });
 
 const favoriteClick = () => {
