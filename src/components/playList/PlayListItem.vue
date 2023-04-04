@@ -2,19 +2,15 @@
   <div class="listItem">
     <div class="thumbnail">
       <img :src="thumbnailURL" class="" />
-      <Heart class="favorite" :video-id="props.videoId" />
+      <Heart :title="props.title" class="favorite" :video-id="props.videoId" />
     </div>
 
     <!-- <img :src="item.snippet.thumbnails.default.url" /> -->
     <div class="title">
-      <slot name="title"
-        >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum quam
-        officia iure asperiores maiores perspiciatis quia ex possimus
-        consequatur dignissimos? Aperiam mollitia cumque recusandae veritatis
-        veniam nulla libero maiores quae.</slot
-      >
+      {{ props.title }}
     </div>
 
+    <div id="test"></div>
     <!-- <div class="byWriter">
       <slot name="by">by test</slot>
     </div> -->
@@ -23,10 +19,12 @@
 
 <script setup lang="ts">
 import Heart from "@/components/icons/Heart.vue";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 export interface Props {
   videoId: string;
+  title: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   videoId: "undefined",
 });
@@ -34,7 +32,8 @@ const thumbnailURL = computed(
   () => `https://i.ytimg.com/vi/${props.videoId}/mqdefault.jpg`
 );
 
-// console.log("playlistitem", props.videoId);
+const test = ref(null);
+onMounted(() => {});
 </script>
 
 <style scoped lang="scss">
