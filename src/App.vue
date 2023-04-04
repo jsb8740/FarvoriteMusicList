@@ -29,7 +29,7 @@ const tables = [
 
 onMounted(() => {
   // initialize();
-  store.getFavList();
+  store.updateFavList();
 });
 
 const initialize = async () => {
