@@ -72,6 +72,7 @@ export default class DataBase {
         store.createIndex("videoId", "videoId", {
           unique: true,
         });
+        store.createIndex("title", "title");
         // const properties: TableProperties = {
         //   name: "favorites",
         //   indexproperties: {
@@ -163,9 +164,10 @@ export default class DataBase {
     return check;
   }
 
-  public addData(videoId: string) {
+  public addData(videoId: string, title: string) {
     const data = {
       videoId,
+      title,
     };
 
     // console.log("add test", data);
@@ -202,22 +204,6 @@ export default class DataBase {
       );
     };
 
-    // objectStore.delete(1);
-    // const t = objectStore.getKey("2");
-    // t.onsuccess = (event) => {
-    //   const key = (event.target as IDBOpenDBRequest).result;
-    //   console.log(key);
-    // };
-
-    // const t = objectStore.getAll();
-    // t.onsuccess = (event) => {
-    //   const dd = (event.target as IDBOpenDBRequest).result;
-    //   console.log(dd);
-    // };
-
-    //getall 보단 cursor로 1개씩 오픈하면서 비교하는게 좋을듯
-    //처음 데이터 확인일때는 getall로 다가져오고
-
     objectStore.openCursor().onsuccess = (event) => {
       const cursor = (event.target as IDBRequest).result;
       if (cursor) {
@@ -232,7 +218,5 @@ export default class DataBase {
         }
       }
     };
-
-    // console.log(this.objectStore.indexNames);
   }
 }
