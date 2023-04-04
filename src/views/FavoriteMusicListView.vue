@@ -3,16 +3,15 @@
     <template #default>
       <h2>Favorite Musics</h2>
       <div>
-        <!-- <MusicItem></MusicItem>
-        <MusicItem></MusicItem> -->
-        <PlayListItem v-for="item in favSongList" :video-id="item.videoId">
+        <PlayListItem
+          v-for="item in favSongList"
+          :video-id="item.videoId"
+          :title="item.title"
+        >
         </PlayListItem>
-        <!-- <div v-for="item in favSongList">
-            {{ item.videoId }}
-          </div> -->
       </div>
 
-      <!-- Music Itme을 2초 정도 누르면 드래그앤 드롭이 가능하게끔 -->
+      <AppYoutube></AppYoutube>
     </template>
   </TheViewLayout>
 </template>
@@ -23,12 +22,13 @@ import PlayListItem from "@/components/playList/PlayListItem.vue";
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
+import AppYoutube from "@/components/common/AppYoutube.vue";
 
 const store = useIndexedDBStore();
 const { favSongList } = storeToRefs(store);
 
 onMounted(() => {
-  store.getFavList();
+  store.updateFavList();
   // console.log(favSongList.value);
 });
 </script>

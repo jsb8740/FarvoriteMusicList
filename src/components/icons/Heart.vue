@@ -17,12 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, inject } from "vue";
 import DataBase from "@/indexedDB/index";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { storeToRefs } from "pinia";
 export interface Props {
   videoId: string;
+  title: string;
 }
 export interface DbField {
   videoId: string;
@@ -34,7 +35,7 @@ const props = defineProps<Props>();
 const store = useIndexedDBStore();
 const { favSongList } = storeToRefs(store);
 
-const dataBase = DataBase.getInstance();
+// const dataBase = DataBase.getInstance();
 const favorite = ref(false);
 
 const checkFavSong = () => {
@@ -45,6 +46,7 @@ const checkFavSong = () => {
 };
 
 onMounted(() => {
+  favorite.value = false;
   // console.log("heart", props.videoId);
   checkFavSong();
 });
@@ -54,10 +56,13 @@ const favoriteClick = () => {
 
   //클릭을 했는데 추가인 상태이면
   if (favorite.value === true) {
-    dataBase.addData(props.videoId);
+    store.addSong(props.videoId, props.title);
   } else {
     //클릭을 했는데 해제하는 상태
-    dataBase.deleteData(props.videoId);
+    store.removeSong(props.videoId);
+    // store.updateFavList();
+    checkFavSong();
+    store.updateFavList();
   }
 };
 const favoriteColorCheck = computed(() =>
