@@ -11,13 +11,11 @@
         <PlayListItem
           v-for="(item, index) in searchResult?.data.items"
           :video-id="item.id.videoId"
+          :title="item.snippet.title"
         >
           <!-- <template #thumbnail>
           :width="item.snippet.thumbnails.thumbnails.width"  
           </template> -->
-          <template #title>
-            {{ item.snippet.title }}
-          </template>
         </PlayListItem>
       </template>
 
@@ -45,7 +43,7 @@ import PlayListItem from "@/components/playList/PlayListItem.vue";
 import { useSearchStore } from "@/stores/search";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { onMounted, onUpdated, computed } from "vue";
+import { onMounted, onUpdated, computed, provide } from "vue";
 
 const store = useSearchStore();
 const { searchResult } = storeToRefs(store);
