@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@types/youtube": "^0.0.47",
     "axios": "^1.3.4",
     "pinia": "^2.0.28",
     "sass": "^1.58.3",
