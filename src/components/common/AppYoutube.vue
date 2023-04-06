@@ -10,6 +10,7 @@ import { storeToRefs } from "pinia";
 
 export interface Props {
   videoId: string;
+  test: YT.PlayerState;
 }
 
 const store = useMusicControllerStore();
@@ -31,9 +32,7 @@ class youtubePlayer {
       this.scriptLoad();
 
       window.onYouTubeIframeAPIReady = () => {
-        // resolve(window.YT);
-        this.createPlayer();
-        resolve("d");
+        resolve(window.YT);
       };
     });
   }
@@ -62,6 +61,9 @@ class youtubePlayer {
     }
   }
 
+  private onPlayerStateChange(event: YT.OnStateChangeEvent) {
+    console.log("stateChange");
+  }
   // class에서는 arrow function 안쓰는게 좋음
   private onPlayerReady(event: YT.PlayerEvent) {
     // console.log("event", event.target);
@@ -83,6 +85,9 @@ class youtubePlayer {
     this.player?.setVolume(volume);
   }
 
+  private setPaused() {
+    this.player?.pauseVideo();
+  }
   async createPlayer() {
     await this.loadIFrame();
 
@@ -92,11 +97,34 @@ class youtubePlayer {
       videoId: "iqe220lkJzc",
       events: {
         onReady: this.onPlayerReady,
-        onStateChange: () => {},
+        onStateChange: this.onPlayerStateChange,
       },
     });
   }
+
+  updatedVideo(state: string) {
+    switch (state) {
+      case "paused":
+        // this.setPaused(paused);
+        break;
+      case "muted":
+        this.setMute(muteFlag.value);
+        break;
+      case "volume":
+        this.setVolume(volume.value);
+        break;
+      case "videoId":
+        // this.player?.loadVideoById({ videoId });
+        break;
+      default:
+        break;
+    }
+  }
 }
+
+watch(volume, (newValue) => {
+  player.updatedVideo("volume");
+});
 // const init = async () => {
 //   const YT = await loadIFrame();
 //   test.value = new YT.Player("test", {
@@ -128,9 +156,10 @@ function stopVideo() {
   (test.value as any).stopVideo();
 }
 
+const player = new youtubePlayer();
 onMounted(() => {
   // init();
-  const player = new youtubePlayer();
+
   player.createPlayer();
 });
 
