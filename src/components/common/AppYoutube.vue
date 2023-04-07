@@ -1,6 +1,6 @@
 <template>
-  <!-- <div id="player" class="player"></div> -->
-  <div ref="test" id="test"></div>
+  <div id="player" class="player"></div>
+  <!-- <div ref="test" id="test"></div> -->
 </template>
 
 <script setup lang="ts">
@@ -10,13 +10,12 @@ import { storeToRefs } from "pinia";
 
 export interface Props {
   videoId: string;
-  test: YT.PlayerState;
 }
 
 const store = useMusicControllerStore();
-const { volume, muteFlag } = storeToRefs(store);
+const { volume, muteFlag, isPaused } = storeToRefs(store);
 
-const test = ref(null);
+// const test = ref(null);
 
 class youtubePlayer {
   private player?: YT.Player;
@@ -25,9 +24,8 @@ class youtubePlayer {
   constructor() {
     // binding
     this.onPlayerReady = this.onPlayerReady.bind(this);
-    this.loadIFrame();
   }
-  private loadIFrame() {
+  loadIFrame() {
     return new Promise<any>((resolve, reject) => {
       this.scriptLoad();
 
@@ -66,12 +64,9 @@ class youtubePlayer {
   }
   // class에서는 arrow function 안쓰는게 좋음
   private onPlayerReady(event: YT.PlayerEvent) {
-    // console.log("event", event.target);
-
-    // console.log("test", this.test);
-
     this.setVolume(volume.value);
     this.setMute(muteFlag.value);
+    console.log(isPaused.value);
     // this.player?.playVideo();
   }
   private setMute(muteType: MuteState) {
@@ -85,15 +80,26 @@ class youtubePlayer {
     this.player?.setVolume(volume);
   }
 
-  private setPaused() {
-    this.player?.pauseVideo();
+  private setPaused(isPaused: boolean) {
+    if (isPaused) {
+      this.player?.pauseVideo();
+    } else {
+      this.player?.playVideo();
+    }
   }
+
+  getCurrentTime() {
+    setInterval(() => {
+      console.log(this.player?.getCurrentTime());
+    }, 1000);
+  }
+
   async createPlayer() {
     await this.loadIFrame();
 
-    this.player = new YT.Player("test", {
-      height: "360",
-      width: "640",
+    this.player = new YT.Player("player", {
+      height: "105",
+      width: "200",
       videoId: "iqe220lkJzc",
       events: {
         onReady: this.onPlayerReady,
@@ -105,7 +111,7 @@ class youtubePlayer {
   updatedVideo(state: string) {
     switch (state) {
       case "paused":
-        // this.setPaused(paused);
+        this.setPaused(isPaused.value);
         break;
       case "muted":
         this.setMute(muteFlag.value);
@@ -122,52 +128,42 @@ class youtubePlayer {
   }
 }
 
-watch(volume, (newValue) => {
+watch([volume, isPaused], (newValue) => {
+  console.log("watch");
+
   player.updatedVideo("volume");
+  player.updatedVideo("paused");
 });
-// const init = async () => {
-//   const YT = await loadIFrame();
-//   test.value = new YT.Player("test", {
-//     height: "360",
-//     width: "640",
-//     videoId: "iqe220lkJzc",
-//     events: {
-//       onReady: onPlayerReady,
-//       onStateChange: onPlayerStateChange,
-//     },
-//   });
-// };
-
-function onPlayerReady(event: Record<string, any>) {
-  console.log(typeof event);
-  event.target.setVolume(volume.value);
-  event.target.playVideo();
-}
-var done = false;
-function onPlayerStateChange(event: Record<string, any>) {
-  console.log(typeof event);
-
-  if (event.data == window.YT.PlayerState.PLAYING && !done) {
-    setTimeout(stopVideo, 10000);
-    done = true;
-  }
-}
-function stopVideo() {
-  (test.value as any).stopVideo();
-}
 
 const player = new youtubePlayer();
 onMounted(() => {
   // init();
-
+  player.loadIFrame();
   player.createPlayer();
+  // player.getCurrentTime();
+  // 추가 할것
+  /*
+    isPause가 false
+    setinterval ㄱㄱ
+    ispause가 true면
+    clearinterval
+    
+    store에 time변수를 추가하거나
+    emit으로 위로 올려보내기
+
+    player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
+    로 지정한 시간 이동
+
+    soundcontroll의 작동방식이랑
+    videoProgressBar랑 같은 작동 방식으로 
+    class extends 느낌?
+    
+    그리고 store의 musiccontroll를
+    youtube 폴더 밑의
+    videoControll
+    soundControll로 분리
+  */
 });
-
-// watch(volume, (newValue) => {
-//   console.log(newValue);
-
-//   player.setVolume(newValue);
-// });
 </script>
 
 <style scoped lang="scss">
