@@ -11,7 +11,7 @@
         </PlayListItem>
       </div>
 
-      <AppYoutube></AppYoutube>
+      <!-- <AppYoutube></AppYoutube> -->
     </template>
   </TheViewLayout>
 </template>

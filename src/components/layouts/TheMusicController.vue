@@ -6,7 +6,8 @@
 
     <div class="musicPlayer">
       <div class="musicInfo">
-        <img src="@/assets/test/test1.jpg" alt="" />
+        <!-- <img src="@/assets/test/test1.jpg" alt="" /> -->
+        <AppYoutube></AppYoutube>
 
         <div class="music">
           <!-- 전광판 효과 추가 -->
@@ -31,6 +32,7 @@
 import Heart from "../icons/Heart.vue";
 import MusicPlayer from "../musicController/MusicPlayer.vue";
 import SoundController from "../musicController/SoundController.vue";
+import AppYoutube from "@/components/common/AppYoutube.vue";
 </script>
 
 <style scoped lang="scss">
