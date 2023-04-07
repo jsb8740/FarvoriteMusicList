@@ -2,7 +2,7 @@
   <div class="player">
     <img src="@/assets/player/playerSkipBack.png" alt="" srcset="" />
 
-    <button class="playerPause" @click="changeMusicState">
+    <button class="playerPause" @click="store.changePauseState">
       <img v-show="startBtn" src="@/assets/player/playerPause.png" />
       <img v-show="pauseBtn" src="@/assets/player/playerPlay.png" />
     </button>
@@ -12,15 +12,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useMusicControllerStore } from "@/stores/musicController";
+import { storeToRefs } from "pinia";
 
+const store = useMusicControllerStore();
+const { isPaused } = storeToRefs(store);
 //true 음악 시작 상태
-const musicState = ref(true);
-const changeMusicState = () => {
-  musicState.value = !musicState.value;
-};
 
-const startBtn = computed<boolean>(() => (musicState.value ? false : true));
-const pauseBtn = computed<boolean>(() => (musicState.value ? true : false));
+const startBtn = computed<boolean>(() => (isPaused.value ? false : true));
+const pauseBtn = computed<boolean>(() => (isPaused.value ? true : false));
 </script>
 
 <style scoped lang="scss">
