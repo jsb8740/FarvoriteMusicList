@@ -10,11 +10,15 @@ export const useMusicControllerStore = defineStore("music", () => {
   const volume = ref(100);
   const volumeTmp = ref(0); // 뮤트인 경우 볼륨을 담는 임시변수 뮤트끝나면 복귀시키는 용도
   const muteFlag = ref(MuteState.UN_MUTE); //뮤트 확인  플래그
+  const isPaused = ref(true); // 음악 시작 state
+  const currentTime = ref(1);
+
+  const changePauseState = () => {
+    isPaused.value = !isPaused.value;
+  };
 
   // 사운드 이미지 클릭시 소리 mute
   const soundMute = () => {
-    // muteFlag.value = !muteFlag.value;
-
     if (muteFlag.value === MuteState.MUTE) {
       // UN_MUTE인 상태
       muteFlag.value = MuteState.UN_MUTE;
@@ -84,6 +88,7 @@ export const useMusicControllerStore = defineStore("music", () => {
     return 0;
   };
 
+  // private function
   //볼륨 0, 100 밖으로 안벗어나게
   const volumeLimit = () => {
     if (volume.value < 0) {
@@ -112,9 +117,11 @@ export const useMusicControllerStore = defineStore("music", () => {
   return {
     volume,
     muteFlag,
+    isPaused,
     soundMute,
     updateVolume,
     volumeInit,
     volumeUpDownHandler,
+    changePauseState,
   };
 });
