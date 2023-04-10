@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useMusicControllerStore } from "@/stores/musicController";
 import { storeToRefs } from "pinia";
+import { useMusicControllerStore } from "@/stores/musicController";
 
 const store = useMusicControllerStore();
 const { isPaused } = storeToRefs(store);
