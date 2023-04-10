@@ -7,6 +7,11 @@
           <PlayListItem></PlayListItem>
           <PlayListItem></PlayListItem>
           <PlayListItem></PlayListItem> -->
+          <div>
+            <AppProgressBar type="music-palyer"></AppProgressBar>
+            <br />
+            <AppProgressBar type="sound"></AppProgressBar>
+          </div>
         </PlayList>
       </div>
     </template>
@@ -18,6 +23,7 @@ import TheViewLayout from "@/components/layouts/TheViewLayout.vue";
 import PlayListItem from "@/components/playList/PlayListItem.vue";
 import PlayList from "@/components/playList/PlayList.vue";
 import SoundController from "@/components/musicController/SoundController.vue";
+import AppProgressBar from "@/components/common/AppProgressBar.vue";
 </script>
 <style scoped lang="scss">
 img {
