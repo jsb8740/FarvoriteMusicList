@@ -5,23 +5,27 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { useMusicControllerStore, MuteState } from "@/stores/musicController";
+import {
+  useSoundControllerStore,
+  MuteState,
+} from "@/stores/soundController.js";
 import { storeToRefs } from "pinia";
-import { is } from "@babel/types";
+import { useMusicControllerStore } from "@/stores/musicController";
 
 export interface Props {
   videoId: string;
 }
 
-const store = useMusicControllerStore();
-const { volume, muteFlag, isPaused } = storeToRefs(store);
-
+const soundStore = useSoundControllerStore();
+const { volume, muteFlag } = storeToRefs(soundStore);
+const musicPlayStore = useMusicControllerStore();
+const { isPaused, duration, clickedTime, currentTime } =
+  storeToRefs(musicPlayStore);
 // const test = ref(null);
 
 class youtubePlayer {
   player?: YT.Player;
   currentTimeInterval?: number;
-  videoLength?: number;
 
   constructor() {
     // binding
@@ -63,6 +67,7 @@ class youtubePlayer {
 
   private onPlayerStateChange(event: YT.OnStateChangeEvent) {
     console.log("stateChange");
+    // console.log(musicPlayStore.dynamicMusicdWidth);
   }
   // class에서는 arrow function 안쓰는게 좋음
   private onPlayerReady(event: YT.PlayerEvent) {
@@ -70,8 +75,7 @@ class youtubePlayer {
     this.setMute(muteFlag.value);
     // console.log(isPaused.value);
     console.log(this.player?.getDuration());
-    this.videoLength = this.player?.getDuration();
-
+    duration.value = this.player?.getDuration() as number;
     // this.player?.playVideo();
   }
   private setMute(muteType: MuteState) {
@@ -96,7 +100,7 @@ class youtubePlayer {
   getCurrentTime() {
     console.log("currentTime", isPaused.value);
     this.currentTimeInterval = setInterval(() => {
-      console.log(this.player?.getCurrentTime());
+      this.player?.getCurrentTime();
     }, 1000);
 
     if (isPaused.value == false) {
@@ -134,6 +138,9 @@ class youtubePlayer {
       case "videoId":
         // this.player?.loadVideoById({ videoId });
         break;
+      case "videoTime":
+        this.player?.seekTo(currentTime.value, true);
+        break;
       default:
         break;
     }
@@ -149,7 +156,7 @@ watch(isPaused, (newValue) => {
       console.log(player.player?.getCurrentTime());
 
       // 3.5.. 이렇게 오기에 올림으로 보내줌
-      store.setCurrentTitme(
+      musicPlayStore.setCurrentTitme(
         Math.ceil(player.player?.getCurrentTime() as number)
       );
     }, 1000);
@@ -166,6 +173,11 @@ watch([volume, isPaused], (newValue) => {
   player.updatedVideo("paused");
 });
 
+// video update
+watch(clickedTime, (newValue) => {
+  player.updatedVideo("videoTime");
+});
+
 const player = new youtubePlayer();
 onMounted(() => {
   // init();
@@ -177,9 +189,9 @@ onMounted(() => {
     isPause가 false
     setinterval ㄱㄱ
     ispause가 true면
-    clearinterval 
+    clearinterval
     --OK--
-    
+
     store에 time변수를 추가하거나
     emit으로 위로 올려보내기
 
@@ -187,9 +199,9 @@ onMounted(() => {
     로 지정한 시간 이동
 
     soundcontroll의 작동방식이랑
-    videoProgressBar랑 같은 작동 방식으로 
+    videoProgressBar랑 같은 작동 방식으로
     class extends 느낌?
-    
+
     그리고 store의 musiccontroll를
     youtube 폴더 밑의
     videoControll
