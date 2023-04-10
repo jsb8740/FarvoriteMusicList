@@ -7,6 +7,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useMusicControllerStore, MuteState } from "@/stores/musicController";
 import { storeToRefs } from "pinia";
+import { is } from "@babel/types";
 
 export interface Props {
   videoId: string;
@@ -18,9 +19,10 @@ const { volume, muteFlag, isPaused } = storeToRefs(store);
 // const test = ref(null);
 
 class youtubePlayer {
-  private player?: YT.Player;
+  player?: YT.Player;
+  currentTimeInterval?: number;
+  videoLength?: number;
 
-  private test = 3;
   constructor() {
     // binding
     this.onPlayerReady = this.onPlayerReady.bind(this);
@@ -66,7 +68,10 @@ class youtubePlayer {
   private onPlayerReady(event: YT.PlayerEvent) {
     this.setVolume(volume.value);
     this.setMute(muteFlag.value);
-    console.log(isPaused.value);
+    // console.log(isPaused.value);
+    console.log(this.player?.getDuration());
+    this.videoLength = this.player?.getDuration();
+
     // this.player?.playVideo();
   }
   private setMute(muteType: MuteState) {
@@ -89,9 +94,16 @@ class youtubePlayer {
   }
 
   getCurrentTime() {
-    setInterval(() => {
+    console.log("currentTime", isPaused.value);
+    this.currentTimeInterval = setInterval(() => {
       console.log(this.player?.getCurrentTime());
     }, 1000);
+
+    if (isPaused.value == false) {
+    } else if (isPaused.value) {
+      // isPaused가 ture이면 clear
+      clearInterval(this.currentTimeInterval);
+    }
   }
 
   async createPlayer() {
@@ -128,6 +140,25 @@ class youtubePlayer {
   }
 }
 
+// update current Time
+watch(isPaused, (newValue) => {
+  if (newValue) {
+    clearInterval(player.currentTimeInterval);
+  } else {
+    player.currentTimeInterval = setInterval(() => {
+      console.log(player.player?.getCurrentTime());
+
+      // 3.5.. 이렇게 오기에 올림으로 보내줌
+      store.setCurrentTitme(
+        Math.ceil(player.player?.getCurrentTime() as number)
+      );
+    }, 1000);
+
+    player.player?.getDuration();
+  }
+});
+
+// volume update
 watch([volume, isPaused], (newValue) => {
   console.log("watch");
 
@@ -146,7 +177,8 @@ onMounted(() => {
     isPause가 false
     setinterval ㄱㄱ
     ispause가 true면
-    clearinterval
+    clearinterval 
+    --OK--
     
     store에 time변수를 추가하거나
     emit으로 위로 올려보내기
@@ -162,6 +194,9 @@ onMounted(() => {
     youtube 폴더 밑의
     videoControll
     soundControll로 분리
+
+    player.getPlayerState로 종료가 뜨면
+    다음 곡으로 이동
   */
 });
 </script>
