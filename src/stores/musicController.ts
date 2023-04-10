@@ -11,7 +11,11 @@ export const useMusicControllerStore = defineStore("music", () => {
   const volumeTmp = ref(0); // 뮤트인 경우 볼륨을 담는 임시변수 뮤트끝나면 복귀시키는 용도
   const muteFlag = ref(MuteState.UN_MUTE); //뮤트 확인  플래그
   const isPaused = ref(true); // 음악 시작 state
-  const currentTime = ref(1);
+  const currentTime = ref(0);
+
+  const setCurrentTitme = (nowTime: number) => {
+    currentTime.value = nowTime;
+  };
 
   const changePauseState = () => {
     isPaused.value = !isPaused.value;
@@ -118,10 +122,12 @@ export const useMusicControllerStore = defineStore("music", () => {
     volume,
     muteFlag,
     isPaused,
+    currentTime,
     soundMute,
     updateVolume,
     volumeInit,
     volumeUpDownHandler,
     changePauseState,
+    setCurrentTitme,
   };
 });
