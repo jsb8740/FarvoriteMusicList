@@ -6,7 +6,7 @@
       <img v-show="soundHighImg" src="@/assets/volumeHigh-white.png" />
     </button>
 
-    <div class="soundWrap">
+    <div class="soundWrap" @wheel.prevent.stop>
       <div
         class="soundBar"
         @mousedown="onMouseClick"
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useMusicControllerStore } from "@/stores/musicController";
+import { useSoundControllerStore } from "@/stores/soundController.js";
 import { storeToRefs } from "pinia";
 
 enum VolumeControllerState {
@@ -29,7 +29,7 @@ enum VolumeControllerState {
   DRAGGING,
 }
 
-const store = useMusicControllerStore();
+const store = useSoundControllerStore();
 const { volume } = storeToRefs(store);
 
 onMounted(() => {
