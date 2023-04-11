@@ -140,6 +140,9 @@ class youtubePlayer {
         break;
       case "videoTime":
         this.player?.seekTo(currentTime.value, true);
+        if (isPaused.value) {
+          this.setPaused(isPaused.value);
+        }
         break;
       default:
         break;
@@ -183,6 +186,7 @@ onMounted(() => {
   // init();
   player.loadIFrame();
   player.createPlayer();
+
   // player.getCurrentTime();
   // 추가 할것
   /*
@@ -196,16 +200,16 @@ onMounted(() => {
     emit으로 위로 올려보내기
 
     player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
-    로 지정한 시간 이동
+    로 지정한 시간 이동 ok
 
     soundcontroll의 작동방식이랑
     videoProgressBar랑 같은 작동 방식으로
-    class extends 느낌?
+    class extends 느낌? ok
 
     그리고 store의 musiccontroll를
     youtube 폴더 밑의
     videoControll
-    soundControll로 분리
+    soundControll로 분리 ok
 
     player.getPlayerState로 종료가 뜨면
     다음 곡으로 이동
