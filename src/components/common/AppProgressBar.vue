@@ -14,7 +14,6 @@
 <script setup lang="ts">
 import { useMusicControllerStore } from "@/stores/musicController";
 import { useSoundControllerStore } from "@/stores/soundController.js";
-import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 export interface Props {
@@ -87,19 +86,13 @@ const onMouseMove = (e: MouseEvent) => {
 <style scoped lang="scss">
 @import "@/assets/color.scss";
 
-.soundController {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem;
-}
-
 .progressWrap {
   overflow: hidden;
   position: relative;
   width: 200px;
   height: 12px;
   cursor: pointer;
+  margin: 0.3rem;
 
   $radius: 0.5rem;
   .progressBar {
