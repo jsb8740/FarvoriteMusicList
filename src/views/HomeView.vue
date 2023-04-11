@@ -11,6 +11,8 @@
             <AppProgressBar type="music-palyer"></AppProgressBar>
             <br />
             <AppProgressBar type="sound"></AppProgressBar>
+            <br />
+            <MusicListShuffleVue></MusicListShuffleVue>
           </div>
         </PlayList>
       </div>
@@ -24,6 +26,7 @@ import PlayListItem from "@/components/playList/PlayListItem.vue";
 import PlayList from "@/components/playList/PlayList.vue";
 import SoundController from "@/components/musicController/SoundController.vue";
 import AppProgressBar from "@/components/common/AppProgressBar.vue";
+import MusicListShuffleVue from "@/components/musicController/MusicListShuffle.vue";
 </script>
 <style scoped lang="scss">
 img {
