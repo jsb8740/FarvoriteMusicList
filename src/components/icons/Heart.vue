@@ -28,6 +28,7 @@ export interface Props {
 export interface DbField {
   videoId: string;
   id: number;
+  title: string;
 }
 
 const props = defineProps<Props>();
@@ -61,9 +62,11 @@ const favoriteClick = () => {
     //클릭을 했는데 해제하는 상태
     store.removeSong(props.videoId);
     // store.updateFavList();
-    checkFavSong();
+
     store.updateFavList();
   }
+  checkFavSong();
+  // 2번체크해야 사라지는 걸 고처야함
 };
 const favoriteColorCheck = computed(() =>
   favorite.value ? "#ef7330" : "#fff"
