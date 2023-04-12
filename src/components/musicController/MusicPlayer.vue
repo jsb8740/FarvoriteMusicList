@@ -1,12 +1,12 @@
 <template>
   <div class="player">
-    <img src="@/assets/player/playerSkipBack.png" alt="" srcset="" />
+    <img src="@/assets/player/playerSkipBack.png" @click="prev" />
 
     <button class="playerPause" @click="store.changePauseState">
       <img v-show="startBtn" src="@/assets/player/playerPause.png" />
       <img v-show="pauseBtn" src="@/assets/player/playerPlay.png" />
     </button>
-    <img src="@/assets/player/playerSkipForward.png" />
+    <img src="@/assets/player/playerSkipForward.png" @click="next" />
   </div>
 </template>
 
@@ -21,6 +21,14 @@ const { isPaused } = storeToRefs(store);
 
 const startBtn = computed<boolean>(() => (isPaused.value ? false : true));
 const pauseBtn = computed<boolean>(() => (isPaused.value ? true : false));
+
+const next = () => {
+  console.log(store.nextIndex());
+};
+
+const prev = () => {
+  console.log(store.previousIndex());
+};
 </script>
 
 <style scoped lang="scss">
