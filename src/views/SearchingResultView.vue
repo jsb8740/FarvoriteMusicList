@@ -1,21 +1,16 @@
 <template>
   <TheViewLayout>
     <template #default>
-      <!-- <img src="https://i.ytimg.com/vi/U5TTMeIadME/default.jpg" /> -->
-      <!-- {{ searchResult }} -->
-      <template v-if="!searchResult">
-        test
-        <!-- <PlayListItem></PlayListItem> -->
-      </template>
+      <template v-if="!searchResult"> test </template>
       <template v-else>
+        <!-- 다른노래 검색시 item이 rerendering이 안되는 이슈 -->
+        <!-- key값을 줘서 해결 -->
         <PlayListItem
-          v-for="(item, index) in searchResult?.data.items"
+          v-for="item in searchResult?.data.items"
+          :key="item.id.videoId"
           :video-id="item.id.videoId"
           :title="item.snippet.title"
         >
-          <!-- <template #thumbnail>
-          :width="item.snippet.thumbnails.thumbnails.width"  
-          </template> -->
         </PlayListItem>
       </template>
 
@@ -24,15 +19,6 @@
       <!-- 시간도 뮤직 컨트롤로에만 있게 -->
       <!-- 한줄에 3개씩? 4개씩 -->
       <!-- 무한 스크롤 -->
-
-      <!-- <PlayListItem v-for="(item, index) in searchResult?.data.items">
-        <template #thumbnail>
-          <img :src="item.snippet.thumbnails.default.url" />
-        </template>
-        <template #title>
-          {{ item.snippet.title }}
-        </template>
-      </PlayListItem> -->
     </template>
   </TheViewLayout>
 </template>
