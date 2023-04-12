@@ -9,13 +9,37 @@ export const useMusicControllerStore = defineStore("play", () => {
   const clickedTime = ref(0);
   const playList = ref<string[]>([]);
   const indexedDBStore = useIndexedDBStore();
+  const currentIndex = ref(0);
+  // 재생버튼 누를시 inpoutPlayList로 세팅을하고
+  // index 0번 나옴
 
+  // computed
   const dynamicMusicdWidth = computed(
     () => `${Math.round((currentTime.value / duration.value) * 100)}%`
   );
+  // methods
+  const nextIndex = () => {
+    currentIndex.value++;
+    if (
+      playList.value.length === currentIndex.value ||
+      playList.value.length === 0
+    ) {
+      currentIndex.value = 0;
+    }
+    // return playList.value[currentIndex.value];
+  };
+
+  const previousIndex = () => {
+    currentIndex.value--;
+    if (currentIndex.value < 0) {
+      currentIndex.value = playList.value.length - 1;
+    }
+
+    // return playList.value[currentIndex.value];
+  };
 
   const inputPlayList = async () => {
-    playList.value = await indexedDBStore.getPlayList;
+    playList.value = await indexedDBStore.getPlayList();
     console.log(playList.value);
   };
   const shufflePlaylist = () => {
@@ -38,7 +62,8 @@ export const useMusicControllerStore = defineStore("play", () => {
       shuffleArray.push(sliceValue);
     }
 
-    console.log(shuffleArray);
+    playList.value = shuffleArray;
+    console.log("shuffle", playList.value);
   };
 
   const setCurrentTitme = (nowTime: number) => {
@@ -65,6 +90,10 @@ export const useMusicControllerStore = defineStore("play", () => {
     isPaused,
     duration,
     dynamicMusicdWidth,
+    currentIndex,
+    playList,
+    previousIndex,
+    nextIndex,
     setCurrentTitme,
     changePauseState,
     updateTime,
