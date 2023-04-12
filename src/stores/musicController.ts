@@ -66,6 +66,10 @@ export const useMusicControllerStore = defineStore("play", () => {
     console.log("shuffle", playList.value);
   };
 
+  const setDuration = (fullTime: number) => {
+    duration.value = fullTime;
+  };
+
   const setCurrentTitme = (nowTime: number) => {
     currentTime.value = nowTime;
   };
@@ -95,6 +99,7 @@ export const useMusicControllerStore = defineStore("play", () => {
     previousIndex,
     nextIndex,
     setCurrentTitme,
+    setDuration,
     changePauseState,
     updateTime,
     shufflePlaylist,
