@@ -1,12 +1,20 @@
 <template>
   <div class="player">
-    <img src="@/assets/player/playerSkipBack.png" @click="prev" />
+    <img
+      src="@/assets/player/playerSkipBack.png"
+      @click="prev"
+      class="moveSong"
+    />
 
     <button class="playerPause" @click="store.changePauseState">
       <img v-show="startBtn" src="@/assets/player/playerPause.png" />
       <img v-show="pauseBtn" src="@/assets/player/playerPlay.png" />
     </button>
-    <img src="@/assets/player/playerSkipForward.png" @click="next" />
+    <img
+      src="@/assets/player/playerSkipForward.png"
+      @click="next"
+      class="moveSong"
+    />
   </div>
 </template>
 
@@ -41,6 +49,9 @@ $imgSize: 2.3rem;
   //   background-color: grey;
   gap: 3rem;
   //   position: absolute;
+  .moveSong {
+    cursor: pointer;
+  }
 
   .playerPause {
     width: $imgSize;
