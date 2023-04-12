@@ -6,8 +6,11 @@
     </div>
 
     <!-- <img :src="item.snippet.thumbnails.default.url" /> -->
+
+    <!-- css 변경 -->
+    <!-- 가로로 흐르는 텍스트 구현하기 -->
     <div class="title">
-      {{ props.title }}
+      <div v-html="props.title" />
     </div>
 
     <div id="test"></div>
@@ -32,7 +35,6 @@ const thumbnailURL = computed(
   () => `https://i.ytimg.com/vi/${props.videoId}/mqdefault.jpg`
 );
 
-const test = ref(null);
 onMounted(() => {});
 </script>
 
