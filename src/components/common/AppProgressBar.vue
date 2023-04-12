@@ -8,6 +8,8 @@
       @wheel="onMouseWheel"
       :style="{ '--progressWidth': typeWidth }"
     ></div>
+
+    <!-- 애니메이션 css가 필요할듯함 -->
   </div>
 </template>
 
