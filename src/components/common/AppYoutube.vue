@@ -21,180 +21,171 @@ const { volume, muteFlag } = storeToRefs(soundStore);
 const musicPlayStore = useMusicControllerStore();
 const { isPaused, duration, clickedTime, currentTime, currentIndex, playList } =
   storeToRefs(musicPlayStore);
-// const test = ref(null);
 
-class youtubePlayer {
-  player?: YT.Player;
-  currentTimeInterval?: number;
+let player: YT.Player;
+let currentTimeInterval: number;
 
-  constructor() {
-    // binding
-    this.onPlayerReady = this.onPlayerReady.bind(this);
+const scriptLoad = () => {
+  const firstScript = document.getElementsByTagName("script")[0];
+  const script = document.createElement("script");
+  // script를 태그를 만들고
+  // script 값을 줌
+  script.src = "https://www.youtube.com/iframe_api";
+  script.async = true;
+
+  script.onerror = function () {
+    // this == script
+    this.onload = null;
+    this.onerror = null;
+  };
+
+  if (firstScript) {
+    // firstscript.parentNode == head
+    // inserBefore는 자식 노드를 삽입
+    // script를 firstscript 앞에 삽입
+    firstScript.parentNode?.insertBefore(script, firstScript);
+  } else {
+    document.head.appendChild(script);
   }
-  loadIFrame() {
-    return new Promise<any>((resolve, reject) => {
-      this.scriptLoad();
+};
 
-      window.onYouTubeIframeAPIReady = () => {
-        resolve(window.YT);
-      };
-    });
-  }
+const loadIFrame = () => {
+  return new Promise<any>((resolve) => {
+    scriptLoad();
 
-  private scriptLoad() {
-    const firstScript = document.getElementsByTagName("script")[0];
-    const script = document.createElement("script");
-    // script를 태그를 만들고
-    // script 값을 줌
-    script.src = "https://www.youtube.com/iframe_api";
-    script.async = true;
-
-    script.onerror = function () {
-      // this == script
-      this.onload = null;
-      this.onerror = null;
+    window.onYouTubeIframeAPIReady = () => {
+      resolve(window.YT);
     };
+  });
+};
 
-    if (firstScript) {
-      // firstscript.parentNode == head
-      // inserBefore는 자식 노드를 삽입
-      // script를 firstscript 앞에 삽입
-      firstScript.parentNode?.insertBefore(script, firstScript);
-    } else {
-      document.head.appendChild(script);
-    }
-  }
+const createPlayer = async () => {
+  await loadIFrame();
 
-  private onPlayerStateChange(event: YT.OnStateChangeEvent) {
-    console.log("stateChange");
-    // console.log(musicPlayStore.dynamicMusicdWidth);
-  }
-  // class에서는 arrow function 안쓰는게 좋음
-  private onPlayerReady(event: YT.PlayerEvent) {
-    this.setVolume(volume.value);
-    this.setMute(muteFlag.value);
-    // console.log(isPaused.value);
-    console.log(this.player?.getDuration());
-    duration.value = this.player?.getDuration() as number;
-    // this.player?.playVideo();
-  }
-  private setMute(muteType: MuteState) {
-    if (muteType === MuteState.MUTE) {
-      this.player?.mute();
-    } else {
-      this.player?.unMute();
-    }
-  }
-  private setVolume(volume: number) {
-    this.player?.setVolume(volume);
-  }
+  player = new YT.Player("player", {
+    height: "105",
+    width: "200",
+    videoId: "iqe220lkJzc",
+    events: {
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange,
+    },
+  });
+};
 
-  private setPaused(isPaused: boolean) {
-    if (isPaused) {
-      this.player?.pauseVideo();
-    } else {
-      this.player?.playVideo();
-    }
+const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
+  console.log("stateChange");
+  // console.log(musicPlayStore.dynamicMusicdWidth);
+};
+
+const onPlayerReady = (event: YT.PlayerEvent) => {
+  setVolume(volume.value);
+  setMute(muteFlag.value);
+  const fullTime = player.getDuration();
+  console.log(fullTime);
+  // duration.value = player.getDuration() as number;
+  musicPlayStore.setDuration(fullTime);
+  // this.player?.playVideo();
+};
+
+//////////////////////////////////
+// setVideo function
+//////////////////////////////////
+const setMute = (muteType: MuteState) => {
+  if (muteType === MuteState.MUTE) {
+    player.mute();
+  } else {
+    player.unMute();
   }
+};
+const setVolume = (volume: number) => {
+  player.setVolume(volume);
+};
 
-  getCurrentTime() {
-    console.log("currentTime", isPaused.value);
-    this.currentTimeInterval = setInterval(() => {
-      this.player?.getCurrentTime();
-    }, 1000);
-
-    if (isPaused.value == false) {
-    } else if (isPaused.value) {
-      // isPaused가 ture이면 clear
-      clearInterval(this.currentTimeInterval);
-    }
+const setPaused = (isPaused: boolean) => {
+  if (isPaused) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
   }
-
-  async createPlayer() {
-    await this.loadIFrame();
-
-    this.player = new YT.Player("player", {
-      height: "105",
-      width: "200",
-      videoId: "iqe220lkJzc",
-      events: {
-        onReady: this.onPlayerReady,
-        onStateChange: this.onPlayerStateChange,
-      },
-    });
+};
+const setVideo = (type: string) => {
+  switch (type) {
+    case "videoTime":
+      //시간 이동
+      player.seekTo(currentTime.value, true);
+      break;
+    case "videoId":
+      const videoId = playList.value[currentIndex.value];
+      player.loadVideoById({ videoId });
+      break;
+    default:
   }
-
-  updatedVideo(state: string) {
-    switch (state) {
-      case "paused":
-        this.setPaused(isPaused.value);
-        break;
-      case "muted":
-        this.setMute(muteFlag.value);
-        break;
-      case "volume":
-        this.setVolume(volume.value);
-        break;
-      case "videoId":
-        const videoId = playList.value[currentIndex.value];
-        this.player?.loadVideoById({ videoId });
-        if (isPaused.value) {
-          this.setPaused(isPaused.value);
-        }
-        break;
-      case "videoTime":
-        this.player?.seekTo(currentTime.value, true);
-        if (isPaused.value) {
-          this.setPaused(isPaused.value);
-        }
-        break;
-      default:
-        break;
-    }
+  if (isPaused.value) {
+    setPaused(isPaused.value);
   }
-}
+};
+
+const updatedVideo = (state: string) => {
+  switch (state) {
+    case "paused":
+      setPaused(isPaused.value);
+      break;
+    case "muted":
+      setMute(muteFlag.value);
+      break;
+    case "volume":
+      setVolume(volume.value);
+      break;
+    case "videoId":
+      setVideo(state);
+      break;
+    case "videoTime":
+      setVideo(state);
+      break;
+    default:
+      break;
+  }
+};
 
 // update current Time
 watch(isPaused, (newValue) => {
   if (newValue) {
-    clearInterval(player.currentTimeInterval);
+    clearInterval(currentTimeInterval);
   } else {
-    player.currentTimeInterval = setInterval(() => {
-      console.log(player.player?.getCurrentTime());
+    currentTimeInterval = setInterval(() => {
+      console.log(player.getCurrentTime());
 
       // 3.5.. 이렇게 오기에 올림으로 보내줌
       musicPlayStore.setCurrentTitme(
-        Math.ceil(player.player?.getCurrentTime() as number)
+        Math.ceil(player.getCurrentTime() as number)
       );
     }, 1000);
-
-    player.player?.getDuration();
   }
 });
 
 // volume update
 watch([volume, isPaused], (newValue) => {
-  console.log("watch");
-
-  player.updatedVideo("volume");
-  player.updatedVideo("paused");
+  updatedVideo("volume");
+  updatedVideo("paused");
 });
 
 // video time update
 watch(clickedTime, (newValue) => {
-  player.updatedVideo("videoTime");
+  updatedVideo("videoTime");
 });
 
 //  video Id update
 watch(currentIndex, () => {
-  player.updatedVideo("videoId");
+  updatedVideo("videoId");
+  const fullTime = player.getDuration();
+  musicPlayStore.setDuration(fullTime);
 });
 
-const player = new youtubePlayer();
 onMounted(() => {
   // init();
-  player.loadIFrame();
-  player.createPlayer();
+  loadIFrame();
+  createPlayer();
 
   // player.getCurrentTime();
   // 추가 할것
