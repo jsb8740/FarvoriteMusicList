@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, inject } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import DataBase from "@/indexedDB/index";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { storeToRefs } from "pinia";
@@ -34,43 +34,40 @@ export interface DbField {
 const props = defineProps<Props>();
 
 const store = useIndexedDBStore();
-const { favSongList } = storeToRefs(store);
-
 // const dataBase = DataBase.getInstance();
 const favorite = ref(false);
+let playList: string[];
 
-const checkFavSong = () => {
-  favSongList.value.forEach((el: DbField) => {
-    // console.log(el.videoId);
-    if (el.videoId === props.videoId) favorite.value = true;
+const checkFavSong = async () => {
+  // 원본 복사
+  playList = await store.getPlayList();
+  playList.find((videoId) => {
+    if (videoId === props.videoId) favorite.value = true;
   });
 };
 
-onMounted(() => {
-  favorite.value = false;
-  // console.log("heart", props.videoId);
-  checkFavSong();
-});
-
-const favoriteClick = () => {
+const favoriteClick = async () => {
   favorite.value = !favorite.value;
 
-  //클릭을 했는데 추가인 상태이면
+  // 클릭을 했는데 추가인 상태이면
   if (favorite.value === true) {
-    store.addSong(props.videoId, props.title);
+    await store.addSong(props.videoId, props.title);
   } else {
     //클릭을 했는데 해제하는 상태
-    store.removeSong(props.videoId);
-    // store.updateFavList();
-
-    store.updateFavList();
+    await store.removeSong(props.videoId);
+    await store.updateFavList();
   }
-  checkFavSong();
+  await checkFavSong();
   // 2번체크해야 사라지는 걸 고처야함
+  // 비동기 문제였음 await로 해결
 };
 const favoriteColorCheck = computed(() =>
   favorite.value ? "#ef7330" : "#fff"
 );
+
+onMounted(() => {
+  checkFavSong();
+});
 </script>
 
 <style scoped lang="scss">
