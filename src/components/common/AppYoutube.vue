@@ -19,7 +19,7 @@ export interface Props {
 const soundStore = useSoundControllerStore();
 const { volume, muteFlag } = storeToRefs(soundStore);
 const musicPlayStore = useMusicControllerStore();
-const { isPaused, duration, clickedTime, currentTime } =
+const { isPaused, duration, clickedTime, currentTime, currentIndex, playList } =
   storeToRefs(musicPlayStore);
 // const test = ref(null);
 
@@ -136,7 +136,11 @@ class youtubePlayer {
         this.setVolume(volume.value);
         break;
       case "videoId":
-        // this.player?.loadVideoById({ videoId });
+        const videoId = playList.value[currentIndex.value];
+        this.player?.loadVideoById({ videoId });
+        if (isPaused.value) {
+          this.setPaused(isPaused.value);
+        }
         break;
       case "videoTime":
         this.player?.seekTo(currentTime.value, true);
@@ -176,9 +180,14 @@ watch([volume, isPaused], (newValue) => {
   player.updatedVideo("paused");
 });
 
-// video update
+// video time update
 watch(clickedTime, (newValue) => {
   player.updatedVideo("videoTime");
+});
+
+//  video Id update
+watch(currentIndex, () => {
+  player.updatedVideo("videoId");
 });
 
 const player = new youtubePlayer();
