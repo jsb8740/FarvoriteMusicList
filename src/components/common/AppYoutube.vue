@@ -19,7 +19,7 @@ export interface Props {
 const soundStore = useSoundControllerStore();
 const { volume, muteFlag } = storeToRefs(soundStore);
 const musicPlayStore = useMusicControllerStore();
-const { isPaused, duration, clickedTime, currentTime, currentIndex, playList } =
+const { isPaused, clickedTime, currentTime, currentIndex, playList } =
   storeToRefs(musicPlayStore);
 
 let player: YT.Player;
@@ -54,7 +54,7 @@ const loadIFrame = () => {
     scriptLoad();
 
     window.onYouTubeIframeAPIReady = () => {
-      resolve(window.YT);
+      resolve(window.YT.Player);
     };
   });
 };
@@ -63,8 +63,8 @@ const createPlayer = async () => {
   await loadIFrame();
 
   player = new YT.Player("player", {
-    height: "105",
-    width: "200",
+    height: "200",
+    width: "400",
     videoId: "iqe220lkJzc",
     events: {
       onReady: onPlayerReady,
@@ -74,8 +74,14 @@ const createPlayer = async () => {
 };
 
 const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
-  console.log("stateChange");
+  console.log("stateChange", event);
   // console.log(musicPlayStore.dynamicMusicdWidth);
+  switch (event.data) {
+    case -1:
+      break;
+  }
+  const fullTime = player.getDuration();
+  musicPlayStore.setDuration(fullTime);
 };
 
 const onPlayerReady = (event: YT.PlayerEvent) => {
@@ -121,6 +127,9 @@ const setVideo = (type: string) => {
       break;
     default:
   }
+  const fullTime = player.getDuration();
+  musicPlayStore.setDuration(fullTime);
+
   if (isPaused.value) {
     setPaused(isPaused.value);
   }
@@ -154,8 +163,6 @@ watch(isPaused, (newValue) => {
     clearInterval(currentTimeInterval);
   } else {
     currentTimeInterval = setInterval(() => {
-      console.log(player.getCurrentTime());
-
       // 3.5.. 이렇게 오기에 올림으로 보내줌
       musicPlayStore.setCurrentTitme(
         Math.ceil(player.getCurrentTime() as number)
@@ -176,10 +183,8 @@ watch(clickedTime, (newValue) => {
 });
 
 //  video Id update
-watch(currentIndex, () => {
+watch(currentIndex, (newValue) => {
   updatedVideo("videoId");
-  const fullTime = player.getDuration();
-  musicPlayStore.setDuration(fullTime);
 });
 
 onMounted(() => {
