@@ -14,6 +14,7 @@
     </div>
 
     <div id="test"></div>
+    <!-- <slot></slot> -->
     <!-- <div class="byWriter">
       <slot name="by">by test</slot>
     </div> -->
@@ -31,6 +32,10 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   videoId: "undefined",
 });
+
+// 작은 크기 default
+// 중간 mqdefault
+// 큰크기 hqdefault
 const thumbnailURL = computed(
   () => `https://i.ytimg.com/vi/${props.videoId}/mqdefault.jpg`
 );
