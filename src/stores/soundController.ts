@@ -42,10 +42,10 @@ export const useSoundControllerStore = defineStore("music", () => {
     volumeLimit();
   };
 
-  const updateVolume = (offsetX: number) => {
+  const updateVolume = (offsetX: number, divWidth: number) => {
     muteFlag.value = MuteState.UN_MUTE;
     volumeTmp.value = 0;
-    volume.value = Math.round((offsetX / 200) * 100);
+    volume.value = Math.round((offsetX / divWidth) * 100);
     // 200은 div의 넓이
   };
 

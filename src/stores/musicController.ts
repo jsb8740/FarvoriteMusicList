@@ -1,4 +1,4 @@
-import { computed, ref, toRef, toRefs } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useIndexedDBStore } from "./indexedDB";
 
@@ -67,7 +67,7 @@ export const useMusicControllerStore = defineStore("play", () => {
   };
 
   const setDuration = (fullTime: number) => {
-    duration.value = fullTime;
+    duration.value = Math.round(fullTime);
   };
 
   const setCurrentTitme = (nowTime: number) => {
@@ -78,9 +78,9 @@ export const useMusicControllerStore = defineStore("play", () => {
     isPaused.value = !isPaused.value;
   };
 
-  const updateTime = (offsetX: number) => {
+  const updateTime = (offsetX: number, divWidth: number) => {
     clickedTime.value = Math.round(
-      duration.value * Number((offsetX / 200).toFixed(2))
+      duration.value * Number((offsetX / divWidth).toFixed(2))
     );
     currentTime.value = clickedTime.value;
     console.log(currentTime.value);
