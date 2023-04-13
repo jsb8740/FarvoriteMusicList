@@ -9,11 +9,25 @@ export const useIndexedDBStore = defineStore("indexedDB", () => {
 
   const getPlayList = async () => {
     await updateFavList;
-    const songList = Object.values(favSongList.value).map(
+    const videoIdList = Object.values(favSongList.value).map(
       (value: DbField) => value.videoId
     );
-    // title도 필요할듯함
-    return songList;
+    return videoIdList;
+  };
+
+  const getPlaylistTitle = async (videoId: string = "iqe220lkJzc") => {
+    await updateFavList;
+    const getListObject: DbField | undefined = favSongList.value.find(
+      (item) => item.videoId === videoId
+    );
+
+    if (getListObject === undefined) {
+      console.log("List object not found");
+      return "";
+    }
+    const { title } = getListObject;
+
+    return title;
   };
 
   async function updateFavList() {
@@ -28,5 +42,12 @@ export const useIndexedDBStore = defineStore("indexedDB", () => {
   async function removeSong(videoId: string) {
     webDB.deleteData(videoId);
   }
-  return { updateFavList, removeSong, addSong, getPlayList, favSongList };
+  return {
+    updateFavList,
+    removeSong,
+    addSong,
+    getPlayList,
+    getPlaylistTitle,
+    favSongList,
+  };
 });
