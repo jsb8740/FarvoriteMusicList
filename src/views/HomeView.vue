@@ -1,7 +1,7 @@
 <template>
   <TheViewLayout>
     <template #default>
-      <div>
+      <div class="test">
         <PlayList>
           <!-- <PlayListItem></PlayListItem>
           <PlayListItem></PlayListItem>
@@ -15,6 +15,8 @@
             <MusicListShuffleVue></MusicListShuffleVue>
           </div>
         </PlayList>
+
+        <PlayerArea></PlayerArea>
       </div>
     </template>
   </TheViewLayout>
@@ -27,9 +29,13 @@ import PlayList from "@/components/playList/PlayList.vue";
 import SoundController from "@/components/musicController/SoundController.vue";
 import AppProgressBar from "@/components/common/AppProgressBar.vue";
 import MusicListShuffleVue from "@/components/musicController/MusicListShuffle.vue";
+import PlayerArea from "@/components/player/PlayerArea.vue";
 </script>
 <style scoped lang="scss">
 img {
   width: 24px;
+}
+.test {
+  width: 100%;
 }
 </style>
