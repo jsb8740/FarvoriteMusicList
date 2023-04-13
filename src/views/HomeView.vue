@@ -17,6 +17,7 @@
         </PlayList>
 
         <PlayerArea></PlayerArea>
+        <AppMarquee></AppMarquee>
       </div>
     </template>
   </TheViewLayout>
@@ -30,6 +31,7 @@ import SoundController from "@/components/musicController/SoundController.vue";
 import AppProgressBar from "@/components/common/AppProgressBar.vue";
 import MusicListShuffleVue from "@/components/musicController/MusicListShuffle.vue";
 import PlayerArea from "@/components/player/PlayerArea.vue";
+import AppMarquee from "@/components/common/AppMarquee.vue";
 </script>
 <style scoped lang="scss">
 img {
