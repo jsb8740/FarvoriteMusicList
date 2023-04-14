@@ -8,7 +8,9 @@
       @wheel="onMouseWheel"
       :style="{ '--progressWidth': typeWidth }"
       ref="bar"
-    ></div>
+    >
+      <div class="circle"></div>
+    </div>
 
     <!-- 애니메이션 css가 필요할듯함 -->
   </div>
@@ -95,11 +97,13 @@ const onMouseMove = (e: MouseEvent) => {
 <style scoped lang="scss">
 @import "@/assets/color.scss";
 
+$progressHeight: 0.2rem;
+$circleDiameter: 0.8rem;
 .progressWrap {
-  overflow: hidden;
+  // overflow: hidden;
   position: relative;
   width: 100%;
-  height: 12px;
+  height: $progressHeight;
   cursor: pointer;
   margin: 0.3rem;
 
@@ -109,6 +113,8 @@ const onMouseMove = (e: MouseEvent) => {
     width: 100%;
     height: 100%;
     border-radius: $radius;
+    display: flex;
+    align-items: center;
 
     &::before {
       content: "";
@@ -117,6 +123,16 @@ const onMouseMove = (e: MouseEvent) => {
       width: var(--progressWidth);
       height: 100%;
       border-radius: $radius;
+    }
+
+    .circle {
+      width: $circleDiameter;
+      height: $circleDiameter;
+      border-radius: 10rem;
+      background-color: red;
+      position: absolute;
+      // z-index: 1;
+      left: calc(var(--progressWidth) - $circleDiameter);
     }
   }
 }
