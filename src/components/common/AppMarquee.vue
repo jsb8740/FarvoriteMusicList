@@ -11,7 +11,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// props가 필요할듯 list용인지  main용인지
+// class도 2개나눠서 list용 -> 글자가 width를 넘어가는 경우 hover시에는 marquee 실행
+// 다른 main용 클래스
+</script>
 
 <style scoped lang="scss">
 @use "sass:math";
