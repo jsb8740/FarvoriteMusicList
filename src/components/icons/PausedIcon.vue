@@ -1,18 +1,32 @@
 <template>
-  <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-
   <svg
-    fill="#000000"
-    width="30px"
-    height="30px"
-    viewBox="-7 0 32 32"
+    width="20px"
+    height="20px"
+    viewBox="-1 0 8 8"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
   >
-    <title>play</title>
-    <path
-      d="M0 6.688v18.906c0 0.344 0.156 0.625 0.469 0.813 0.125 0.094 0.344 0.125 0.5 0.125s0.281-0.031 0.438-0.125l16.375-9.438c0.313-0.219 0.5-0.5 0.5-0.844 0-0.313-0.188-0.594-0.5-0.813l-16.375-9.438c-0.563-0.406-1.406 0.094-1.406 0.813z"
-    ></path>
+    <g
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+      fill="none"
+      fill-rule="evenodd"
+    >
+      <g
+        id="Dribbble-Light-Preview"
+        transform="translate(-227.000000, -3765.000000)"
+        fill="#000000"
+      >
+        <g id="icons" transform="translate(56.000000, 160.000000)">
+          <path
+            d="M172,3605 C171.448,3605 171,3605.448 171,3606 L171,3612 C171,3612.552 171.448,3613 172,3613 C172.552,3613 173,3612.552 173,3612 L173,3606 C173,3605.448 172.552,3605 172,3605 M177,3606 L177,3612 C177,3612.552 176.552,3613 176,3613 C175.448,3613 175,3612.552 175,3612 L175,3606 C175,3605.448 175.448,3605 176,3605 C176.552,3605 177,3605.448 177,3606"
+            id="pause-[#1006]"
+          ></path>
+        </g>
+      </g>
+    </g>
   </svg>
 </template>
 
