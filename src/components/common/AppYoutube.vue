@@ -188,8 +188,6 @@ watch(currentIndex, (newValue) => {
 });
 
 onMounted(() => {
-  // init();
-  loadIFrame();
   createPlayer();
 
   // player.getCurrentTime();
