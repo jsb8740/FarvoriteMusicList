@@ -18,9 +18,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import DataBase from "@/indexedDB/index";
 import { useIndexedDBStore } from "@/stores/indexedDB";
-import { storeToRefs } from "pinia";
+
 export interface Props {
   videoId: string;
   title: string;
