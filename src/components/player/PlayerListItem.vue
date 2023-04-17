@@ -1,16 +1,14 @@
 <template>
   <div class="playerList">
-    <img
-      src="https://i.ytimg.com/vi/FUcekBiR1aU/mqdefault.jpg"
-      alt=""
-      class="thumbnail"
-    />
+    <img :src="thumbnailURL" alt="" class="thumbnail" />
 
-    <div class="title">title</div>
+    <AppMarquee>
+      <template #default>
+        <div class="title" v-html="title"></div>
+      </template>
+    </AppMarquee>
 
-    <!-- 나중에 시간도 넣어야할듯함 -->
-    <!-- <div>4:23</div> -->
-
+    <!-- 클릭시 이 노래로 시작 onclick사용-->
     <div class="paused">
       <PlayIcon></PlayIcon>
     </div>
@@ -19,6 +17,25 @@
 
 <script setup lang="ts">
 import PlayIcon from "@/components/icons/PlayIcon.vue";
+import { useIndexedDBStore } from "@/stores/indexedDB";
+import { computed, ref } from "vue";
+import AppMarquee from "@/components/common/AppMarquee.vue";
+export interface Props {
+  videoId: string;
+}
+const props = defineProps<Props>();
+
+const thumbnailURL = computed(
+  () => `https://i.ytimg.com/vi/${props.videoId}/hqdefault.jpg`
+);
+
+const dbStore = useIndexedDBStore();
+const title = ref("");
+const getPlaylist = async (item: string) => {
+  title.value = await dbStore.getPlaylistTitle(item);
+};
+
+getPlaylist(props.videoId);
 </script>
 
 <style scoped lang="scss">
@@ -34,6 +51,9 @@ import PlayIcon from "@/components/icons/PlayIcon.vue";
   .title {
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
   }
   .paused {
     cursor: pointer;

@@ -2,8 +2,8 @@
   <div class="playList">
     <div class="top">노래 리스트</div>
     <ul class="listItem">
-      <li v-for="i in 10">
-        <PlayerListItem></PlayerListItem>
+      <li v-for="item in props.musicList">
+        <PlayerListItem :video-id="item"> </PlayerListItem>
       </li>
     </ul>
   </div>
@@ -11,6 +11,11 @@
 
 <script setup lang="ts">
 import PlayerListItem from "@/components/player/PlayerListItem.vue";
+export interface Props {
+  musicList: string[];
+}
+
+const props = defineProps<Props>();
 </script>
 
 <style scoped lang="scss">
