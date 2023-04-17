@@ -73,6 +73,7 @@ export default class DataBase {
           unique: true,
         });
         store.createIndex("title", "title");
+        // store.createIndex("playingTime", "playingTime");
         // const properties: TableProperties = {
         //   name: "favorites",
         //   indexproperties: {

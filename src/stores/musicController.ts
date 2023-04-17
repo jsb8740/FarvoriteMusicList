@@ -34,7 +34,7 @@ export const useMusicControllerStore = defineStore("play", () => {
     if (currentIndex.value < 0) {
       currentIndex.value = playList.value.length - 1;
     }
-
+    // (status + 1) % 4
     // return playList.value[currentIndex.value];
   };
 
