@@ -37,7 +37,7 @@
       <test></test>
     </div>
 
-    <PlayerMusicList></PlayerMusicList>
+    <PlayerMusicList :music-list="musicList"></PlayerMusicList>
   </div>
 </template>
 
@@ -57,9 +57,9 @@ import PlayerMusicList from "./PlayerMusicList.vue";
 
 const dbStore = useIndexedDBStore();
 
-const MusicStore = useMusicControllerStore();
+const musicStore = useMusicControllerStore();
 const { currentIndex, playList, isPaused, currentTime, duration } =
-  storeToRefs(MusicStore);
+  storeToRefs(musicStore);
 const title = ref("");
 
 const thumbnailURL = computed(
@@ -73,13 +73,18 @@ watch(thumbnailURL, async () => {
   );
 });
 
-onMounted(async () => {});
+const musicList = ref<string[]>([]);
+let getMusicList = async () => {
+  musicList.value = await dbStore.getPlayList();
+};
+getMusicList();
 </script>
 
 <style scoped lang="scss">
 .playerArea {
   gap: 2%;
   display: flex;
+  flex-wrap: wrap;
   width: 70rem;
   margin: 0 auto;
   height: 40rem;
