@@ -1,11 +1,11 @@
 <template>
   <div class="playList">
     <div class="top">노래 리스트</div>
-    <ul class="listItem">
-      <li v-for="item in props.musicList">
+    <ol class="listItem">
+      <li v-for="item in props.musicList" :key="item">
         <PlayerListItem :video-id="item"> </PlayerListItem>
       </li>
-    </ul>
+    </ol>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ const props = defineProps<Props>();
 <style scoped lang="scss">
 .playList {
   width: 49%;
-
+  height: 100%;
   border: 1px solid black;
   display: flex;
   flex-direction: column;
@@ -33,17 +33,18 @@ const props = defineProps<Props>();
     background-color: rgb(214, 212, 219);
   }
 
-  li {
-    list-style: none;
-    &:nth-child(odd) {
+  ol {
+    li {
+      &:nth-child(odd) {
+      }
+      &:nth-child(even) {
+      }
     }
-    &:nth-child(even) {
-    }
+    margin: 0;
+    overflow-y: scroll;
   }
 
   .listItem {
-    margin: 0;
-    overflow-y: scroll;
   }
 }
 </style>
