@@ -65,7 +65,7 @@ const createPlayer = async () => {
   player = new YT.Player("player", {
     height: "200",
     width: "400",
-    videoId: "iqe220lkJzc",
+    videoId: "",
     events: {
       onReady: onPlayerReady,
       onStateChange: onPlayerStateChange,
