@@ -18,6 +18,12 @@ export const useMusicControllerStore = defineStore("play", () => {
     () => `${Math.round((currentTime.value / duration.value) * 100)}%`
   );
   // methods
+  const moveMusic = (videoId: string) => {
+    // console.log(playList.value.findIndex((item) => item === videoId));
+    const index = playList.value.findIndex((item) => item === videoId);
+    currentIndex.value = index;
+  };
+
   const nextIndex = () => {
     currentIndex.value++;
     if (
@@ -104,5 +110,6 @@ export const useMusicControllerStore = defineStore("play", () => {
     updateTime,
     shufflePlaylist,
     inputPlayList,
+    moveMusic,
   };
 });
