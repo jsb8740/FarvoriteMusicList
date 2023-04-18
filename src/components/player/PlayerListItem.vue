@@ -8,8 +8,8 @@
       </template>
     </AppMarquee>
 
-    <!-- 클릭시 이 노래로 시작 onclick사용-->
-    <div class="paused">
+    <!-- 클릭시 이 노래로 시작 -->
+    <div class="paused" @click="clickPlay">
       <PlayIcon></PlayIcon>
     </div>
   </div>
@@ -18,8 +18,9 @@
 <script setup lang="ts">
 import PlayIcon from "@/components/icons/PlayIcon.vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import AppMarquee from "@/components/common/AppMarquee.vue";
+import { useMusicControllerStore } from "@/stores/musicController";
 export interface Props {
   videoId: string;
 }
@@ -31,11 +32,21 @@ const thumbnailURL = computed(
 
 const dbStore = useIndexedDBStore();
 const title = ref("");
+
+// 자꾸 업데이트가 안되는게 있음 상위 컴포넌트 v-for의 li에 key값을 줘서
+// 업데이트하게 만듦
 const getPlaylist = async (item: string) => {
   title.value = await dbStore.getPlaylistTitle(item);
 };
 
-getPlaylist(props.videoId);
+const musicStore = useMusicControllerStore();
+
+const clickPlay = () => {
+  musicStore.moveMusic(props.videoId);
+};
+onMounted(() => {
+  getPlaylist(props.videoId);
+});
 </script>
 
 <style scoped lang="scss">
@@ -52,7 +63,7 @@ getPlaylist(props.videoId);
     display: flex;
     align-items: center;
     white-space: nowrap;
-    overflow: hidden;
+
     width: 100%;
   }
   .paused {
