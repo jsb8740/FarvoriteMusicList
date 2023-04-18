@@ -1,7 +1,16 @@
 <template>
   <TheViewLayout>
     <template #default>
-      <h2>Favorite Musics</h2>
+      <div class="content-header">
+        <h2>Favorite Musics</h2>
+
+        <div>
+          <AppPlayButton></AppPlayButton>
+        </div>
+
+        <!-- <Random></Random> -->
+      </div>
+
       <div>
         <PlayListItem
           v-for="item in favSongList"
@@ -23,6 +32,8 @@ import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import AppYoutube from "@/components/common/AppYoutube.vue";
+import Random from "@/components/icons/Random.vue";
+import AppPlayButton from "@/components/common/AppPlayButton.vue";
 
 const store = useIndexedDBStore();
 const { favSongList } = storeToRefs(store);
@@ -33,4 +44,9 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.content-header {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
