@@ -89,14 +89,15 @@ const test = (event: Event) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30rem;
+  width: 10%;
   background-color: white;
   border-radius: 1.5rem;
   padding: 0.7rem;
 
   box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.12);
-  &:focus {
+  &:hover {
     border: 1px solid #ef7330;
+    width: 100%;
   }
 
   input {
