@@ -14,16 +14,11 @@
         <MenuHeart></MenuHeart>
         Favorites
       </RouterLink>
-
-      <RouterLink :to="{ name: 'OpenPlayList' }"> 카테고리 </RouterLink>
-
-      <RouterLink :to="{ name: 'Home' }" class=""> TOP100 </RouterLink>
+      <RouterLink :to="{ name: 'MyPlayList' }"> My PlayList </RouterLink>
     </div>
 
     <div>
       <div class="category">Playlists</div>
-
-      <RouterLink :to="{ name: 'OpenPlayList' }"> Open PlayList </RouterLink>
     </div>
   </aside>
 </template>
