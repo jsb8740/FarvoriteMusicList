@@ -39,6 +39,11 @@ import { storeToRefs } from "pinia";
 import PlayerMusicList from "./PlayerMusicList.vue";
 import PlayerController from "./PlayerController.vue";
 
+export interface Props {
+  type: string;
+}
+const props = defineProps<Props>();
+
 const dbStore = useIndexedDBStore();
 
 const musicStore = useMusicControllerStore();
@@ -51,6 +56,15 @@ const thumbnailURL = computed(
     `https://i.ytimg.com/vi/${playList.value[currentIndex.value]}/hqdefault.jpg`
 );
 
+// watch("", () => {}, { immediate: true });
+
+const checkProps = () => {
+  if (props.type === "favorites") {
+    musicStore.inputPlayList();
+  } else {
+  }
+};
+checkProps();
 watch(thumbnailURL, async () => {
   title.value = await dbStore.getPlaylistTitle(
     playList.value[currentIndex.value]
