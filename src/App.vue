@@ -1,8 +1,7 @@
 <template>
   <!-- <div v-if="initialized" id="container"> -->
   <div id="container">
-    <!-- <TheSide></TheSide> -->
-    <TheMenu></TheMenu>
+    <TheSide></TheSide>
     <TheView></TheView>
 
     <TheMusicController class="controller"></TheMusicController>
@@ -15,7 +14,6 @@ import TheView from "./components/layouts/TheView.vue";
 import { onMounted, ref } from "vue";
 import { Connector, type TableProperties } from "@/indexedDB/connector";
 import { useIndexedDBStore } from "@/stores/indexedDB";
-import TheMenu from "@/components/layouts/TheMenu.vue";
 
 const store = useIndexedDBStore();
 
@@ -54,22 +52,23 @@ const initializeIndexedDB = async () => {
 
 <style scoped lang="scss">
 #container {
-  background-color: rgb(249, 249, 249);
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  // display: grid;
-  // grid-template-columns: 1fr 6fr;
-  // grid-template-rows: 7fr auto;
-  // height: 100dvh;
+  // background-color: rgb(249, 249, 249);
+  // width: 100%;
+  // height: 100%;
+  // margin: 0 auto;
 
-  // .controller {
-  //   grid-column: 1 / 3; // === grid-area: 2 / 1 / span 1 / span 2;
-  //   // display: none;
-  // }
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+  grid-template-rows: 7fr auto;
+  height: 100dvh;
 
-  // main {
-  //   overflow: hidden scroll;
-  // }
+  .controller {
+    grid-column: 1 / 3; // === grid-area: 2 / 1 / span 1 / span 2;
+    // display: none;
+  }
+
+  main {
+    overflow: hidden scroll;
+  }
 }
 </style>
