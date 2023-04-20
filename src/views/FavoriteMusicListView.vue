@@ -9,8 +9,6 @@
             <AppPlayButton></AppPlayButton>
           </RouterLink>
         </div>
-
-        <!-- <Random></Random> -->
       </div>
 
       <div>
@@ -34,7 +32,6 @@ import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import AppYoutube from "@/components/common/AppYoutube.vue";
-import Random from "@/components/common/AppRandomButton.vue.js";
 import AppPlayButton from "@/components/common/AppPlayButton.vue";
 
 const store = useIndexedDBStore();
