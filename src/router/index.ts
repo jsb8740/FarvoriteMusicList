@@ -28,6 +28,11 @@ const router = createRouter({
       name: "SearchingResult",
       component: () => import("@/views/SearchingResultView.vue"),
     },
+    {
+      path: "/player/:type",
+      name: "Player",
+      component: () => import("@/views/PlayerView.vue"),
+    },
   ],
 });
 
