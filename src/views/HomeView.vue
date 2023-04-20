@@ -16,7 +16,7 @@
           </div>
         </PlayList>
 
-        <PlayerArea></PlayerArea>
+        <PlayerArea type="favorites"></PlayerArea>
         <AppMarquee></AppMarquee>
       </div>
     </template>
