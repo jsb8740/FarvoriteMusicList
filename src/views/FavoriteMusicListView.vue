@@ -5,7 +5,9 @@
         <h2>Favorite Musics</h2>
 
         <div>
-          <AppPlayButton></AppPlayButton>
+          <RouterLink to="/player/favorites">
+            <AppPlayButton></AppPlayButton>
+          </RouterLink>
         </div>
 
         <!-- <Random></Random> -->
@@ -32,7 +34,7 @@ import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import AppYoutube from "@/components/common/AppYoutube.vue";
-import Random from "@/components/icons/Random.vue";
+import Random from "@/components/common/AppRandomButton.vue.js";
 import AppPlayButton from "@/components/common/AppPlayButton.vue";
 
 const store = useIndexedDBStore();
@@ -48,5 +50,8 @@ onMounted(() => {
 .content-header {
   display: flex;
   justify-content: space-between;
+}
+a {
+  text-decoration: none;
 }
 </style>
