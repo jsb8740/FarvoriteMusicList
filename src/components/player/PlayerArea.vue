@@ -12,7 +12,8 @@
       <PlayerController></PlayerController>
 
       <!-- 밑에 현재시간도 같이 출력해야할듯 -->
-      <AppProgressBar type="video"></AppProgressBar>
+      <AppProgressBar type="time"></AppProgressBar>
+
       <div>
         {{ currentTime }}
         &nbsp;
@@ -21,7 +22,9 @@
 
       <AppProgressBar type="sound"></AppProgressBar>
 
-      <test></test>
+      ---------------
+      <AppProgressBar2></AppProgressBar2>
+      <!-- <test type="sound"></test> -->
     </div>
 
     <PlayerMusicList :music-list="playList"></PlayerMusicList>
@@ -34,10 +37,10 @@ import AppProgressBar from "../common/AppProgressBar.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import AppMarquee from "../common/AppMarquee.vue";
-import test from "@/components/common/test.vue";
 import { storeToRefs } from "pinia";
 import PlayerMusicList from "./PlayerMusicList.vue";
 import PlayerController from "./PlayerController.vue";
+import AppProgressBar2 from "../common/AppProgressBar2.vue";
 
 export interface Props {
   type: string;

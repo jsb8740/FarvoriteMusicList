@@ -15,7 +15,7 @@ export const useMusicControllerStore = defineStore("play", () => {
 
   // computed
   const dynamicMusicdWidth = computed(
-    () => `${Math.round((currentTime.value / duration.value) * 100)}%`
+    () => `${Math.round((currentTime.value / duration.value) * 100)}`
   );
   // methods
   const moveMusic = (videoId: string) => {

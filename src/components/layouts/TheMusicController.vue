@@ -18,12 +18,12 @@
         </div>
       </div>
 
-      <MusicPlayer></MusicPlayer>
+      <!-- <MusicPlayer></MusicPlayer> -->
 
       <div class="soundControl">
         <!-- <Heart video-id="undefined"></Heart> -->
         <!-- <SoundController></SoundController> -->
-        <AppProgressBar type="sound"></AppProgressBar>
+        <!-- <AppProgressBar type="sound"></AppProgressBar> -->
         <!-- soundcontroller의 의존성 분리가 필요함 -->
         <!-- TheMusicController를 layouts을 다른 곳을 이동함 -->
       </div>
@@ -33,9 +33,6 @@
 
 <script setup lang="ts">
 import AppProgressBar from "../common/AppProgressBar.vue";
-import Heart from "../icons/Heart.vue";
-import MusicPlayer from "../musicController/MusicPlayer.vue";
-import SoundController from "../musicController/SoundController.vue";
 import AppYoutube from "@/components/common/AppYoutube.vue";
 </script>
 

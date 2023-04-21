@@ -1,5 +1,5 @@
 <template>
-  <div class="soundController">
+  <!-- <div class="soundController">
     <button class="iconView" @click="store.soundMute">
       <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
       <img v-show="soundLowImg" src="@/assets/volumeLow-white.png" />
@@ -16,7 +16,7 @@
         :style="{ '--soundWidth': dynamicWidth }"
       ></div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -24,62 +24,62 @@ import { ref, computed, onMounted } from "vue";
 import { useSoundControllerStore } from "@/stores/soundController.js";
 import { storeToRefs } from "pinia";
 
-enum VolumeControllerState {
-  IDLE,
-  DRAGGING,
-}
+// enum VolumeControllerState {
+//   IDLE,
+//   DRAGGING,
+// }
 
-const store = useSoundControllerStore();
-const { volume } = storeToRefs(store);
+// const store = useSoundControllerStore();
+// const { volume } = storeToRefs(store);
 
-onMounted(() => {
-  store.volumeInit();
-});
+// onMounted(() => {
+//   store.volumeInit();
+// });
 
-const volumeControllerState = ref<VolumeControllerState>(
-  VolumeControllerState.IDLE
-);
+// const volumeControllerState = ref<VolumeControllerState>(
+//   VolumeControllerState.IDLE
+// );
 
-const dynamicWidth = computed(() => `${volume.value}%`);
+// const dynamicWidth = computed(() => `${volume.value}%`);
 
-// sound img 컨트롤
-const soundMuteImg = computed<boolean>(() =>
-  volume.value === 0 ? true : false
-);
-const soundLowImg = computed<boolean>(() =>
-  volume.value > 0 && volume.value <= 50 ? true : false
-);
-const soundHighImg = computed<boolean>(() =>
-  volume.value > 50 && volume.value <= 100 ? true : false
-);
+// // sound img 컨트롤
+// const soundMuteImg = computed<boolean>(() =>
+//   volume.value === 0 ? true : false
+// );
+// const soundLowImg = computed<boolean>(() =>
+//   volume.value > 0 && volume.value <= 50 ? true : false
+// );
+// const soundHighImg = computed<boolean>(() =>
+//   volume.value > 50 && volume.value <= 100 ? true : false
+// );
 
-// 볼륨 핸들러
-const onMouseWheel = (e: WheelEvent) => {
-  store.volumeUpDownHandler(e.deltaY);
-};
+// // 볼륨 핸들러
+// const onMouseWheel = (e: WheelEvent) => {
+//   store.volumeUpDownHandler(e.deltaY);
+// };
 
-const onMouseClick = (e: MouseEvent) => {
-  // 클릭시 볼륨 컨트롤 상태 -> 드래그
-  if (volumeControllerState.value === VolumeControllerState.IDLE) {
-    volumeControllerState.value = VolumeControllerState.DRAGGING;
-  }
+// const onMouseClick = (e: MouseEvent) => {
+//   // 클릭시 볼륨 컨트롤 상태 -> 드래그
+//   if (volumeControllerState.value === VolumeControllerState.IDLE) {
+//     volumeControllerState.value = VolumeControllerState.DRAGGING;
+//   }
 
-  // 클릭시 마우스 체크
-  store.updateVolume(e.offsetX);
-};
+//   // 클릭시 마우스 체크
+//   store.updateVolume(e.offsetX);
+// };
 
-const onMouseRelease = (e: MouseEvent) => {
-  if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
-    volumeControllerState.value = VolumeControllerState.IDLE;
-  }
-};
+// const onMouseRelease = (e: MouseEvent) => {
+//   if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
+//     volumeControllerState.value = VolumeControllerState.IDLE;
+//   }
+// };
 
-const onMouseMove = (e: MouseEvent) => {
-  //mouseMove 상태이고 드래그인 상태
-  if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
-    store.updateVolume(e.offsetX);
-  }
-};
+// const onMouseMove = (e: MouseEvent) => {
+//   //mouseMove 상태이고 드래그인 상태
+//   if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
+//     store.updateVolume(e.offsetX);
+//   }
+// };
 </script>
 
 <style scoped lang="scss">
