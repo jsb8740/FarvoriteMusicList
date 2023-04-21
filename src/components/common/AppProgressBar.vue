@@ -1,61 +1,51 @@
 <template>
-  <div class="progressWrap" @wheel.prevent.stop>
-    <div
-      class="progressBar"
-      @mousedown="onMouseClick"
-      @mouseup="onMouseRelease"
-      @mousemove="onMouseMove"
-      @wheel="onMouseWheel"
-      :style="{ '--progressWidth': typeWidth }"
+  <div style="width: 100%">
+    <input
+      type="range"
+      class="progress"
+      v-model="typeWidth"
+      @wheel.prevent.stop="onMouseWheel"
+      @click="onMouseClick"
       ref="bar"
-    >
-      <div class="circle"></div>
-    </div>
-
-    <!-- 애니메이션 css가 필요할듯함 -->
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMusicControllerStore } from "@/stores/musicController";
-import { useSoundControllerStore } from "@/stores/soundController.js";
+import { useSoundControllerStore } from "@/stores/soundController";
+import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
-
 export interface Props {
   type: string;
 }
 
-enum VolumeControllerState {
-  IDLE,
-  DRAGGING,
-}
+const props = defineProps<Props>();
+const bar = ref<HTMLFormElement | null>(null);
 
-// soundStore
 const soundStore = useSoundControllerStore();
 const musicPlayStore = useMusicControllerStore();
+const { volume } = storeToRefs(soundStore);
+const { currentTime, duration } = storeToRefs(musicPlayStore);
 
-const bar = ref<HTMLFormElement | null>(null);
-let progressBarWidth: number;
-onMounted(() => {
-  progressBarWidth = (bar.value as HTMLFormElement).clientWidth;
+const typeWidth = computed({
+  get() {
+    {
+      if (props.type === "sound") {
+        return volume.value;
+      } else {
+        const time = Math.round((currentTime.value / duration.value) * 100);
+        if (isNaN(time)) {
+          return 0;
+        } else {
+          return time;
+        }
+      }
+    }
+  },
+  set() {},
 });
 
-const props = defineProps<Props>();
-const volumeControllerState = ref<VolumeControllerState>(
-  VolumeControllerState.IDLE
-);
-
-const typeWidth = computed(() => {
-  if (props.type === "sound") {
-    return soundStore.dynamicSoundWidth;
-  } else {
-    return musicPlayStore.dynamicMusicdWidth;
-  }
-});
-
-// videostore
-
-// 볼륨 핸들러
 const onMouseWheel = (e: WheelEvent) => {
   if (props.type === "sound") {
     soundStore.volumeUpDownHandler(e.deltaY);
@@ -63,12 +53,9 @@ const onMouseWheel = (e: WheelEvent) => {
 };
 
 const onMouseClick = (e: MouseEvent) => {
-  // 클릭시 볼륨 컨트롤 상태 -> 드래그
-  if (volumeControllerState.value === VolumeControllerState.IDLE) {
-    volumeControllerState.value = VolumeControllerState.DRAGGING;
-  }
-
   // 클릭시 마우스 체크
+  console.log("click", e.offsetX, progressBarWidth);
+
   if (props.type === "sound") {
     soundStore.updateVolume(e.offsetX, progressBarWidth);
   } else {
@@ -76,64 +63,69 @@ const onMouseClick = (e: MouseEvent) => {
   }
 };
 
-const onMouseRelease = (e: MouseEvent) => {
-  if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
-    volumeControllerState.value = VolumeControllerState.IDLE;
+const onMouseUp = (e: MouseEvent) => {
+  console.log("release", e.offsetX, progressBarWidth);
+  if (props.type === "sound") {
+    soundStore.updateVolume(e.offsetX, progressBarWidth);
+  } else {
+    musicPlayStore.updateTime(e.offsetX, progressBarWidth);
   }
 };
 
-const onMouseMove = (e: MouseEvent) => {
-  //mouseMove 상태이고 드래그인 상태
-  if (volumeControllerState.value === VolumeControllerState.DRAGGING) {
-    if (props.type === "sound") {
-      soundStore.updateVolume(e.offsetX, progressBarWidth);
-    } else {
-      musicPlayStore.updateTime(e.offsetX, progressBarWidth);
-    }
-  }
-};
+let progressBarWidth: number;
+onMounted(() => {
+  soundStore.volumeInit();
+  progressBarWidth = (bar.value as HTMLFormElement).clientWidth;
+});
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/color.scss";
+input[type="range"] {
+  // appearance: none;
+  // -webkit-appearance: none;
+  // background: transparent;
 
-$progressHeight: 0.2rem;
-$circleDiameter: 0.8rem;
-.progressWrap {
-  // overflow: hidden;
-  position: relative;
+  // cursor: pointer;
+
+  // width: 100%;
+  // border: 1px solid black;
+  // height: 0.3rem;
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  height: $progressHeight;
   cursor: pointer;
-  margin: 0.3rem;
+  outline: none;
+  border-radius: 15px;
+  height: 6px;
+  background: #ccc;
 
-  $radius: 0.5rem;
-  .progressBar {
-    background-color: $progressBackColor;
-    width: 100%;
-    height: 100%;
-    border-radius: $radius;
-    display: flex;
-    align-items: center;
+  &::-webkit-slider-thumb {
+    // appearance: none;
+    // -webkit-appearance: none;
 
-    &::before {
-      content: "";
-      position: absolute;
-      background-color: $orangeColor;
-      width: var(--progressWidth);
-      height: 100%;
-      border-radius: $radius;
-    }
+    // background-color: $yellowPastel;
+    // cursor: pointer;
+    // border: 0.1px solid $yellowPastel;
+    // height: 1rem;
+    // width: 1rem;
+    // border-radius: 100%;
+    // // box-shadow: -100vw 0 100vw dodgerblue;
 
-    .circle {
-      width: $circleDiameter;
-      height: $circleDiameter;
-      border-radius: 10rem;
-      background-color: red;
-      position: absolute;
-      // z-index: 1;
-      left: calc(var(--progressWidth) - $circleDiameter);
-    }
+    // box-shadow: -1000% 0 0 1000% dodgerblue;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 15px;
+    width: 15px;
+    background-color: #f50;
+    border-radius: 50%;
+    border: none;
+    transition: 0.2s ease-in-out;
+  }
+
+  &::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background-color: red;
   }
 }
 </style>
