@@ -19,7 +19,7 @@
 
 <style scoped lang="scss">
 @use "sass:math";
-$divWidth: 400%;
+$divWidth: 700%;
 $marqueeHeight: 1.6rem;
 .marquee {
   height: $marqueeHeight + 0.5;
@@ -36,7 +36,7 @@ $marqueeHeight: 1.6rem;
     position: absolute;
     overflow: hidden;
 
-    animation: marquee 7s linear infinite;
+    animation: marquee 10s linear infinite;
 
     span {
       // float: left;
