@@ -19,7 +19,7 @@ export interface Props {
 const soundStore = useSoundControllerStore();
 const { volume, muteFlag } = storeToRefs(soundStore);
 const musicPlayStore = useMusicControllerStore();
-const { isPaused, clickedTime, currentTime, currentIndex, playList } =
+const { isPaused, currentTime, currentIndex, playList, currentTimeClick } =
   storeToRefs(musicPlayStore);
 
 let player: YT.Player;
@@ -159,16 +159,22 @@ const updatedVideo = (state: string) => {
 
 // update current Time
 watch(isPaused, (newValue) => {
-  if (newValue) {
+  if (newValue === true) {
     clearInterval(currentTimeInterval);
   } else {
     currentTimeInterval = setInterval(() => {
       // 3.5.. 이렇게 오기에 올림으로 보내줌
-      musicPlayStore.setCurrentTitme(
+      musicPlayStore.setCurrentTime(
         Math.ceil(player.getCurrentTime() as number)
       );
+      console.log(Math.ceil(player.getCurrentTime() as number));
     }, 1000);
   }
+});
+
+watch(playList, () => {
+  musicPlayStore.changePauseState();
+  updatedVideo("videoId");
 });
 
 // volume update
@@ -178,7 +184,7 @@ watch([volume, isPaused], (newValue) => {
 });
 
 // video time update
-watch(clickedTime, (newValue) => {
+watch(currentTimeClick, (newValue) => {
   updatedVideo("videoTime");
 });
 
