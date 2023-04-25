@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 import { defineStore } from "pinia";
 import { useIndexedDBStore } from "./indexedDB";
 
@@ -6,22 +6,25 @@ export const useMusicControllerStore = defineStore("play", () => {
   const currentTime = ref(0);
   const duration = ref(0);
   const isPaused = ref(true); // 음악 시작 state
-  const clickedTime = ref(0);
   const playList = ref<string[]>([]);
-  const indexedDBStore = useIndexedDBStore();
+  const currentTimePercent = ref(0); // 현재 음악 %
+  const currentTimeClick = ref(0); //누른 음악 시간
   const currentIndex = ref(0);
   // 재생버튼 누를시 inpoutPlayList로 세팅을하고
   // index 0번 나옴
+  const indexedDBStore = useIndexedDBStore();
 
-  // computed
-  const dynamicMusicdWidth = computed(
-    () => `${Math.round((currentTime.value / duration.value) * 100)}`
-  );
   // methods
   const moveMusic = (videoId: string) => {
     // console.log(playList.value.findIndex((item) => item === videoId));
     const index = playList.value.findIndex((item) => item === videoId);
     currentIndex.value = index;
+  };
+
+  const setCurrentTimePercent = (percent: number) => {
+    currentTimePercent.value = percent;
+    // console.log(currentTimePercent.value);
+    // currentTime.value = Math.round((duration.value * percent) / 100);
   };
 
   const nextIndex = () => {
@@ -46,7 +49,7 @@ export const useMusicControllerStore = defineStore("play", () => {
 
   const inputPlayList = async () => {
     playList.value = await indexedDBStore.getPlayList();
-    console.log(playList.value);
+    // console.log(playList.value);
   };
   const shufflePlaylist = () => {
     if (playList.value.length === 0) return;
@@ -76,40 +79,37 @@ export const useMusicControllerStore = defineStore("play", () => {
     duration.value = Math.round(fullTime);
   };
 
-  const setCurrentTitme = (nowTime: number) => {
-    currentTime.value = nowTime;
+  const setCurrentTime = (nowTime: number, type?: string) => {
+    let time = nowTime;
+    if (type) {
+      time = Math.round((duration.value * nowTime) / 100);
+      console.log(time);
+      currentTimePercent.value = nowTime;
+      currentTimeClick.value = time;
+    }
+    currentTime.value = time;
   };
 
   const changePauseState = () => {
     isPaused.value = !isPaused.value;
   };
 
-  const updateTime = (offsetX: number, divWidth: number) => {
-    clickedTime.value = Math.round(
-      duration.value * Number((offsetX / divWidth).toFixed(2))
-    );
-    currentTime.value = clickedTime.value;
-    console.log(currentTime.value);
-
-    // 200은 div의 넓이
-  };
-
   return {
-    clickedTime,
     currentTime,
     isPaused,
     duration,
-    dynamicMusicdWidth,
     currentIndex,
     playList,
+    currentTimePercent,
+    currentTimeClick,
     previousIndex,
     nextIndex,
-    setCurrentTitme,
+    setCurrentTime,
     setDuration,
     changePauseState,
-    updateTime,
     shufflePlaylist,
     inputPlayList,
     moveMusic,
+    setCurrentTimePercent,
   };
 });
