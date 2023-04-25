@@ -11,8 +11,11 @@ export const useSoundControllerStore = defineStore("music", () => {
   const volumeTmp = ref(0); // 뮤트인 경우 볼륨을 담는 임시변수 뮤트끝나면 복귀시키는 용도
   const muteFlag = ref(MuteState.UN_MUTE); //뮤트 확인  플래그
 
-  const dynamicSoundWidth = computed(() => `${volume.value}`);
   // 사운드 이미지 클릭시 소리 mute
+  const setVolume = (newVolume: number) => {
+    volume.value = newVolume;
+  };
+
   const soundMute = () => {
     if (muteFlag.value === MuteState.MUTE) {
       // UN_MUTE인 상태
@@ -117,5 +120,6 @@ export const useSoundControllerStore = defineStore("music", () => {
     updateVolume,
     volumeInit,
     volumeUpDownHandler,
+    setVolume,
   };
 });
