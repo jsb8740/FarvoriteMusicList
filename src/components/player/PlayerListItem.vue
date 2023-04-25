@@ -2,10 +2,8 @@
   <div class="playerList">
     <img :src="thumbnailURL" alt="" class="thumbnail" />
 
-    <AppMarquee>
-      <template #default>
-        <div class="title" v-html="title"></div>
-      </template>
+    <AppMarquee :stop="titleLength">
+      <span class="title" v-html="title"></span>
     </AppMarquee>
 
     <!-- 클릭시 이 노래로 시작 -->
@@ -32,7 +30,11 @@ const thumbnailURL = computed(
 
 const dbStore = useIndexedDBStore();
 const title = ref("");
-
+const titleLength = computed(() => {
+  if (title.value.length < 43) {
+    return "stop";
+  }
+});
 // 자꾸 업데이트가 안되는게 있음 상위 컴포넌트 v-for의 li에 key값을 줘서
 // 업데이트하게 만듦
 const getPlaylist = async (item: string) => {
@@ -44,6 +46,7 @@ const musicStore = useMusicControllerStore();
 const clickPlay = () => {
   musicStore.moveMusic(props.videoId);
 };
+
 onMounted(() => {
   getPlaylist(props.videoId);
 });
@@ -60,11 +63,10 @@ onMounted(() => {
   }
 
   .title {
-    display: flex;
-    align-items: center;
     white-space: nowrap;
-
+    display: flex;
     width: 100%;
+    padding-left: 0.6rem;
   }
   .paused {
     cursor: pointer;
