@@ -1,131 +1,160 @@
 <template>
-  <div style="width: 100%">
-    <input
-      type="range"
-      class="progress"
-      v-model="typeWidth"
-      @wheel.prevent.stop="onMouseWheel"
-      @click="onMouseClick"
-      ref="bar"
-    />
-  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    :value="type === 'sound' ? volume : currentTimePercent"
+    @input="onInputSlidereValue"
+    @wheel.prevent="onMouseWheel"
+    :style="inputStyle"
+    ref="slider"
+  />
 </template>
 
 <script setup lang="ts">
 import { useMusicControllerStore } from "@/stores/musicController";
 import { useSoundControllerStore } from "@/stores/soundController";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+
 export interface Props {
   type: string;
+  // typeValue: number;
 }
-
 const props = defineProps<Props>();
-const bar = ref<HTMLFormElement | null>(null);
-
 const soundStore = useSoundControllerStore();
-const musicPlayStore = useMusicControllerStore();
 const { volume } = storeToRefs(soundStore);
-const { currentTime, duration } = storeToRefs(musicPlayStore);
+const musicStore = useMusicControllerStore();
+const { currentTime, duration, currentTimePercent } = storeToRefs(musicStore);
+const slider = ref<HTMLElement | null>(null);
 
-const typeWidth = computed({
-  get() {
-    {
-      if (props.type === "sound") {
-        return volume.value;
-      } else {
-        const time = Math.round((currentTime.value / duration.value) * 100);
-        if (isNaN(time)) {
-          return 0;
-        } else {
-          return time;
-        }
-      }
-    }
-  },
-  set() {},
-});
+const inputStyle = computed(() =>
+  props.type === "sound"
+    ? `--ProgressPercent: ${volume.value}%`
+    : "--ProgressPercent: 0%"
+);
 
+const onInputSlidereValue = (event: Event) => {
+  const value = Number((event.target as HTMLInputElement).value);
+  if (props.type === "sound") {
+    soundStore.setVolume(value);
+  } else {
+    console.log(value);
+    musicStore.setCurrentTime(value, "percent");
+    // musicStore.setCurrentTimePercent(value);
+  }
+};
 const onMouseWheel = (e: WheelEvent) => {
   if (props.type === "sound") {
     soundStore.volumeUpDownHandler(e.deltaY);
   }
 };
 
-const onMouseClick = (e: MouseEvent) => {
-  // 클릭시 마우스 체크
-  console.log("click", e.offsetX, progressBarWidth);
-
-  if (props.type === "sound") {
-    soundStore.updateVolume(e.offsetX, progressBarWidth);
-  } else {
-    musicPlayStore.updateTime(e.offsetX, progressBarWidth);
-  }
+const getProgressWidth = (value: number, min: number, max: number) => {
+  const widthPercent = ((value - min) / (max - min)) * 100;
+  return widthPercent;
 };
 
-const onMouseUp = (e: MouseEvent) => {
-  console.log("release", e.offsetX, progressBarWidth);
-  if (props.type === "sound") {
-    soundStore.updateVolume(e.offsetX, progressBarWidth);
-  } else {
-    musicPlayStore.updateTime(e.offsetX, progressBarWidth);
-  }
+const setProgressCss = (width: number) => {
+  (slider.value as HTMLElement).style.setProperty(
+    "--ProgressPercent",
+    `${width}%`
+  );
 };
 
-let progressBarWidth: number;
 onMounted(() => {
   soundStore.volumeInit();
-  progressBarWidth = (bar.value as HTMLFormElement).clientWidth;
+});
+
+watch(currentTime, () => {
+  if (props.type !== "sound") {
+    const percent = (currentTime.value / duration.value) * 100;
+    // const extraWidth = (100 - percent) / 10;
+    musicStore.setCurrentTimePercent(percent);
+  }
+});
+
+watch(currentTimePercent, () => {
+  if (currentTimePercent.value && props.type !== "sound") {
+    setProgressCss(currentTimePercent.value + 1);
+  }
+});
+
+watch(volume, () => {
+  // console.log(props.typeValue);
+  if (volume.value === 0) {
+    setProgressCss(0);
+  }
+
+  if (volume.value && props.type === "sound") {
+    // const min = Number((slider.value as HTMLInputElement).min);
+    // const max = Number((slider.value as HTMLInputElement).max);
+    // const widthPercent = getProgressWidth(volume.value as number, min, max);
+    setProgressCss(volume.value);
+  }
 });
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/color.scss";
+
+/* style the input element with type "range" */
 input[type="range"] {
-  // appearance: none;
-  // -webkit-appearance: none;
-  // background: transparent;
-
-  // cursor: pointer;
-
-  // width: 100%;
-  // border: 1px solid black;
-  // height: 0.3rem;
-  -webkit-appearance: none;
-  appearance: none;
+  display: inline-block;
   width: 100%;
+  position: relative;
+  appearance: none;
+  /* pointer-events: none; */
+  border-radius: 999px;
+  z-index: 0;
   cursor: pointer;
-  outline: none;
-  border-radius: 15px;
-  height: 6px;
-  background: #ccc;
 
-  &::-webkit-slider-thumb {
-    // appearance: none;
-    // -webkit-appearance: none;
-
-    // background-color: $yellowPastel;
-    // cursor: pointer;
-    // border: 0.1px solid $yellowPastel;
-    // height: 1rem;
-    // width: 1rem;
-    // border-radius: 100%;
-    // // box-shadow: -100vw 0 100vw dodgerblue;
-
-    // box-shadow: -1000% 0 0 1000% dodgerblue;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 15px;
-    width: 15px;
-    background-color: #f50;
-    border-radius: 50%;
-    border: none;
-    transition: 0.2s ease-in-out;
+  --trackHeight: 0.3rem;
+  --thumbRadius: 0.8rem;
+  &::before {
+    content: "";
+    position: absolute;
+    //   100% -> default value
+    width: var(--ProgressPercent, 0%);
+    height: 100%;
+    background: $orangeColor;
+    /* z-index: -1; */
+    pointer-events: none;
+    border-radius: 999px;
   }
 
   &::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    background-color: red;
+    appearance: none;
+    background: rgb(222, 222, 222);
+    height: var(--trackHeight);
+    border-radius: 999px;
+  }
+
+  &::-moz-range-track {
+    appearance: none;
+    background: rgb(222, 222, 222);
+    height: var(--trackHeight);
+    border-radius: 999px;
+  }
+
+  &::-webkit-slider-thumb {
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: var(--thumbRadius);
+    height: var(--thumbRadius);
+    /* margin-top: calc((var(--trackHeight) - var(--thumbRadius)) / 2); */
+    background: $orangeColor;
+    border-radius: 999px;
+    pointer-events: all;
+    appearance: none;
+    z-index: 1;
   }
 }
+
+/* ::before element to replace the slider track */
+
+/* `::-webkit-slider-runnable-track` targets the track (background) of a range slider in chrome and safari browsers. */
+
+/* `::-moz-range-track` targets the track (background) of a range slider in Mozilla Firefox. */
 </style>
