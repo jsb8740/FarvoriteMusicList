@@ -14,10 +14,12 @@ import AppSearchingBox from "../AppSearchingBox.vue";
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/color.scss";
 main {
   width: 100%;
   height: 100%;
-  background-color: rgb(249, 249, 249);
+  background-color: $mainbackground;
+  // background-color: $pastel4;
   padding: 2rem 3rem;
   box-sizing: border-box;
   .searching {

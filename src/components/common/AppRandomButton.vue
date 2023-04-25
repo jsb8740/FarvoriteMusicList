@@ -30,9 +30,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  border: 2px solid rgb(95, 95, 95);
   padding: 0.2rem 0.5rem;
-  border-radius: 2rem;
+  border-radius: 999px;
   font-size: 1rem;
 }
 </style>

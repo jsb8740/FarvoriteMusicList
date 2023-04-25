@@ -59,7 +59,7 @@ const checkClicked = (event: InputEvent) => {
   gap: 2rem;
   font-size: 1.4rem;
 
-  background-color: rgb(242, 241, 246);
+  background-color: $pastel3;
   padding: 0 2.4rem;
 
   .category {
@@ -74,7 +74,7 @@ a {
   gap: 0.7rem;
   align-items: center;
   text-decoration: none;
-  color: black;
+  color: white;
   width: 100%;
   display: block;
   padding: 0.5rem;

@@ -40,7 +40,7 @@ const prev = () => {
   display: flex;
   align-items: center;
   gap: 3.4rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 
   .previous,

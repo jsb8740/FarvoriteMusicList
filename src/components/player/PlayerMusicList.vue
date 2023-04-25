@@ -29,17 +29,19 @@ const musicStore = useMusicControllerStore();
 <style scoped lang="scss">
 @import "@/assets/color.scss";
 .playList {
-  width: 49%;
+  border: 0.3rem solid $pastel3;
+  border-radius: 10%;
+  width: 57%;
   height: 100%;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   .header {
     padding: 1.2rem 0 1.2rem 1.2rem;
     font-weight: 700;
     font-size: 1.6rem;
-    background-color: $yellowPastel;
+    background-color: $pastel4;
     display: flex;
   }
 
@@ -47,6 +49,7 @@ const musicStore = useMusicControllerStore();
     overflow-y: scroll;
     margin: 0;
     list-style: none;
+    padding: 0 1rem;
   }
 }
 </style>

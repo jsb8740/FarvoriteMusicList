@@ -14,4 +14,4 @@ const typeComputed = computed(() =>
 );
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

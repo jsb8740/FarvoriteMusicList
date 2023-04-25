@@ -61,7 +61,7 @@ const favoriteClick = async () => {
   // 비동기 문제였음 await로 해결
 };
 const favoriteColorCheck = computed(() =>
-  favorite.value ? "#ef7330" : "#fff"
+  favorite.value ? "#FF8400" : "#fff"
 );
 
 onMounted(() => {
