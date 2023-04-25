@@ -32,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import AppProgressBar from "../common/AppProgressBar.vue";
 import AppYoutube from "@/components/common/AppYoutube.vue";
 </script>
 
