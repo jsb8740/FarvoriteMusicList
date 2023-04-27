@@ -7,9 +7,10 @@ export const enum MuteState {
 }
 
 export const useSoundControllerStore = defineStore("music", () => {
-  const volume = ref(100);
+  const storage = parseInt(localStorage.getItem("volume") as string);
+  const volume = ref(storage);
   const volumeTmp = ref(0); // 뮤트인 경우 볼륨을 담는 임시변수 뮤트끝나면 복귀시키는 용도
-  const muteFlag = ref(MuteState.UN_MUTE); //뮤트 확인  플래그
+  const isMute = ref(false); //뮤트 확인  플래그
 
   // 사운드 이미지 클릭시 소리 mute
   const setVolume = (newVolume: number) => {
@@ -17,21 +18,21 @@ export const useSoundControllerStore = defineStore("music", () => {
   };
 
   const soundMute = () => {
-    if (muteFlag.value === MuteState.MUTE) {
+    if (isMute.value === true) {
       // UN_MUTE인 상태
-      muteFlag.value = MuteState.UN_MUTE;
+      isMute.value = false;
     } else {
       // Mute인 상태
-      muteFlag.value = MuteState.MUTE;
+      isMute.value = true;
     }
 
-    switch (muteFlag.value) {
-      case MuteState.UN_MUTE:
+    switch (isMute.value) {
+      case false:
         //뮤트 아닌 경우
         volume.value = volumeTmp.value;
         volumeTmp.value = 0;
         break;
-      case MuteState.MUTE:
+      case true:
         // 뮤트인 경우
         volumeTmp.value = volume.value;
         volume.value = 0;
@@ -46,7 +47,7 @@ export const useSoundControllerStore = defineStore("music", () => {
   };
 
   const updateVolume = (offsetX: number, divWidth: number) => {
-    muteFlag.value = MuteState.UN_MUTE;
+    isMute.value = false;
     volumeTmp.value = 0;
     volume.value = Math.round((offsetX / divWidth) * 100);
     // 200은 div의 넓이
@@ -59,20 +60,20 @@ export const useSoundControllerStore = defineStore("music", () => {
       volume.value = 100;
       localStorage.setItem("volume", volume.value.toString());
       localStorage.setItem("volumeTmp", volumeTmp.value.toString());
-      localStorage.setItem("mute", muteFlag.value.toString());
+      localStorage.setItem("mute", isMute.value.toString());
       return;
     }
 
     // get Local Storage
     volume.value = parseInt(localStorage.getItem("volume") as string);
     volumeTmp.value = parseInt(localStorage.getItem("volumeTmp") as string);
-    muteFlag.value = JSON.parse(localStorage.getItem("mute") as string);
+    isMute.value = JSON.parse(localStorage.getItem("mute") as string);
     return;
   };
 
   // private function
   const volumeUpDown = (upDown: number): number => {
-    if (muteFlag.value === MuteState.UN_MUTE) {
+    if (isMute.value === false) {
       // 뮤트가 아닌 경우
 
       if (upDown < 0) {
@@ -99,7 +100,7 @@ export const useSoundControllerStore = defineStore("music", () => {
 
   // auto set Local Storage
   watch(
-    [volume, muteFlag, volumeTmp],
+    [volume, isMute, volumeTmp],
     (newValue, oldValue) => {
       if (newValue[0] !== oldValue[0]) {
         localStorage.setItem("volume", newValue[0].toString());
@@ -115,7 +116,7 @@ export const useSoundControllerStore = defineStore("music", () => {
   );
   return {
     volume,
-    muteFlag,
+    isMute,
     soundMute,
     updateVolume,
     volumeInit,
