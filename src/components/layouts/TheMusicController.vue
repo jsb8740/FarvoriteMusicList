@@ -7,7 +7,18 @@
     <div class="musicPlayer">
       <div class="musicInfo">
         <!-- <img src="@/assets/test/test1.jpg" alt="" /> -->
-        <AppYoutube></AppYoutube>
+        <!-- <AppYoutube></AppYoutube> -->
+        <!-- iqe220lkJzc -->
+        <App
+          :video-id="currentMusic ?? 'iqe220lkJzc'"
+          @unstarted="unstarted"
+          @ended="ended"
+          @playing="playing"
+          @paused="paused"
+          @buffering="buffering"
+          @stateChange="stateChange"
+          @ready="ready"
+        ></App>
 
         <div class="music">
           <!-- 전광판 효과 추가 -->
@@ -33,6 +44,66 @@
 
 <script setup lang="ts">
 import AppYoutube from "@/components/common/AppYoutube.vue";
+import App from "@/components/common/App.vue";
+import { useMusicControllerStore } from "@/stores/musicController";
+import { computed, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useSoundControllerStore } from "@/stores/soundController";
+const currentTimeInterval = ref(0);
+
+const musicStore = useMusicControllerStore();
+const { playList, currentIndex } = storeToRefs(musicStore);
+
+const soundStore = useSoundControllerStore();
+const { isMute, volume } = storeToRefs(soundStore);
+
+// const currentMusic = computed(() => playList.value[currentIndex.value]);
+
+const currentMusic = ref(playList.value[currentIndex.value]);
+
+const unstarted = (player: YT.Player) => {
+  musicStore.setCurrentTime(1);
+};
+
+const ended = (player: YT.Player) => {
+  clearInterval(currentTimeInterval.value);
+
+  // update video
+  musicStore.nextIndex();
+  const videoId = playList.value[currentIndex.value];
+  player.loadVideoById({ videoId });
+
+  musicStore.setCurrentTime(1);
+};
+const playing = (player: YT.Player) => {
+  currentTimeInterval.value = setInterval(() => {
+    const currentTime = Math.ceil(player.getCurrentTime() as number);
+    musicStore.setCurrentTime(currentTime);
+    console.log(currentTime);
+  }, 1000);
+};
+const paused = (player: YT.Player) => {
+  clearInterval(currentTimeInterval.value);
+};
+
+const buffering = (player: YT.Player) => {
+  musicStore.setCurrentTime(1);
+};
+
+const stateChange = (player: YT.Player) => {
+  const fullTime = player.getDuration();
+  musicStore.setDuration(fullTime);
+};
+
+const ready = (player: YT.Player) => {
+  soundStore.volumeInit();
+  player.setVolume(volume.value);
+  if (isMute.value === true) {
+    player.mute();
+  } else {
+    player.unMute();
+  }
+};
 </script>
 
 <style scoped lang="scss">
