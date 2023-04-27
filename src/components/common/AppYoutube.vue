@@ -17,7 +17,7 @@ export interface Props {
 }
 
 const soundStore = useSoundControllerStore();
-const { volume, muteFlag } = storeToRefs(soundStore);
+const { volume, isMute } = storeToRefs(soundStore);
 const musicPlayStore = useMusicControllerStore();
 const { isPaused, currentTime, currentIndex, playList, currentTimeClick } =
   storeToRefs(musicPlayStore);
@@ -77,16 +77,38 @@ const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
   console.log("stateChange", event);
   // console.log(musicPlayStore.dynamicMusicdWidth);
   switch (event.data) {
-    case -1:
+    case YT.PlayerState.UNSTARTED:
+      // unstarted
+      break;
+    case YT.PlayerState.ENDED:
+      // finished
+      musicPlayStore.setCurrentTime(0);
+      musicPlayStore.nextIndex();
+      break;
+    case YT.PlayerState.PLAYING:
+      // playing
+      break;
+    case YT.PlayerState.PAUSED:
+      // paused
+      // updatedVideo("paused");
+      break;
+    case YT.PlayerState.BUFFERING:
+      // buffering
+
+      break;
+    case YT.PlayerState.CUED:
+      // video cued
       break;
   }
   const fullTime = player.getDuration();
   musicPlayStore.setDuration(fullTime);
+  console.log("BUFFERING");
+  console.log(fullTime);
 };
 
 const onPlayerReady = (event: YT.PlayerEvent) => {
   setVolume(volume.value);
-  setMute(muteFlag.value);
+  setMute(isMute.value);
   const fullTime = player.getDuration();
   console.log(fullTime);
   // duration.value = player.getDuration() as number;
@@ -97,8 +119,8 @@ const onPlayerReady = (event: YT.PlayerEvent) => {
 //////////////////////////////////
 // setVideo function
 //////////////////////////////////
-const setMute = (muteType: MuteState) => {
-  if (muteType === MuteState.MUTE) {
+const setMute = (muteType: boolean) => {
+  if (muteType === true) {
     player.mute();
   } else {
     player.unMute();
@@ -141,7 +163,7 @@ const updatedVideo = (state: string) => {
       setPaused(isPaused.value);
       break;
     case "muted":
-      setMute(muteFlag.value);
+      setMute(isMute.value);
       break;
     case "volume":
       setVolume(volume.value);
@@ -178,8 +200,11 @@ watch(playList, () => {
 });
 
 // volume update
-watch([volume, isPaused], (newValue) => {
+watch(volume, () => {
   updatedVideo("volume");
+});
+
+watch(isPaused, () => {
   updatedVideo("paused");
 });
 
