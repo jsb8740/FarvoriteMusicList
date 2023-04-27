@@ -6,9 +6,9 @@
     :value="type === 'sound' ? volume : currentTimePercent"
     @input="onInputSlidereValue"
     @wheel.prevent="onMouseWheel"
-    :style="inputStyle"
     ref="slider"
   />
+  <!-- :style="inputStyle" -->
 </template>
 
 <script setup lang="ts">
@@ -64,29 +64,32 @@ const setProgressCss = (width: number) => {
 
 onMounted(() => {
   soundStore.volumeInit();
+  if (props.type !== "sound") {
+    (slider.value as HTMLInputElement).defaultValue = "0";
+  }
 });
 
 watch(currentTime, () => {
   if (props.type !== "sound") {
-    const percent = (currentTime.value / duration.value) * 100;
+    const percent = Math.round((currentTime.value / duration.value) * 100);
     // const extraWidth = (100 - percent) / 10;
     musicStore.setCurrentTimePercent(percent);
   }
 });
 
 watch(currentTimePercent, () => {
-  if (currentTimePercent.value && props.type !== "sound") {
-    setProgressCss(currentTimePercent.value + 1);
+  if (props.type !== "sound") {
+    setProgressCss(Math.ceil(currentTimePercent.value));
   }
 });
 
 watch(volume, () => {
   // console.log(props.typeValue);
-  if (volume.value === 0) {
+  if (volume.value === 0 && props.type === "sound") {
     setProgressCss(0);
   }
 
-  if (volume.value && props.type === "sound") {
+  if (props.type === "sound") {
     // const min = Number((slider.value as HTMLInputElement).min);
     // const max = Number((slider.value as HTMLInputElement).max);
     // const widthPercent = getProgressWidth(volume.value as number, min, max);
@@ -115,7 +118,7 @@ input[type="range"] {
     content: "";
     position: absolute;
     //   100% -> default value
-    width: var(--ProgressPercent, 0%);
+    width: var(--ProgressPercent, 0);
     height: 100%;
     background: $orangeColor;
     /* z-index: -1; */
