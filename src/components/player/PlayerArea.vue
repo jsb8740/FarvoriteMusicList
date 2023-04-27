@@ -11,6 +11,20 @@
 
       <PlayerController></PlayerController>
 
+      <br />
+
+      <div class="timeLine">
+        <AppProgressBar type="time"></AppProgressBar>
+        <div class="timeLineText">
+          <span>
+            {{ startTime }}
+          </span>
+          <span>
+            {{ lastTime }}
+          </span>
+        </div>
+      </div>
+
       <div class="sound">
         <div @click="soundStore.soundMute">
           <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
@@ -21,15 +35,6 @@
         <div>
           <AppProgressBar type="sound"></AppProgressBar>
         </div>
-      </div>
-
-      <br />
-
-      <div class="timeLine">
-        <AppProgressBar type="time"></AppProgressBar>
-        {{ startTime }}
-        ///
-        {{ lastTime }}
       </div>
       <!-- <test type="sound"></test> -->
     </div>
@@ -77,7 +82,6 @@ const checkProps = () => {
 
 const formattingTime = (time: number) => {
   const value = Math.floor(time) % 60;
-  console.log(value);
 
   if (value < 10) {
     return `0${value}`;
@@ -151,12 +155,21 @@ onMounted(() => {
     justify-content: center;
     padding: 0 2rem;
     box-sizing: border-box;
+    .timeLine {
+      width: 100%;
+      .timeLineText {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
     .sound {
       width: 25%;
       align-self: flex-end;
       display: flex;
-      justify-self: center;
+      justify-content: space-between;
       gap: 0.3rem;
+      margin-top: 0.5rem;
 
       div {
         display: flex;
