@@ -12,8 +12,6 @@
     <div class="title">
       <div v-html="props.title" />
     </div>
-
-    <div id="test"></div>
     <!-- <slot></slot> -->
     <!-- <div class="byWriter">
       <slot name="by">by test</slot>
