@@ -14,7 +14,7 @@
       <br />
 
       <div class="timeLine">
-        <AppProgressBar type="time"></AppProgressBar>
+        <AppProgressBar v-model="currentTimePercent" progress-type="time" />
         <div class="timeLineText">
           <span>
             {{ startTime }}
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="sound">
+      <div class="sound" @wheel.prevent>
         <div @click="soundStore.soundMute">
           <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
           <img v-show="soundLowImg" src="@/assets/volumeLow-white.png" />
@@ -33,10 +33,9 @@
         </div>
 
         <div>
-          <AppProgressBar type="sound"></AppProgressBar>
+          <AppProgressBar v-model="volume" progress-type="sound" />
         </div>
       </div>
-      <!-- <test type="sound"></test> -->
     </div>
 
     <PlayerMusicList :music-list="playList"></PlayerMusicList>
@@ -53,14 +52,12 @@ import PlayerMusicList from "./PlayerMusicList.vue";
 import PlayerController from "./PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
 import { useSoundControllerStore } from "@/stores/soundController";
-
 export interface Props {
   type: string;
 }
 const props = defineProps<Props>();
 
 const dbStore = useIndexedDBStore();
-
 const soundStore = useSoundControllerStore();
 const { volume } = storeToRefs(soundStore);
 const musicStore = useMusicControllerStore();
@@ -178,6 +175,7 @@ onMounted(() => {
           width: 1.1rem;
           height: 1.1em;
           margin: 0;
+          cursor: pointer;
         }
       }
     }
