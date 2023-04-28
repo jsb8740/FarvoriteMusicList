@@ -2,12 +2,12 @@ import { computed, getCurrentInstance, ref } from "vue";
 import { defineStore } from "pinia";
 import { useIndexedDBStore } from "./indexedDB";
 
-export const useMusicControllerStore = defineStore("play", () => {
+export const useMusicControllerStore = defineStore("music", () => {
   const currentTime = ref(0);
   const duration = ref(0);
   const isPaused = ref(true); // 음악 시작 state
   const playList = ref<string[]>([]);
-  const currentTimePercent = ref(0); // 현재 음악 %
+  const currentTimePercent = ref(0); // 현재 음악 % input value
   const currentTimeClick = ref(0); //누른 음악 시간
   const currentIndex = ref(0);
   // 재생버튼 누를시 inpoutPlayList로 세팅을하고
@@ -79,15 +79,12 @@ export const useMusicControllerStore = defineStore("play", () => {
     duration.value = Math.round(fullTime);
   };
 
-  const setCurrentTime = (nowTime: number, type?: string) => {
+  const setCurrentTime = (nowTime: number) => {
     let time = nowTime;
-    if (type) {
-      time = Math.round((duration.value * nowTime) / 100);
-      console.log(time);
-      currentTimePercent.value = nowTime;
-      currentTimeClick.value = time;
-    }
     currentTime.value = time;
+  };
+  const setCurrentTimeClick = (percent: number) => {
+    currentTimeClick.value = percent;
   };
 
   const changePauseState = () => {
@@ -111,5 +108,6 @@ export const useMusicControllerStore = defineStore("play", () => {
     inputPlayList,
     moveMusic,
     setCurrentTimePercent,
+    setCurrentTimeClick,
   };
 });

@@ -1,12 +1,7 @@
 import { computed, ref, watch } from "vue";
 import { defineStore } from "pinia";
 
-export const enum MuteState {
-  MUTE = 0,
-  UN_MUTE = 1,
-}
-
-export const useSoundControllerStore = defineStore("music", () => {
+export const useSoundControllerStore = defineStore("sound", () => {
   const storage = parseInt(localStorage.getItem("volume") as string);
   const volume = ref(storage);
   const volumeTmp = ref(0); // 뮤트인 경우 볼륨을 담는 임시변수 뮤트끝나면 복귀시키는 용도
@@ -41,10 +36,12 @@ export const useSoundControllerStore = defineStore("music", () => {
   };
 
   // 마우스 휠 볼륨 핸들러
-  const volumeUpDownHandler = (deltaY: number) => {
-    volume.value += volumeUpDown(deltaY);
-    volumeLimit();
-  };
+  // const volumeUpDownHandler = (deltaY: number): number => {
+  //   volume.value += volumeUpDown(deltaY);
+  //   volumeLimit();
+
+  //   return volume.value;
+  // };
 
   const updateVolume = (offsetX: number, divWidth: number) => {
     isMute.value = false;
@@ -71,32 +68,32 @@ export const useSoundControllerStore = defineStore("music", () => {
     return;
   };
 
-  // private function
-  const volumeUpDown = (upDown: number): number => {
-    if (isMute.value === false) {
-      // 뮤트가 아닌 경우
+  // // private function
+  // const volumeUpDown = (upDown: number): number => {
+  //   if (isMute.value === false) {
+  //     // 뮤트가 아닌 경우
 
-      if (upDown < 0) {
-        //up
-        return 5;
-      } else if (upDown > 0) {
-        //down
-        return -5;
-      }
-    }
-    // 뮤트인 경우
-    return 0;
-  };
+  //     if (upDown < 0) {
+  //       //up
+  //       return 5;
+  //     } else if (upDown > 0) {
+  //       //down
+  //       return -5;
+  //     }
+  //   }
+  //   // 뮤트인 경우
+  //   return 0;
+  // };
 
-  // private function
-  //볼륨 0, 100 밖으로 안벗어나게
-  const volumeLimit = () => {
-    if (volume.value < 0) {
-      volume.value = 0;
-    } else if (volume.value > 100) {
-      volume.value = 100;
-    }
-  };
+  // // private function
+  // //볼륨 0, 100 밖으로 안벗어나게
+  // const volumeLimit = () => {
+  //   if (volume.value < 0) {
+  //     volume.value = 0;
+  //   } else if (volume.value > 100) {
+  //     volume.value = 100;
+  //   }
+  // };
 
   // auto set Local Storage
   watch(
@@ -120,7 +117,6 @@ export const useSoundControllerStore = defineStore("music", () => {
     soundMute,
     updateVolume,
     volumeInit,
-    volumeUpDownHandler,
     setVolume,
   };
 });
