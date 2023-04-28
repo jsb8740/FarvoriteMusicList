@@ -5,10 +5,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import {
-  useSoundControllerStore,
-  MuteState,
-} from "@/stores/soundController.js";
+import { useSoundControllerStore } from "@/stores/soundController.js";
 import { storeToRefs } from "pinia";
 import { useMusicControllerStore } from "@/stores/musicController";
 
