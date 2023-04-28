@@ -1,5 +1,5 @@
 <template>
-  <div ref="player" id="test"></div>
+  <div ref="player" id="player"></div>
 </template>
 
 <script setup lang="ts">
@@ -11,8 +11,8 @@ import { useSoundControllerStore } from "@/stores/soundController";
 export interface Props {
   videoId: string;
 }
-const props = defineProps<Props>();
-const emit = defineEmits<{
+
+export interface Emits {
   (e: "ready", player: YT.Player): void;
   (e: "unstarted", player: YT.Player): void;
   (e: "ended", player: YT.Player): void;
@@ -20,7 +20,9 @@ const emit = defineEmits<{
   (e: "paused", player: YT.Player): void;
   (e: "buffering", player: YT.Player): void;
   (e: "stateChange", player: YT.Player): void;
-}>();
+}
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const player = ref<YT.Player | null>(null);
 const loadAPI = () => {
@@ -33,7 +35,6 @@ const loadAPI = () => {
   } else {
     document.head.appendChild(script);
   }
-  console.log("api");
 };
 
 const checkTYLoaded = () => {
@@ -45,9 +46,8 @@ const checkTYLoaded = () => {
 };
 
 const createPlayer = () => {
-  const playerElement = document.getElementById("test") as HTMLElement;
+  const playerElement = document.getElementById("player") as HTMLElement;
   const videoID = props.videoId;
-  console.log("createPlayer");
 
   player.value = new YT.Player(playerElement, {
     height: 200,
@@ -98,7 +98,15 @@ onMounted(async () => {
 });
 
 const musicStore = useMusicControllerStore();
-const { playList, currentIndex, isPaused } = storeToRefs(musicStore);
+const {
+  playList,
+  currentIndex,
+  isPaused,
+  currentTimePercent,
+  duration,
+  currentTime,
+  currentTimeClick,
+} = storeToRefs(musicStore);
 
 const soundStore = useSoundControllerStore();
 const { volume } = storeToRefs(soundStore);
@@ -113,15 +121,38 @@ const setVideoPlay = (isPausedValue: boolean) => {
 
 // Update Sound
 watch(volume, (newVolume, old) => {
-  console.log("volume", volume.value);
-  console.log("newVolume", newVolume);
-  console.log("old", old);
-
+  if (!player.value) {
+    return;
+  }
   (player.value as YT.Player).setVolume(newVolume);
 });
 
 // Update video
+watch(currentTimeClick, (newCurrentTimeClick) => {
+  if (!player.value) {
+    return;
+  }
+
+  if (duration.value === 0) {
+    musicStore.setCurrentTimePercent(0);
+  }
+  const time = Math.round((duration.value * newCurrentTimeClick) / 100);
+  musicStore.setCurrentTime(time);
+  (player.value as YT.Player).seekTo(time, !isPaused.value);
+});
+
+watch(currentTime, (newCurrentTime) => {
+  if (!player.value) {
+    return;
+  }
+  const time = Math.round((newCurrentTime / duration.value) * 100);
+  musicStore.setCurrentTimePercent(time);
+});
+
 watch(currentIndex, (newCurrentIndex) => {
+  if (!player.value) {
+    return;
+  }
   const videoId = playList.value[newCurrentIndex];
   (player.value as YT.Player).loadVideoById({ videoId });
   setVideoPlay(isPaused.value);
@@ -138,6 +169,9 @@ watch(playList, (newPlayList, oldPlayList) => {
 });
 
 watch(isPaused, (newIsPaused) => {
+  if (!player.value) {
+    return;
+  }
   setVideoPlay(newIsPaused);
 });
 </script>
