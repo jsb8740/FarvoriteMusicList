@@ -1,26 +1,8 @@
 <template>
-  <div>
-    <!-- <input
-    type="range"
-    min="0"
-    max="100"
-    ref="slider"
-    :value="sliderValue"
-    @input="onInput"
-    @wheel="onMouseWheel"
-    :style="initStyle"
-  /> -->
-    <input
-      type="range"
-      :min="min"
-      :max="max"
-      ref="slider"
-      v-model="progress"
-      @input="onInput"
-      @wheel="onMouseWheel"
-    />
-    {{ progress }}
-  </div>
+  <!-- <div> -->
+  <input type="range" :min="min" :max="max" ref="slider" v-model="progress" />
+  <!-- {{ progress }}
+  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -52,8 +34,6 @@ const isModelValueNull = computed(() => props.modelValue == null);
 const progress = computed({
   get: () => {
     if (isModelValueNull.value) {
-      console.log("df");
-
       return innerProgress.value;
     }
 
@@ -69,6 +49,8 @@ const progress = computed({
     if (isModelValueNull.value) {
       innerProgress.value = temp;
     }
+    console.log("progess", temp);
+
     emit("update:modelValue", temp);
   },
 });
@@ -88,11 +70,6 @@ const onMouseWheel = ({ deltaY }: WheelEvent) => {
   }
 };
 
-const onInput = (e: Event) => {
-  const value = Number((e.target as HTMLInputElement).value);
-  progress.value = value;
-};
-
 const setProgressCss = (width: number) => {
   console.log(width);
   (slider.value as HTMLElement).style.setProperty(
@@ -104,6 +81,7 @@ const setProgressCss = (width: number) => {
 watch(
   () => progress.value,
   (newVal) => {
+    console.log("watch", newVal);
     setProgressCss(newVal);
   }
 );
