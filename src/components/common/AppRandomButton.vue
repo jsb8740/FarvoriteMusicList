@@ -19,7 +19,7 @@
         fill="#33363F"
       />
     </svg>
-    랜덤재생
+    <slot></slot>
   </button>
 </template>
 
