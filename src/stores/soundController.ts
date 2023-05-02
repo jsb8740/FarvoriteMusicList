@@ -1,4 +1,4 @@
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { defineStore } from "pinia";
 
 export const useSoundControllerStore = defineStore("sound", () => {
@@ -35,21 +35,6 @@ export const useSoundControllerStore = defineStore("sound", () => {
     }
   };
 
-  // 마우스 휠 볼륨 핸들러
-  // const volumeUpDownHandler = (deltaY: number): number => {
-  //   volume.value += volumeUpDown(deltaY);
-  //   volumeLimit();
-
-  //   return volume.value;
-  // };
-
-  const updateVolume = (offsetX: number, divWidth: number) => {
-    isMute.value = false;
-    volumeTmp.value = 0;
-    volume.value = Math.round((offsetX / divWidth) * 100);
-    // 200은 div의 넓이
-  };
-
   // init
   const volumeInit = (): void => {
     if (localStorage.getItem("volume") === null) {
@@ -67,33 +52,6 @@ export const useSoundControllerStore = defineStore("sound", () => {
     isMute.value = JSON.parse(localStorage.getItem("mute") as string);
     return;
   };
-
-  // // private function
-  // const volumeUpDown = (upDown: number): number => {
-  //   if (isMute.value === false) {
-  //     // 뮤트가 아닌 경우
-
-  //     if (upDown < 0) {
-  //       //up
-  //       return 5;
-  //     } else if (upDown > 0) {
-  //       //down
-  //       return -5;
-  //     }
-  //   }
-  //   // 뮤트인 경우
-  //   return 0;
-  // };
-
-  // // private function
-  // //볼륨 0, 100 밖으로 안벗어나게
-  // const volumeLimit = () => {
-  //   if (volume.value < 0) {
-  //     volume.value = 0;
-  //   } else if (volume.value > 100) {
-  //     volume.value = 100;
-  //   }
-  // };
 
   // auto set Local Storage
   watch(
@@ -115,7 +73,6 @@ export const useSoundControllerStore = defineStore("sound", () => {
     volume,
     isMute,
     soundMute,
-    updateVolume,
     volumeInit,
     setVolume,
   };
