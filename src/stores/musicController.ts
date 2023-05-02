@@ -14,6 +14,8 @@ export const useMusicControllerStore = defineStore("music", () => {
   // index 0번 나옴
   const indexedDBStore = useIndexedDBStore();
 
+  const getVideoId = computed(() => playList.value[currentIndex.value]);
+
   // methods
   const moveMusic = (videoId: string) => {
     // console.log(playList.value.findIndex((item) => item === videoId));
@@ -109,5 +111,6 @@ export const useMusicControllerStore = defineStore("music", () => {
     moveMusic,
     setCurrentTimePercent,
     setCurrentTimeClick,
+    getVideoId,
   };
 });
