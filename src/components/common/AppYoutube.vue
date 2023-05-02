@@ -1,255 +1,185 @@
 <template>
-  <div id="player" class="player"></div>
-  <!-- <div ref="test" id="test"></div> -->
+  <div ref="player" id="player"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useSoundControllerStore } from "@/stores/soundController.js";
-import { storeToRefs } from "pinia";
 import { useMusicControllerStore } from "@/stores/musicController";
+import { onMounted, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useSoundControllerStore } from "@/stores/soundController";
 
 export interface Props {
   videoId: string;
 }
 
-const soundStore = useSoundControllerStore();
-const { volume, isMute } = storeToRefs(soundStore);
-const musicPlayStore = useMusicControllerStore();
-const { isPaused, currentTime, currentIndex, playList, currentTimeClick } =
-  storeToRefs(musicPlayStore);
+export interface Emits {
+  (e: "ready", player: YT.Player): void;
+  (e: "unstarted", player: YT.Player): void;
+  (e: "ended", player: YT.Player): void;
+  (e: "playing", player: YT.Player): void;
+  (e: "paused", player: YT.Player): void;
+  (e: "buffering", player: YT.Player): void;
+  (e: "stateChange", player: YT.Player): void;
+}
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
-let player: YT.Player;
-let currentTimeInterval: number;
-
-const scriptLoad = () => {
+const player = ref<YT.Player | null>(null);
+const loadAPI = () => {
   const firstScript = document.getElementsByTagName("script")[0];
   const script = document.createElement("script");
-  // script를 태그를 만들고
-  // script 값을 줌
   script.src = "https://www.youtube.com/iframe_api";
   script.async = true;
-
-  script.onerror = function () {
-    // this == script
-    this.onload = null;
-    this.onerror = null;
-  };
-
   if (firstScript) {
-    // firstscript.parentNode == head
-    // inserBefore는 자식 노드를 삽입
-    // script를 firstscript 앞에 삽입
     firstScript.parentNode?.insertBefore(script, firstScript);
   } else {
     document.head.appendChild(script);
   }
 };
 
-const loadIFrame = () => {
-  return new Promise<any>((resolve) => {
-    scriptLoad();
-
+const checkTYLoaded = () => {
+  return new Promise<void>((resolve) => {
     window.onYouTubeIframeAPIReady = () => {
-      resolve(window.YT.Player);
+      resolve();
     };
   });
 };
 
-const createPlayer = async () => {
-  await loadIFrame();
+const createPlayer = () => {
+  const playerElement = document.getElementById("player") as HTMLElement;
+  // const videoID = props.videoId;
+  const videoID = props.videoId;
 
-  player = new YT.Player("player", {
-    height: "200",
-    width: "400",
-    videoId: "",
+  player.value = new YT.Player(playerElement, {
+    height: 0,
+    width: 0,
+    videoId: "iqe220lkJzc",
+    playerVars: { start: 0 },
     events: {
       onReady: onPlayerReady,
       onStateChange: onPlayerStateChange,
+      // "onPlaybackQualityChange": onPlaybackQualityChange,
+      // "onPlaybackRateChange": onPlaybackRateChange,
+      // "onError": onError,
+      // "onApiChange": onApiChange,
     },
   });
 };
+const onPlayerReady = (event: YT.PlayerEvent) => {
+  emit("ready", event.target);
+};
 
 const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
-  console.log("stateChange", event);
-  // console.log(musicPlayStore.dynamicMusicdWidth);
   switch (event.data) {
-    case YT.PlayerState.UNSTARTED:
-      // unstarted
+    case window.YT.PlayerState.UNSTARTED:
+      emit("unstarted", event.target);
       break;
-    case YT.PlayerState.ENDED:
-      // finished
-      musicPlayStore.setCurrentTime(0);
-      musicPlayStore.nextIndex();
+    case window.YT.PlayerState.ENDED:
+      emit("ended", event.target);
       break;
-    case YT.PlayerState.PLAYING:
-      // playing
+    case window.YT.PlayerState.PLAYING:
+      emit("playing", event.target);
       break;
-    case YT.PlayerState.PAUSED:
-      // paused
-      // updatedVideo("paused");
+    case window.YT.PlayerState.PAUSED:
+      emit("paused", event.target);
       break;
-    case YT.PlayerState.BUFFERING:
-      // buffering
-
-      break;
-    case YT.PlayerState.CUED:
-      // video cued
+    case window.YT.PlayerState.BUFFERING:
+      emit("buffering", event.target);
       break;
   }
-  const fullTime = player.getDuration();
-  musicPlayStore.setDuration(fullTime);
-  console.log("BUFFERING");
-  console.log(fullTime);
+  emit("stateChange", event.target);
 };
 
-const onPlayerReady = (event: YT.PlayerEvent) => {
-  setVolume(volume.value);
-  setMute(isMute.value);
-  const fullTime = player.getDuration();
-  console.log(fullTime);
-  // duration.value = player.getDuration() as number;
-  musicPlayStore.setDuration(fullTime);
-  // this.player?.playVideo();
-};
-
-//////////////////////////////////
-// setVideo function
-//////////////////////////////////
-const setMute = (muteType: boolean) => {
-  if (muteType === true) {
-    player.mute();
-  } else {
-    player.unMute();
-  }
-};
-const setVolume = (volume: number) => {
-  player.setVolume(volume);
-};
-
-const setPaused = (isPaused: boolean) => {
-  if (isPaused) {
-    player.pauseVideo();
-  } else {
-    player.playVideo();
-  }
-};
-const setVideo = (type: string) => {
-  switch (type) {
-    case "videoTime":
-      //시간 이동
-      player.seekTo(currentTime.value, true);
-      break;
-    case "videoId":
-      const videoId = playList.value[currentIndex.value];
-      player.loadVideoById({ videoId });
-      break;
-    default:
-  }
-  const fullTime = player.getDuration();
-  musicPlayStore.setDuration(fullTime);
-
-  if (isPaused.value) {
-    setPaused(isPaused.value);
-  }
-};
-
-const updatedVideo = (state: string) => {
-  switch (state) {
-    case "paused":
-      setPaused(isPaused.value);
-      break;
-    case "muted":
-      setMute(isMute.value);
-      break;
-    case "volume":
-      setVolume(volume.value);
-      break;
-    case "videoId":
-      setVideo(state);
-      break;
-    case "videoTime":
-      setVideo(state);
-      break;
-    default:
-      break;
-  }
-};
-
-// update current Time
-watch(isPaused, (newValue) => {
-  if (newValue === true) {
-    clearInterval(currentTimeInterval);
-  } else {
-    currentTimeInterval = setInterval(() => {
-      // 3.5.. 이렇게 오기에 올림으로 보내줌
-      musicPlayStore.setCurrentTime(
-        Math.ceil(player.getCurrentTime() as number)
-      );
-      console.log(Math.ceil(player.getCurrentTime() as number));
-    }, 1000);
-  }
-});
-
-watch(playList, () => {
-  musicPlayStore.changePauseState();
-  updatedVideo("videoId");
-});
-
-// volume update
-watch(volume, () => {
-  updatedVideo("volume");
-});
-
-watch(isPaused, () => {
-  updatedVideo("paused");
-});
-
-// video time update
-watch(currentTimeClick, (newValue) => {
-  updatedVideo("videoTime");
-});
-
-//  video Id update
-watch(currentIndex, (newValue) => {
-  updatedVideo("videoId");
-});
-
-onMounted(() => {
+onMounted(async () => {
+  loadAPI();
+  await checkTYLoaded();
   createPlayer();
+  setTimeout(() => {
+    (player.value as YT.Player).loadVideoById(props.videoId);
+    (player.value as YT.Player).stopVideo();
+  }, 2000);
+});
 
-  // player.getCurrentTime();
-  // 추가 할것
-  /*
-    isPause가 false
-    setinterval ㄱㄱ
-    ispause가 true면
-    clearinterval
-    --OK--
+const musicStore = useMusicControllerStore();
+const {
+  playList,
+  currentIndex,
+  isPaused,
+  currentTimePercent,
+  duration,
+  currentTime,
+  currentTimeClick,
+} = storeToRefs(musicStore);
 
-    store에 time변수를 추가하거나
-    emit으로 위로 올려보내기
+const soundStore = useSoundControllerStore();
+const { volume } = storeToRefs(soundStore);
 
-    player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
-    로 지정한 시간 이동 ok
+const setVideoPlay = (isPausedValue: boolean) => {
+  if (isPausedValue) {
+    (player.value as YT.Player).pauseVideo();
+  } else {
+    (player.value as YT.Player).playVideo();
+  }
+};
+// Update Sound
+watch(volume, (newVolume, old) => {
+  if (!player.value) {
+    return;
+  }
+  (player.value as YT.Player).setVolume(newVolume);
+});
 
-    soundcontroll의 작동방식이랑
-    videoProgressBar랑 같은 작동 방식으로
-    class extends 느낌? ok
+// Update video
+watch(currentTimeClick, (newCurrentTimeClick) => {
+  if (!player.value) {
+    return;
+  }
 
-    그리고 store의 musiccontroll를
-    youtube 폴더 밑의
-    videoControll
-    soundControll로 분리 ok
+  if (duration.value === 0) {
+    musicStore.setCurrentTimePercent(0);
+  }
+  const time = Math.round((duration.value * newCurrentTimeClick) / 100);
+  musicStore.setCurrentTime(time);
+  (player.value as YT.Player).seekTo(time, !isPaused.value);
+});
 
-    player.getPlayerState로 종료가 뜨면
-    다음 곡으로 이동
-  */
+watch(currentTime, (newCurrentTime) => {
+  if (!player.value) {
+    return;
+  }
+  console.log("newCurrentTime", newCurrentTime);
+
+  const time = Math.round((newCurrentTime / duration.value) * 100);
+  if (newCurrentTime === 0 || duration.value === 0)
+    musicStore.setCurrentTimePercent(0);
+  else musicStore.setCurrentTimePercent(time);
+});
+
+watch(currentIndex, (newCurrentIndex) => {
+  if (!player.value) {
+    return;
+  }
+  const videoId = playList.value[newCurrentIndex];
+  (player.value as YT.Player).loadVideoById(videoId, 0);
+  setVideoPlay(isPaused.value);
+});
+
+watch(playList, (newPlayList, oldPlayList) => {
+  // 예외처리 f5시 아무것도 안하는거
+  if (oldPlayList.length === 0) {
+    return;
+  }
+  const videoId = newPlayList[currentIndex.value];
+  (player.value as YT.Player).loadVideoById({ videoId });
+  setVideoPlay(isPaused.value);
+});
+
+watch(isPaused, (newIsPaused) => {
+  if (!player.value) {
+    return;
+  }
+  setVideoPlay(newIsPaused);
 });
 </script>
 
-<style scoped lang="scss">
-.player {
-  visibility: hidden;
-}
-</style>
+<style scoped lang="scss"></style>
