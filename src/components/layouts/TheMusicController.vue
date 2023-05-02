@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import AppYoutube from "@/components/common/AppYouTube.vue";
+import AppYoutube from "@/components/common/AppYoutube.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
