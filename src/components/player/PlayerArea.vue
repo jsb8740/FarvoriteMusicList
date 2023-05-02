@@ -14,7 +14,11 @@
       <br />
 
       <div class="timeLine">
-        <AppProgressBar v-model="currentTimePercent" progress-type="time" />
+        <AppProgressBar
+          v-model="currentTimePercent"
+          progress-type="time"
+          @input="onInput"
+        />
         <div class="timeLineText">
           <span>
             {{ startTime }}
@@ -26,14 +30,14 @@
       </div>
 
       <div class="sound" @wheel.prevent>
-        <div @click="soundStore.soundMute">
-          <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
-          <img v-show="soundLowImg" src="@/assets/volumeLow-white.png" />
-          <img v-show="soundHighImg" src="@/assets/volumeHigh-white.png" />
-        </div>
+        <PlayerSoundImg></PlayerSoundImg>
 
         <div>
-          <AppProgressBar v-model="volume" progress-type="sound" />
+          <AppProgressBar
+            v-model="volume"
+            progress-type="sound"
+            @wheel="onMouseWheel"
+          />
         </div>
       </div>
     </div>
@@ -52,6 +56,7 @@ import PlayerMusicList from "./PlayerMusicList.vue";
 import PlayerController from "./PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
 import { useSoundControllerStore } from "@/stores/soundController";
+import PlayerSoundImg from "./PlayerSoundImg.vue";
 export interface Props {
   type: string;
 }
@@ -59,7 +64,7 @@ const props = defineProps<Props>();
 
 const dbStore = useIndexedDBStore();
 const soundStore = useSoundControllerStore();
-const { volume } = storeToRefs(soundStore);
+const { volume, isMute } = storeToRefs(soundStore);
 const musicStore = useMusicControllerStore();
 const { currentIndex, playList, currentTime, duration, currentTimePercent } =
   storeToRefs(musicStore);
@@ -77,6 +82,20 @@ const checkProps = () => {
   }
 };
 
+const onMouseWheel = ({ deltaY }: WheelEvent) => {
+  let value;
+  if (isMute.value) return;
+  if (deltaY > 0) {
+    // progress.value = Math.max(min, progress.value - 5);
+    value = Math.max(0, volume.value - 5);
+    console.log(value);
+  } else {
+    value = Math.min(100, volume.value + 5);
+    console.log(value);
+  }
+  soundStore.setVolume(value);
+};
+
 const formattingTime = (time: number) => {
   const value = Math.floor(time) % 60;
 
@@ -84,6 +103,11 @@ const formattingTime = (time: number) => {
     return `0${value}`;
   }
   return value;
+};
+
+const onInput = (e: Event) => {
+  const value = Number((e.target as HTMLInputElement).value);
+  musicStore.setCurrentTimeClick(value);
 };
 
 const startTime = computed(() => {
@@ -110,17 +134,6 @@ const lastTime = computed(() => {
     return `${hours}:${minutes}:${seconds}`;
   }
 });
-
-// // sound img 컨트롤
-const soundMuteImg = computed<boolean>(() =>
-  volume.value === 0 ? true : false
-);
-const soundLowImg = computed<boolean>(() =>
-  volume.value > 0 && volume.value <= 50 ? true : false
-);
-const soundHighImg = computed<boolean>(() =>
-  volume.value > 50 && volume.value <= 100 ? true : false
-);
 
 watch(thumbnailURL, async () => {
   title.value = await dbStore.getPlaylistTitle(
@@ -167,16 +180,9 @@ onMounted(() => {
       justify-content: space-between;
       gap: 0.3rem;
       margin-top: 0.5rem;
-
       div {
         display: flex;
         align-items: center;
-        img {
-          width: 1.1rem;
-          height: 1.1em;
-          margin: 0;
-          cursor: pointer;
-        }
       }
     }
 
