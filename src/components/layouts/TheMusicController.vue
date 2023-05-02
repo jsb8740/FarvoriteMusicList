@@ -7,10 +7,8 @@
     <div class="musicPlayer">
       <div class="musicInfo">
         <!-- <img src="@/assets/test/test1.jpg" alt="" /> -->
-        <!-- <AppYoutube></AppYoutube> -->
-        <!-- iqe220lkJzc -->
-        <App
-          :video-id="currentMusic ?? 'iqe220lkJzc'"
+        <AppYoutube
+          :video-id="currentMusic"
           @unstarted="unstarted"
           @ended="ended"
           @playing="playing"
@@ -18,7 +16,7 @@
           @buffering="buffering"
           @stateChange="stateChange"
           @ready="ready"
-        ></App>
+        ></AppYoutube>
 
         <div class="music">
           <!-- 전광판 효과 추가 -->
@@ -43,8 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import AppYoutube from "@/components/common/AppYoutube.vue";
-import App from "@/components/common/App.vue";
+import AppYoutube from "@/components/common/AppYouTube.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
@@ -52,7 +49,7 @@ import { useSoundControllerStore } from "@/stores/soundController";
 const currentTimeInterval = ref(0);
 
 const musicStore = useMusicControllerStore();
-const { playList, currentIndex } = storeToRefs(musicStore);
+const { playList, currentIndex, isPaused } = storeToRefs(musicStore);
 
 const soundStore = useSoundControllerStore();
 const { isMute, volume } = storeToRefs(soundStore);
@@ -62,7 +59,8 @@ const { isMute, volume } = storeToRefs(soundStore);
 const currentMusic = ref(playList.value[currentIndex.value]);
 
 const unstarted = (player: YT.Player) => {
-  musicStore.setCurrentTime(1);
+  musicStore.setCurrentTime(0);
+  console.log("unstarted");
 };
 
 const ended = (player: YT.Player) => {
@@ -71,28 +69,33 @@ const ended = (player: YT.Player) => {
   // update video
   musicStore.nextIndex();
   const videoId = playList.value[currentIndex.value];
-  player.loadVideoById({ videoId });
-
-  musicStore.setCurrentTime(1);
+  player.loadVideoById({ videoId, startSeconds: 0 });
+  musicStore.setCurrentTime(0);
 };
 const playing = (player: YT.Player) => {
-  currentTimeInterval.value = setInterval(() => {
-    const currentTime = Math.ceil(player.getCurrentTime() as number);
-    musicStore.setCurrentTime(currentTime);
-    console.log(currentTime);
-  }, 1000);
+  if (!isPaused.value) {
+    clearInterval(currentTimeInterval.value);
+    currentTimeInterval.value = setInterval(() => {
+      const currentTime = Math.ceil(player.getCurrentTime() as number);
+      musicStore.setCurrentTime(currentTime);
+      console.log(currentTime);
+    }, 1000);
+  }
 };
 const paused = (player: YT.Player) => {
-  clearInterval(currentTimeInterval.value);
+  if (isPaused.value) {
+    clearInterval(currentTimeInterval.value);
+  }
 };
 
-const buffering = (player: YT.Player) => {
-  musicStore.setCurrentTime(1);
-};
+const buffering = (player: YT.Player) => {};
 
 const stateChange = (player: YT.Player) => {
   const fullTime = player.getDuration();
   musicStore.setDuration(fullTime);
+  if (isPaused.value) {
+    clearInterval(currentTimeInterval.value);
+  }
 };
 
 const ready = (player: YT.Player) => {
