@@ -4,9 +4,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import AppDarkMode from "../AppDarkMode.vue";
-import AppSearchingBox from "../AppSearchingBox.vue";
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss"></style>
