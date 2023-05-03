@@ -2,7 +2,6 @@
   <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 
   <svg
-    fill="#000000"
     width="30px"
     height="30px"
     viewBox="-7 0 32 32"
@@ -17,4 +16,11 @@
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped lang="scss">
+svg {
+  fill: $buttonColor;
+  &:hover {
+    fill: $orangeColor;
+  }
+}
+</style>

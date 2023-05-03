@@ -14,6 +14,6 @@ svg {
   width: $svg-size;
   height: auto;
   margin-left: -1px;
-  fill: white;
+  fill: $buttonColor;
 }
 </style>

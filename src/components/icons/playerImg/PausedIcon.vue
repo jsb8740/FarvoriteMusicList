@@ -7,17 +7,10 @@
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
-    <g
-      id="Page-1"
-      stroke="none"
-      stroke-width="1"
-      fill="none"
-      fill-rule="evenodd"
-    >
+    <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
       <g
         id="Dribbble-Light-Preview"
         transform="translate(-227.000000, -3765.000000)"
-        fill="#000000"
       >
         <g id="icons" transform="translate(56.000000, 160.000000)">
           <path
@@ -32,4 +25,11 @@
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped lang="scss">
+svg {
+  fill: $buttonColor;
+  &:hover {
+    fill: $orangeColor;
+  }
+}
+</style>

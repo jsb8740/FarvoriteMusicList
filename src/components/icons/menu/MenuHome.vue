@@ -6,7 +6,6 @@
     height="18.000000pt"
     viewBox="0 0 980.000000 778.000000"
     preserveAspectRatio="xMidYMid meet"
-    class="fill"
   >
     <g
       transform="translate(0.000000,778.000000) scale(0.100000,-0.100000)"
@@ -33,6 +32,6 @@
 
 <style scoped lang="scss">
 svg {
-  fill: white;
+  fill: $buttonColor;
 }
 </style>
