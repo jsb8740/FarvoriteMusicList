@@ -29,11 +29,10 @@
   </svg>
 </template>
 
-<script setup lang="ts">
-import { computed } from "vue";
+<script setup lang="ts"></script>
 
-const props = defineProps<{ clicked: boolean }>();
-const color = computed(() => (props.clicked ? "#ef7330" : "#3e3a41"));
-</script>
-
-<style scoped></style>
+<style scoped lang="scss">
+svg {
+  fill: white;
+}
+</style>

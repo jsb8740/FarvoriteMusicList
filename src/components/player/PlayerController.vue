@@ -40,8 +40,6 @@ const prev = () => {
   display: flex;
   align-items: center;
   gap: 3.4rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 
   .previous,
   .next {
@@ -60,8 +58,8 @@ const prev = () => {
     border-radius: 100%;
     padding: 0.5rem 0.4rem 0.5rem 0.5rem;
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18);
-    width: 2rem;
-    height: 2rem;
+    width: 3rem;
+    height: 3rem;
 
     display: flex;
     justify-content: center;
