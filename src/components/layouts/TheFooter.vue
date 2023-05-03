@@ -11,27 +11,31 @@
     />
 
     <div class="musicPlayer">
-      <PlayerController></PlayerController>
+      <div>
+        <PlayerController></PlayerController>
+      </div>
+
       <div class="musicInfo">
         <!-- <img src="@/assets/test/test1.jpg" alt="" /> -->
 
-        <div class="music">
-          <!-- 전광판 효과 추가 -->
-          <!-- <div class="title">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </div>
-          <div class="artist">artist</div> -->
-        </div>
+        <AppMarquee is-play="play">
+          <template #default>
+            <div v-html="title" class="title"></div>
+          </template>
+        </AppMarquee>
       </div>
 
       <!-- <MusicPlayer></MusicPlayer> -->
 
-      <div class="soundControl">
-        <!-- <Heart video-id="undefined"></Heart> -->
-        <!-- <SoundController></SoundController> -->
-        <!-- <AppProgressBar type="sound"></AppProgressBar> -->
-        <!-- soundcontroller의 의존성 분리가 필요함 -->
-        <!-- TheMusicController를 layouts을 다른 곳을 이동함 -->
+      <div class="soundControl" @wheel.prevent>
+        <PlayerSoundImg></PlayerSoundImg>
+        <div>
+          <AppProgressBar
+            v-model="volume"
+            progress-type="sound"
+            @wheel="onMouseWheel"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -39,19 +43,20 @@
 
 <script setup lang="ts">
 import { useMusicControllerStore } from "@/stores/musicController";
-import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useSoundControllerStore } from "@/stores/soundController";
 import PlayerController from "../player/PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
+import { useSoundControllerStore } from "@/stores/soundController";
+import AppMarquee from "../common/AppMarquee.vue";
+import { onMounted, ref, watch } from "vue";
+import { useIndexedDBStore } from "@/stores/indexedDB";
+import PlayerSoundImg from "../player/PlayerSoundImg.vue";
 
+const dbStore = useIndexedDBStore();
 const musicStore = useMusicControllerStore();
-const { playList, currentIndex, isPaused, currentTimePercent } =
-  storeToRefs(musicStore);
-
+const { currentTimePercent, currentIndex, playList } = storeToRefs(musicStore);
 const soundStore = useSoundControllerStore();
-const { isMute, volume } = storeToRefs(soundStore);
-
+const { volume, isMute } = storeToRefs(soundStore);
 // const currentMusic = computed(() => playList.value[currentIndex.value]);
 
 const onInput = (e: Event) => {
@@ -59,10 +64,39 @@ const onInput = (e: Event) => {
   musicStore.setCurrentTimeClick(value);
 };
 
-const currentMusic = ref(playList.value[currentIndex.value]);
+const onMouseWheel = ({ deltaY }: WheelEvent) => {
+  let value;
+  if (isMute.value) return;
+  if (deltaY > 0) {
+    // progress.value = Math.max(min, progress.value - 5);
+    value = Math.max(0, volume.value - 5);
+    console.log(value);
+  } else {
+    value = Math.min(100, volume.value + 5);
+    console.log(value);
+  }
+  soundStore.setVolume(value);
+};
+
+const title = ref("");
+// watch(currentIndex, async () => {
+//   title.value = await dbStore.getPlaylistTitle(
+//     playList.value[currentIndex.value]
+//   );
+// });
+
+// onMounted(async () => {
+//   console.log("df");
+
+//   title.value = await dbStore.getPlaylistTitle(
+//     playList.value[currentIndex.value]
+//   );
+// });
 </script>
 
 <style scoped lang="scss">
+// props로 보내줄 class
+
 .controller {
   background-color: white;
   position: relative;
@@ -83,16 +117,17 @@ const currentMusic = ref(playList.value[currentIndex.value]);
       width: 0%;
     }
   }
-
   .musicPlayer {
     display: flex;
+    flex-shrink: 1;
     align-items: center;
     user-select: none;
-    justify-content: space-between;
+    justify-content: space-around;
+    height: 100%;
 
-    & div {
-      flex-basis: 33.3%;
-    }
+    // & div {
+    //   flex-basis: 20% 50% 30%;
+    // }
 
     .musicInfo {
       display: flex;
@@ -101,40 +136,16 @@ const currentMusic = ref(playList.value[currentIndex.value]);
 
     .soundControl {
       display: flex;
-      justify-content: flex-end;
-    }
-
-    .music {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      padding-top: 0.6rem;
-
-      &:nth-child(1) div {
-        user-select: text;
-      }
-
-      .title {
-        width: 10rem;
-      }
-      .artist {
-        color: $greyColor;
+      gap: 0.3rem;
+      div {
+        display: flex;
+        align-items: center;
       }
     }
-  }
 
-  // .progress {
-  //   background-color: rgb(222, 222, 222);
-  //   svg {
-  //     display: block;
-  //     background-color: $orangeColor;
-  //     height: 7px;
-  //     width: 75%;
-  //   }
-  // }
-
-  img {
-    width: 6.5rem;
+    .title {
+      width: 10rem;
+    }
   }
 }
 </style>
