@@ -97,7 +97,7 @@ onMounted(async () => {
   setTimeout(() => {
     (player.value as YT.Player).loadVideoById(musicStore.getVideoId);
     (player.value as YT.Player).stopVideo();
-  }, 1000);
+  }, 2000);
 });
 
 const musicStore = useMusicControllerStore();
