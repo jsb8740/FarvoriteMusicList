@@ -19,8 +19,6 @@
         >
         </PlayListItem>
       </div>
-
-      <!-- <AppYoutube></AppYoutube> -->
     </template>
   </TheViewLayout>
 </template>
@@ -31,7 +29,6 @@ import PlayListItem from "@/components/playList/PlayListItem.vue";
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
-import AppYoutube from "@/components/common/AppYoutube.vue";
 import AppPlayButton from "@/components/common/AppPlayButton.vue";
 
 const store = useIndexedDBStore();
