@@ -19,4 +19,14 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @import "@/assets/color.scss";
+          @import "@/assets/base.scss";
+          `,
+      },
+    },
+  },
 });
