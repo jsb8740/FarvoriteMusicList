@@ -57,10 +57,6 @@ import PlayerController from "./PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
 import { useSoundControllerStore } from "@/stores/soundController";
 import PlayerSoundImg from "./PlayerSoundImg.vue";
-export interface Props {
-  type: string;
-}
-const props = defineProps<Props>();
 
 const dbStore = useIndexedDBStore();
 const soundStore = useSoundControllerStore();
@@ -75,12 +71,20 @@ const thumbnailURL = computed(
     `https://i.ytimg.com/vi/${playList.value[currentIndex.value]}/hqdefault.jpg`
 );
 
-const checkProps = () => {
-  if (props.type === "favorites") {
+const checkPlaying = () => {
+  if (playList.value.length === 0) {
     musicStore.inputPlayList();
-  } else {
+    return;
   }
 };
+// watch(playList.value, (newPlayList, oldPlayList) => {
+//   console.log();
+
+//   if (newPlayList.length != oldPlayList.length) {
+//     musicStore.inputPlayList();
+//   }
+// });
+// favorites가 update가 되면 갱신해야할듯
 
 const onMouseWheel = ({ deltaY }: WheelEvent) => {
   let value;
@@ -141,7 +145,7 @@ watch(thumbnailURL, async () => {
   );
 });
 onMounted(() => {
-  checkProps();
+  checkPlaying();
 });
 </script>
 
@@ -156,8 +160,8 @@ onMounted(() => {
 
   .player {
     width: 40%;
-    border: 0.3rem solid $pastel3;
-    border-radius: 10%;
+    border: 0.3rem solid $playListBorder;
+    border-radius: 2%;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -2,7 +2,7 @@
   <TheViewLayout>
     <template #default>
       <div class="test">
-        <PlayerArea type="favorites"></PlayerArea>
+        <PlayerArea></PlayerArea>
         <AppMarquee></AppMarquee>
       </div>
     </template>
