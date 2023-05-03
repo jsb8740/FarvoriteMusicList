@@ -2,9 +2,11 @@
   <!-- <div v-if="initialized" id="container"> -->
   <div id="container">
     <TheHeader class="head"></TheHeader>
+    <!-- :class="{ topZero: !isTopZero }" -->
     <TheView></TheView>
     <TheFooter class="foot"></TheFooter>
-    <!-- <TheMusicController class="controller"></TheMusicController> -->
+
+    <!-- display none -->
     <AppYoutube
       v-show="false"
       @unstarted="unstarted"
@@ -29,50 +31,72 @@ import { useMusicControllerStore } from "./stores/musicController";
 import { useSoundControllerStore } from "./stores/soundController";
 import { storeToRefs } from "pinia";
 
-const store = useIndexedDBStore();
+const isTopZero = ref(true);
 
-const initialized = ref(false);
+const isScrolledIntoView = (el: Element) => {
+  let rect = el.getBoundingClientRect();
+  let elemTop = rect.top;
+  let elemBottom = rect.bottom;
 
-const tables = [
-  { name: "favorites" },
-  { name: "playlists" },
-  { name: "sams" },
-] as TableProperties[];
+  console.log("elemTop", elemTop);
+  console.log("elemBottom", elemBottom);
+
+  // let isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+  let isVisible;
+  if (elemTop === 0) {
+    isVisible = false;
+  } else {
+    isVisible = true;
+  }
+
+  return isVisible;
+};
+
+const scroll = () => {
+  window.onscroll = () => {
+    let scrolledTo = document.querySelector("#container");
+
+    if (scrolledTo && isScrolledIntoView(scrolledTo)) {
+      console.log("scrolled");
+      isTopZero.value = false;
+    } else {
+      isTopZero.value = true;
+    }
+  };
+};
 
 onMounted(() => {
   // initialize();
   store.updateFavList();
+  scroll();
 });
 
-const initialize = async () => {
-  try {
-    await Promise.all([initializeIndexedDB()]);
-  } finally {
-    initialized.value = true;
-  }
-};
+// const tables = [
+//   { name: "favorites" },
+//   { name: "playlists" },
+//   { name: "sams" },
+// ] as TableProperties[];
+// const initializeIndexedDB = async () => {
+//   await Connector.create({
+//     database: "favorite_music",
+//     tables,
+//     version: 1,
+//     sync: true,
+//   });
+
+//   let database = await Connector.instance.getDatabase();
+// };
 
 // youtube iframe
 
 const currentTimeInterval = ref(0);
-
+const store = useIndexedDBStore();
 const musicStore = useMusicControllerStore();
 const { playList, currentIndex, isPaused, currentTimePercent } =
   storeToRefs(musicStore);
 
 const soundStore = useSoundControllerStore();
 const { isMute, volume } = storeToRefs(soundStore);
-
-const initializeIndexedDB = async () => {
-  await Connector.create({
-    database: "favorite_music",
-    tables,
-    version: 1,
-    sync: true,
-  });
-
-  let database = await Connector.instance.getDatabase();
-};
 
 const unstarted = (player: YT.Player) => {
   musicStore.setCurrentTime(0);
@@ -91,7 +115,7 @@ const ended = (player: YT.Player) => {
 const playing = (player: YT.Player) => {
   if (!isPaused.value) {
     clearInterval(currentTimeInterval.value);
-    currentTimeInterval.value = setInterval(() => {
+    currentTimeInterval.value = window.setInterval(() => {
       const currentTime = Math.ceil(player.getCurrentTime() as number);
       musicStore.setCurrentTime(currentTime);
       console.log(currentTime);
@@ -152,6 +176,9 @@ const ready = (player: YT.Player) => {
   background-color: black;
   display: grid;
   grid-template-rows: $headerHeight 100% $footerHeight;
+  .topZero {
+    border-bottom: 2px solid $progressBackground;
+  }
   .head {
     position: sticky;
     top: 0;
@@ -162,8 +189,8 @@ const ready = (player: YT.Player) => {
     position: sticky;
     bottom: 0;
     z-index: 1;
-    background-color: black;
-    align-content: end;
+    background-color: $footerColor;
+    // align-content: end;
     //
   }
 }
