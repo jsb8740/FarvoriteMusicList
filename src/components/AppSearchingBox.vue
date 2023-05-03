@@ -1,28 +1,31 @@
 <template>
   <div class="searchingBox">
-    <Search></Search>
+    <SearchingBoxClose @click="closeSearchBox"></SearchingBoxClose>
 
     <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
     <!-- transition 애니메이션 넣기 -->
     <AppInput
       type="text"
-      placeholder="Search"
+      placeholder="검색"
       v-model="keyWord"
       @keypress.enter="enterKeyEvent"
     />
 
-    <Remove @click="closeSearchBox" class="remove"></Remove>
+    <Empty
+      @click="emptyKeyWord"
+      v-show="keyWord.length > 0 ? true : false"
+    ></Empty>
   </div>
 </template>
 
 <script setup lang="ts">
-import Search from "./icons/Search.vue";
+import SearchingBoxClose from "./icons/searchingBox/SearchingBoxClose.vue";
+import Empty from "./icons/searchingBox/Empty.vue";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useSearchStore } from "@/stores/search";
 import { storeToRefs } from "pinia";
 import AppInput from "./common/AppInput.vue";
-import Remove from "./icons/Remove.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -31,18 +34,22 @@ const keyWord = ref<string>("");
 const store = useSearchStore();
 const { searchResult } = storeToRefs(store);
 
-export interface Props {
+interface Props {
   isSearch: boolean;
 }
 const props = defineProps<Props>();
 
-export interface Emits {
+interface Emits {
   (e: "close", value: boolean): void;
 }
 const emit = defineEmits<Emits>();
 
 const closeSearchBox = () => {
   emit("close", !props.isSearch);
+};
+
+const emptyKeyWord = () => {
+  keyWord.value = "";
 };
 
 onMounted(async () => {
@@ -78,7 +85,7 @@ const enterKeyEvent = (event: Event) => {
   }
 };
 
-let timer: number | undefined;
+let timer: number;
 const test = (event: Event) => {
   keyWord.value = (event.target as HTMLInputElement).value;
 
@@ -88,7 +95,7 @@ const test = (event: Event) => {
   // 디바운싱
 
   if (keyWord.value !== "") {
-    timer = setTimeout(() => {
+    timer = window.setTimeout(() => {
       // const params = {
       //   keyword: keyWord.value,
       // };
@@ -107,15 +114,12 @@ const test = (event: Event) => {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-color: white;
+  background-color: $footerColor;
   border-radius: 999px;
   padding: 0.7rem;
 
   box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.19);
 
-  .remove {
-    cursor: pointer;
-  }
   input {
     padding-left: 1rem;
     font-size: 1rem;
