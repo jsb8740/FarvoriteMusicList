@@ -1,7 +1,6 @@
 <template>
   <main role="main">
     <div class="searching">
-      <AppSearchingBox></AppSearchingBox>
       <AppDarkMode></AppDarkMode>
     </div>
     <RouterView></RouterView>
@@ -10,11 +9,9 @@
 
 <script setup lang="ts">
 import AppDarkMode from "../AppDarkMode.vue";
-import AppSearchingBox from "../AppSearchingBox.vue";
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
 main {
   width: 100%;
   height: 100%;

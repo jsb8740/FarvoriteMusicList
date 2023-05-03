@@ -27,7 +27,6 @@ const musicStore = useMusicControllerStore();
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
 .playList {
   border: 0.3rem solid $pastel3;
   border-radius: 10%;

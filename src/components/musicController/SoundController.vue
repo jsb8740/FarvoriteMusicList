@@ -83,8 +83,6 @@ import { storeToRefs } from "pinia";
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
-
 .soundController {
   display: flex;
   align-items: center;

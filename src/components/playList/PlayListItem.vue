@@ -42,7 +42,6 @@ onMounted(() => {});
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
 .listItem {
   margin: 0 2rem;
   display: inline-block;

@@ -146,7 +146,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
 .playerArea {
   gap: 1.8%;
   display: flex;
