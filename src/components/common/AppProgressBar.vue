@@ -55,21 +55,6 @@ const progress = computed({
   },
 });
 
-const onMouseWheel = ({ deltaY }: WheelEvent) => {
-  switch (props.progressType) {
-    case "sound":
-      if (deltaY > 0) {
-        progress.value = Math.max(min, progress.value - 5);
-      } else if (deltaY < 0) {
-        progress.value = Math.min(max, progress.value + 5);
-      }
-      break;
-
-    default:
-      break;
-  }
-};
-
 const setProgressCss = (width: number) => {
   console.log(width);
   (slider.value as HTMLElement).style.setProperty(
@@ -154,8 +139,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/color.scss";
-
 /* style the input element with type "range" */
 input[type="range"] {
   display: inline-block;
