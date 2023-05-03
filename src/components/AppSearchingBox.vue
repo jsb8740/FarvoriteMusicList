@@ -10,6 +10,8 @@
       v-model="keyWord"
       @keypress.enter="enterKeyEvent"
     />
+
+    <Remove @click="closeSearchBox" class="remove"></Remove>
   </div>
 </template>
 
@@ -20,6 +22,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useSearchStore } from "@/stores/search";
 import { storeToRefs } from "pinia";
 import AppInput from "./common/AppInput.vue";
+import Remove from "./icons/Remove.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -27,6 +30,20 @@ const keyWord = ref<string>("");
 
 const store = useSearchStore();
 const { searchResult } = storeToRefs(store);
+
+export interface Props {
+  isSearch: boolean;
+}
+const props = defineProps<Props>();
+
+export interface Emits {
+  (e: "close", value: boolean): void;
+}
+const emit = defineEmits<Emits>();
+
+const closeSearchBox = () => {
+  emit("close", !props.isSearch);
+};
 
 onMounted(async () => {
   await router.isReady();
@@ -89,13 +106,16 @@ const test = (event: Event) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
+  height: 100%;
   background-color: white;
-  border-radius: 1.5rem;
+  border-radius: 999px;
   padding: 0.7rem;
 
   box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.19);
 
+  .remove {
+    cursor: pointer;
+  }
   input {
     padding-left: 1rem;
     font-size: 1rem;
