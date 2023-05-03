@@ -1,8 +1,11 @@
 <template>
   <div @click="soundStore.soundMute">
-    <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
+    <VolumeHigh v-show="soundHighImg" />
+    <VolumeLow v-show="soundLowImg" />
+    <VolumeMute v-show="soundMuteImg" />
+    <!-- <img v-show="soundMuteImg" src="@/assets/volumeMute-white.png" />
     <img v-show="soundLowImg" src="@/assets/volumeLow-white.png" />
-    <img v-show="soundHighImg" src="@/assets/volumeHigh-white.png" />
+    <img v-show="soundHighImg" src="@/assets/volumeHigh-white.png" /> -->
   </div>
 </template>
 
@@ -10,6 +13,9 @@
 import { useSoundControllerStore } from "@/stores/soundController";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+import VolumeHigh from "@/components/icons/volumeImg/VolumeHigh.vue";
+import VolumeLow from "@/components/icons/volumeImg/VolumeLow.vue";
+import VolumeMute from "@/components/icons/volumeImg/VolumeMute.vue";
 const soundStore = useSoundControllerStore();
 const { volume } = storeToRefs(soundStore);
 // // sound img 컨트롤
@@ -28,11 +34,11 @@ const soundHighImg = computed<boolean>(() =>
 div {
   display: flex;
   align-items: center;
+  cursor: pointer;
   img {
     width: 1.1rem;
     height: 1.1em;
     margin: 0;
-    cursor: pointer;
   }
 }
 </style>

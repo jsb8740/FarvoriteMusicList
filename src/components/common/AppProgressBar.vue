@@ -1,8 +1,5 @@
 <template>
-  <!-- <div> -->
   <input type="range" :min="min" :max="max" ref="slider" v-model="progress" />
-  <!-- {{ progress }}
-  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -13,11 +10,11 @@ const max = 100;
 
 type ProgressType = "sound" | "time";
 
-export interface Props {
+interface Props {
   modelValue?: number;
   progressType: ProgressType;
 }
-export interface Emits {
+interface Emits {
   (e: "update:modelValue", value: Props["modelValue"]): void;
   (e: "update:modelValue", value: number): void;
 }
@@ -79,63 +76,6 @@ onMounted(() => {
     isModelValueNull.value ? innerProgress.value : (props.modelValue as number)
   );
 });
-
-// const musicStore = useMusicControllerStore();
-// const { currentTimePercent } = storeToRefs(musicStore);
-// const soundStore = useSoundControllerStore();
-
-// const sliderValue = ref(modelValue);
-// const slider = ref<HTMLElement | null>(null);
-
-// const initStyle = computed(() => `--ProgressPercent: ${modelValue}%`);
-
-// handler
-// const onInput = (e: Event) => {
-//   const value = Number((e.target as HTMLInputElement).value);
-//   sliderValue.value = value;
-// };
-
-// const onMouseWheel = (e: WheelEvent) => {
-//   if (progressType === "sound") {
-//     sliderValue.value = soundStore.volumeUpDownHandler(e.deltaY);
-//   }
-// };
-
-// onMounted
-// onMounted(() => {
-//   console.log(sliderValue.value);
-
-//   soundStore.volumeInit();
-//   if (progressType !== "sound") {
-//     // (slider.value as HTMLInputElement).defaultValue = "0";
-//   }
-// });
-
-// // watch
-// watch(currentTimePercent, (newModelValue, old) => {
-//   console.log("newModelValue", newModelValue);
-//   console.log("old", old);
-
-//   // if (slider.value && progressType !== "sound") {
-//   //   setProgressCss(newModelValue);
-//   // }
-// });
-// watch(sliderValue, (newSliderValue) => {
-//   console.log(newSliderValue);
-//   if (slider.value) {
-//     switch (progressType) {
-//       case "sound":
-//         soundStore.setVolume(newSliderValue);
-//         break;
-//       case "time":
-//         musicStore.setCurrentTimeClick(newSliderValue);
-//         break;
-//     }
-
-//     emit("update:modelValue", sliderValue.value);
-//     setProgressCss(newSliderValue);
-//   }
-// });
 </script>
 
 <style scoped lang="scss">
@@ -166,7 +106,8 @@ input[type="range"] {
 
   &::-webkit-slider-runnable-track {
     appearance: none;
-    background: rgb(222, 222, 222);
+    // background: rgb(222, 222, 222);
+    background-color: $progressBackground;
     height: var(--trackHeight);
     border-radius: 999px;
   }

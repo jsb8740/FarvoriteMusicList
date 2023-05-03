@@ -7,14 +7,14 @@
     </AppMarquee>
 
     <!-- 클릭시 이 노래로 시작 -->
-    <div class="paused" @click="clickPlay">
+    <div class="play" @click="clickPlay">
       <PlayIcon></PlayIcon>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import PlayIcon from "@/components/icons/PlayIcon.vue";
+import PlayIcon from "@/components/icons/playerImg/PlayIcon.vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { computed, ref, onMounted } from "vue";
 import AppMarquee from "@/components/common/AppMarquee.vue";
@@ -68,18 +68,31 @@ onMounted(() => {
     width: 100%;
     padding-left: 0.6rem;
   }
-  .paused {
+  .play {
+    margin-left: 1rem;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
-    background-color: white;
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent;
     border-radius: 100%;
+    border: 2px solid $buttonColor;
     padding: 0.3rem 0.2rem 0.3rem 0.3rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18);
+    // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18);
 
     display: flex;
     justify-content: center;
     align-items: center;
+    &::v-deep(svg) {
+      // color: $orangeColor;
+
+      &:hover {
+        fill: $orangeColor;
+      }
+    }
+
+    &:hover {
+      border: 2px solid $orangeColor;
+    }
   }
 }
 </style>

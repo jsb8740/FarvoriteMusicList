@@ -23,4 +23,9 @@ const updateValue = (event: Event) => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+input[type="text"] {
+  color: white;
+  background-color: transparent;
+}
+</style>

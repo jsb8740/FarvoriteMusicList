@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import PlayIcon from "@/components/icons/PlayIcon.vue";
-import PausedIcon from "@/components/icons/PausedIcon.vue";
-import NextIcon from "../icons/NextIcon.vue";
-import PreviousIcon from "../icons/PreviousIcon.vue";
+import PlayIcon from "@/components/icons/playerImg/PlayIcon.vue";
+import PausedIcon from "@/components/icons/playerImg/PausedIcon.vue";
+import NextIcon from "../icons/playerImg/NextIcon.vue";
+import PreviousIcon from "../icons/playerImg/PreviousIcon.vue";
 import { storeToRefs } from "pinia";
 import { useMusicControllerStore } from "@/stores/musicController";
 
@@ -54,10 +54,10 @@ const prev = () => {
 
   .paused {
     cursor: pointer;
-    background-color: white;
+    // background-color: white;
     border-radius: 100%;
     padding: 0.5rem 0.4rem 0.5rem 0.5rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18);
+    // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18);
     width: 3rem;
     height: 3rem;
 

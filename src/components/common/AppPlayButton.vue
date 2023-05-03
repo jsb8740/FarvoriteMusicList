@@ -3,7 +3,6 @@
 
   <button>
     <svg
-      fill="#000000"
       width="24px"
       height="24px"
       viewBox="-7 0 32 32"
@@ -25,9 +24,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  border: 2px solid #33363f;
   padding: 0.2rem 0.7rem;
   border-radius: 2rem;
   font-size: 1rem;
+  fill: rgb(95, 95, 95);
 }
 </style>
