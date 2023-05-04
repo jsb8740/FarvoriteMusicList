@@ -97,7 +97,7 @@ onMounted(async () => {
   setTimeout(() => {
     (player.value as YT.Player).loadVideoById(musicStore.getVideoId);
     (player.value as YT.Player).stopVideo();
-  }, 2000);
+  }, 1300);
 });
 
 const musicStore = useMusicControllerStore();
@@ -159,7 +159,7 @@ watch(currentIndex, (newCurrentIndex) => {
     return;
   }
   const videoId = playList.value[newCurrentIndex];
-  (player.value as YT.Player).loadVideoById(videoId, 0);
+  (player.value as YT.Player).loadVideoById(videoId);
   setVideoPlay(isPaused.value);
 });
 
