@@ -1,5 +1,5 @@
 <template>
-  <header class="header" role="navigation" ref="header">
+  <header class="header" role="navigation">
     <!-- <img src="@/assets/test/Logo-Test.png" alt="TestLogo" /> -->
     <div class="menu">
       <div class="routes" v-show="!isSearch">
@@ -12,9 +12,9 @@
           <MenuHeart></MenuHeart>
           Favorites
         </RouterLink>
-        <RouterLink :to="{ name: 'MyPlayList' }"> My PlayList </RouterLink>
+        <!-- <RouterLink :to="{ name: 'MyPlayList' }"> My PlayList </RouterLink> -->
 
-        <div @click="clickSearchBtn" class="searchIcon">
+        <div @click.stop="clickSearchBtn" class="searchIcon">
           <Search></Search>
           검색
         </div>
@@ -25,6 +25,9 @@
         class="searchBox"
         :is-search="isSearch"
         @close="closeEmit"
+        @click.stop.prevent
+        @keypress.stop
+        ref="searchBox"
       ></AppSearchingBox>
     </div>
   </header>
@@ -35,17 +38,30 @@ import Home from "@/components/icons/menu/MenuHome.vue";
 import MenuHeart from "@/components/icons/menu/MenuHeart.vue";
 import AppSearchingBox from "@/components/AppSearchingBox.vue";
 import Search from "../icons/searchingBox/Search.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import useClickOutside from "@/composables/useClickOutside";
 
-const header = ref<HTMLElement | null>(null);
 const isSearch = ref(false);
+const searchBox = ref<HTMLElement | null>(null);
+useClickOutside(searchBox, () => {
+  isSearch.value = false;
+  console.log(isSearch.value);
+});
 
 const clickSearchBtn = () => {
-  isSearch.value = !isSearch.value;
+  isSearch.value = true;
 };
 const closeEmit = (value: boolean) => {
+  console.log(value);
+
   isSearch.value = value;
 };
+
+// onMounted(() => {
+//   useClickOutside(t.value as HTMLElement, () => {
+//     console.log("df");
+//   });
+// });
 </script>
 
 <style scoped lang="scss">
@@ -91,6 +107,9 @@ const closeEmit = (value: boolean) => {
 
     .searchIcon {
       cursor: pointer;
+      &:hover {
+        border-bottom: 0.2rem solid $orangeColor;
+      }
     }
     .searchBox {
       width: 50%;
