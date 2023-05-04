@@ -1,16 +1,7 @@
 <template>
   <TheViewLayout>
+    <template #title> Favorite Musics </template>
     <template #default>
-      <div class="content-header">
-        <h2>Favorite Musics</h2>
-
-        <div>
-          <RouterLink to="/player/favorites">
-            <AppPlayButton></AppPlayButton>
-          </RouterLink>
-        </div>
-      </div>
-
       <div>
         <PlayListItem
           v-for="item in favSongList"
@@ -44,6 +35,9 @@ onMounted(() => {
 .content-header {
   display: flex;
   justify-content: space-between;
+  .text {
+    font-weight: 700;
+  }
 }
 a {
   text-decoration: none;
