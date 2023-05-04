@@ -24,51 +24,56 @@ import AppYoutube from "@/components/common/AppYoutube.vue";
 import TheHeader from "./components/layouts/TheHeader.vue";
 import TheView from "./components/layouts/TheView.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { Connector, type TableProperties } from "@/indexedDB/connector";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { useMusicControllerStore } from "./stores/musicController";
 import { useSoundControllerStore } from "./stores/soundController";
 import { storeToRefs } from "pinia";
+import usePressSpaceBar from "./composables/usePressSpaceBar";
 
-const isTopZero = ref(true);
+// const isTopZero = ref(true);
 
-const isScrolledIntoView = (el: Element) => {
-  let rect = el.getBoundingClientRect();
-  let elemTop = rect.top;
-  let elemBottom = rect.bottom;
+// // const isScrolledIntoView = (el: Element) => {
+// //   let rect = el.getBoundingClientRect();
+// //   let elemTop = rect.top;
+// //   let elemBottom = rect.bottom;
 
-  console.log("elemTop", elemTop);
-  console.log("elemBottom", elemBottom);
+// //   console.log("elemTop", elemTop);
+// //   console.log("elemBottom", elemBottom);
 
-  // let isVisible = elemTop < window.innerHeight && elemBottom >= 0;
-  let isVisible;
-  if (elemTop === 0) {
-    isVisible = false;
-  } else {
-    isVisible = true;
-  }
+// //   // let isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+// //   let isVisible;
+// //   if (elemTop === 0) {
+// //     isVisible = false;
+// //   } else {
+// //     isVisible = true;
+// //   }
 
-  return isVisible;
+// //   return isVisible;
+// // };
+
+// // const scroll = () => {
+// //   window.onscroll = () => {
+// //     let scrolledTo = document.querySelector("#container");
+
+// //     if (scrolledTo && isScrolledIntoView(scrolledTo)) {
+// //       console.log("scrolled");
+// //       isTopZero.value = false;
+// //     } else {
+// //       isTopZero.value = true;
+// //     }
+// //   };
+// // };
+
+const changePauseState = (e: KeyboardEvent) => {
+  musicStore.changePauseState();
 };
 
-const scroll = () => {
-  window.onscroll = () => {
-    let scrolledTo = document.querySelector("#container");
-
-    if (scrolledTo && isScrolledIntoView(scrolledTo)) {
-      console.log("scrolled");
-      isTopZero.value = false;
-    } else {
-      isTopZero.value = true;
-    }
-  };
-};
-
+usePressSpaceBar(changePauseState);
 onMounted(() => {
-  // initialize();
   store.updateFavList();
-  scroll();
+  // scroll();
 });
 
 // const tables = [
@@ -88,7 +93,6 @@ onMounted(() => {
 // };
 
 // youtube iframe
-
 const currentTimeInterval = ref(0);
 const store = useIndexedDBStore();
 const musicStore = useMusicControllerStore();
@@ -109,7 +113,7 @@ const ended = (player: YT.Player) => {
   // update video
   musicStore.nextIndex();
   const videoId = playList.value[currentIndex.value];
-  player.loadVideoById({ videoId, startSeconds: 0 });
+  player.loadVideoById({ videoId });
   musicStore.setCurrentTime(0);
 };
 const playing = (player: YT.Player) => {
@@ -175,7 +179,7 @@ const ready = (player: YT.Player) => {
   height: 100%;
   background-color: black;
   display: grid;
-  grid-template-rows: $headerHeight 100% $footerHeight;
+  grid-template-rows: $headerHeight auto $footerHeight;
   .topZero {
     border-bottom: 2px solid $progressBackground;
   }
