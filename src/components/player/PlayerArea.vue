@@ -57,6 +57,7 @@ import PlayerController from "./PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
 import { useSoundControllerStore } from "@/stores/soundController";
 import PlayerSoundImg from "./PlayerSoundImg.vue";
+import timeFormat from "@/common/PlayTimeFormat";
 
 const dbStore = useIndexedDBStore();
 const soundStore = useSoundControllerStore();
@@ -86,6 +87,10 @@ const checkPlaying = () => {
 // });
 // favorites가 update가 되면 갱신해야할듯
 
+const getPlaylist = async (item: string) => {
+  title.value = await dbStore.getPlaylistTitle(item);
+};
+
 const onMouseWheel = ({ deltaY }: WheelEvent) => {
   let value;
   if (isMute.value) return;
@@ -100,15 +105,6 @@ const onMouseWheel = ({ deltaY }: WheelEvent) => {
   soundStore.setVolume(value);
 };
 
-const formattingTime = (time: number) => {
-  const value = Math.floor(time) % 60;
-
-  if (value < 10) {
-    return `0${value}`;
-  }
-  return value;
-};
-
 const onInput = (e: Event) => {
   const value = Number((e.target as HTMLInputElement).value);
   musicStore.setCurrentTimeClick(value);
@@ -116,10 +112,7 @@ const onInput = (e: Event) => {
 
 const startTime = computed(() => {
   const current = currentTime.value;
-  const hours = Math.floor((current / 3600) % 24);
-  const minutes = formattingTime(current / 60);
-
-  const seconds = formattingTime(current);
+  const [hours, minutes, seconds] = timeFormat(current);
   if (hours === 0) {
     return `${minutes}:${seconds}`;
   } else {
@@ -128,10 +121,7 @@ const startTime = computed(() => {
 });
 const lastTime = computed(() => {
   const current = duration.value;
-  const hours = Math.floor((current / 3600) % 24);
-  const minutes = formattingTime(current / 60);
-
-  const seconds = formattingTime(current);
+  const [hours, minutes, seconds] = timeFormat(current);
   if (hours === 0) {
     return `${minutes}:${seconds}`;
   } else {
@@ -146,6 +136,7 @@ watch(thumbnailURL, async () => {
 });
 onMounted(() => {
   checkPlaying();
+  getPlaylist(playList.value[currentIndex.value]);
 });
 </script>
 
