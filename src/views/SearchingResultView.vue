@@ -1,5 +1,6 @@
 <template>
   <TheViewLayout>
+    <template #title> 검색 결과 </template>
     <template #default>
       <template v-if="!searchResult"> test </template>
       <template v-else>
@@ -13,12 +14,6 @@
         >
         </PlayListItem>
       </template>
-
-      <!-- playList로 교체 item마다 id값을 props로 받아서 저장 -->
-      <!-- 유튜브 할당량이 정해져있어서 어쩔 수업슴 -->
-      <!-- 시간도 뮤직 컨트롤로에만 있게 -->
-      <!-- 한줄에 3개씩? 4개씩 -->
-      <!-- 무한 스크롤 -->
     </template>
   </TheViewLayout>
 </template>
