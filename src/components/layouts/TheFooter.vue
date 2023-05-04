@@ -1,5 +1,5 @@
 <template>
-  <div class="controller">
+  <div class="controller" @click.prevent>
     <!-- <div class="progress">
       <svg></svg>
     </div> -->
@@ -11,8 +11,13 @@
     />
 
     <div class="musicPlayer">
-      <div>
+      <div class="playerControl">
         <PlayerController></PlayerController>
+        <div class="time">
+          {{ startTime }}
+          &nbsp;&nbsp;&nbsp;
+          {{ lastTime }}
+        </div>
       </div>
 
       <div class="musicInfo">
@@ -48,16 +53,37 @@ import PlayerController from "../player/PlayerController.vue";
 import AppProgressBar from "../common/AppProgressBar.vue";
 import { useSoundControllerStore } from "@/stores/soundController";
 import AppMarquee from "../common/AppMarquee.vue";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import PlayerSoundImg from "../player/PlayerSoundImg.vue";
+import timeFormat from "@/common/PlayTimeFormat";
 
 const dbStore = useIndexedDBStore();
 const musicStore = useMusicControllerStore();
-const { currentTimePercent, currentIndex, playList } = storeToRefs(musicStore);
+const { currentTimePercent, currentIndex, playList, currentTime, duration } =
+  storeToRefs(musicStore);
 const soundStore = useSoundControllerStore();
 const { volume, isMute } = storeToRefs(soundStore);
 // const currentMusic = computed(() => playList.value[currentIndex.value]);
+
+const startTime = computed(() => {
+  const current = currentTime.value;
+  const [hours, minutes, seconds] = timeFormat(current);
+  if (hours === 0) {
+    return `${minutes}:${seconds}`;
+  } else {
+    return `${hours}:${minutes}:${seconds}`;
+  }
+});
+const lastTime = computed(() => {
+  const current = duration.value;
+  const [hours, minutes, seconds] = timeFormat(current);
+  if (hours === 0) {
+    return `${minutes}:${seconds}`;
+  } else {
+    return `${hours}:${minutes}:${seconds}`;
+  }
+});
 
 const onInput = (e: Event) => {
   const value = Number((e.target as HTMLInputElement).value);
@@ -84,14 +110,21 @@ const title = ref("");
 //     playList.value[currentIndex.value]
 //   );
 // });
+watch(currentIndex, () => {
+  getPlaylist(playList.value[currentIndex.value]);
+});
+watch(playList, () => {
+  getPlaylist(playList.value[currentIndex.value]);
+});
 
-// onMounted(async () => {
-//   console.log("df");
-
-//   title.value = await dbStore.getPlaylistTitle(
-//     playList.value[currentIndex.value]
-//   );
-// });
+const getPlaylist = async (item: string) => {
+  title.value = await dbStore.getPlaylistTitle(item);
+};
+onMounted(() => {
+  setTimeout(() => {
+    getPlaylist(playList.value[currentIndex.value]);
+  }, 1000);
+});
 </script>
 
 <style scoped lang="scss">
@@ -122,8 +155,14 @@ const title = ref("");
     flex-shrink: 1;
     align-items: center;
     user-select: none;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 3%;
     height: 100%;
+    .playerControl {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
     // & div {
     //   flex-basis: 20% 50% 30%;
@@ -132,6 +171,10 @@ const title = ref("");
     .musicInfo {
       display: flex;
       gap: 3rem;
+      width: 50%;
+      .title {
+        color: white;
+      }
     }
 
     .soundControl {
@@ -141,10 +184,6 @@ const title = ref("");
         display: flex;
         align-items: center;
       }
-    }
-
-    .title {
-      width: 10rem;
     }
   }
 }
