@@ -11,7 +11,7 @@ main {
   width: 100%;
   height: 100%;
   background-color: black;
-  padding: 2rem 3rem;
+  padding: 0.3rem 3rem;
   box-sizing: border-box;
 }
 </style>
