@@ -1,14 +1,13 @@
 <template>
   <div class="searchingBox">
     <SearchingBoxClose @click="closeSearchBox"></SearchingBoxClose>
-
-    <!-- input은 이벤트 버블링인가 그걸 막아야할듯 -->
-    <!-- transition 애니메이션 넣기 -->
     <AppInput
       type="text"
       placeholder="검색"
       v-model="keyWord"
       @keypress.enter="enterKeyEvent"
+      ref="cursor"
+      @focus.stop.capture
     />
 
     <Empty
@@ -30,6 +29,7 @@ import AppInput from "./common/AppInput.vue";
 const router = useRouter();
 const route = useRoute();
 const keyWord = ref<string>("");
+const cursor = ref<HTMLElement | null>(null);
 
 const store = useSearchStore();
 const { searchResult } = storeToRefs(store);
@@ -51,12 +51,12 @@ const closeSearchBox = () => {
 const emptyKeyWord = () => {
   keyWord.value = "";
 };
-
 onMounted(async () => {
   await router.isReady();
   if (route.name === "SearchingResult") {
     keyWord.value = (route.query?.keyword as string | null) ?? "";
   }
+  // focusInput();
 });
 
 const enterKeyEvent = (event: Event) => {
@@ -126,9 +126,6 @@ const test = (event: Event) => {
     border: none;
     outline: none;
     width: 100%;
-
-    &:focus {
-    }
   }
 }
 </style>
