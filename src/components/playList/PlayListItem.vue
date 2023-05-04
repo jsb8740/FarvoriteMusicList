@@ -9,19 +9,16 @@
 
     <!-- css 변경 -->
     <!-- 가로로 흐르는 텍스트 구현하기 -->
-    <div class="title">
-      <div v-html="props.title" />
-    </div>
-    <!-- <slot></slot> -->
-    <!-- <div class="byWriter">
-      <slot name="by">by test</slot>
-    </div> -->
+    <AppMarquee :stop="titleLength">
+      <div v-html="props.title" class="title" />
+    </AppMarquee>
   </div>
 </template>
 
 <script setup lang="ts">
 import Heart from "@/components/icons/Heart.vue";
 import { computed, onMounted, ref } from "vue";
+import AppMarquee from "../common/AppMarquee.vue";
 export interface Props {
   videoId: string;
   title: string;
@@ -29,6 +26,12 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   videoId: "undefined",
+});
+
+const titleLength = computed(() => {
+  if (props.title.length < 24) {
+    return "stop";
+  }
 });
 
 // 작은 크기 default
@@ -43,14 +46,15 @@ onMounted(() => {});
 
 <style scoped lang="scss">
 .listItem {
-  margin: 0 2rem;
+  margin: 0 3%;
   display: inline-block;
   width: 320px;
   .title {
-    margin-top: 0.3rem;
-    height: 1.5rem;
-    overflow: hidden;
-    width: 320px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 1.1rem;
+    width: 100%;
   }
 
   .thumbnail {
