@@ -2,10 +2,9 @@ import { onBeforeMount, onMounted } from "vue";
 
 export default function usePressSpaceBar(cb: Function) {
   const listener = (e: KeyboardEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-
     if (e.code === "Space") {
+      e.preventDefault();
+      e.stopPropagation();
       cb();
     }
   };
