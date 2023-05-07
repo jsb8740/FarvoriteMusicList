@@ -6,8 +6,6 @@
         <PlayerArea></PlayerArea>
         <AppMarquee></AppMarquee>
       </div>
-
-      <PlayListItemSkeleton></PlayListItemSkeleton>
     </template>
   </TheViewLayout>
 </template>
@@ -16,7 +14,6 @@
 import TheViewLayout from "@/components/layouts/TheViewLayout.vue";
 import PlayerArea from "@/components/player/PlayerArea.vue";
 import AppMarquee from "@/components/common/AppMarquee.vue";
-import PlayListItemSkeleton from "@/components/playList/PlayListItemSkeleton.vue";
 </script>
 <style scoped lang="scss">
 .contents {
