@@ -2,7 +2,9 @@
   <TheViewLayout>
     <template #title> 검색 결과 </template>
     <template #default>
-      <template v-if="!searchResult"> test </template>
+      <template v-if="loading">
+        <PlayListItemSkeleton v-for="i in 12"></PlayListItemSkeleton>
+      </template>
       <template v-else>
         <!-- 다른노래 검색시 item이 rerendering이 안되는 이슈 -->
         <!-- key값을 줘서 해결 -->
@@ -21,13 +23,15 @@
 <script setup lang="ts">
 import TheViewLayout from "@/components/layouts/TheViewLayout.vue";
 import PlayListItem from "@/components/playList/PlayListItem.vue";
+import PlayListItemSkeleton from "@/components/playList/PlayListItemSkeleton.vue";
+
 import { useSearchStore } from "@/stores/search";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { onMounted, onUpdated, computed, provide } from "vue";
 
 const store = useSearchStore();
-const { searchResult } = storeToRefs(store);
+const { searchResult, loading } = storeToRefs(store);
 const route = useRoute();
 
 const queryString = computed(() => route.query as Record<string, unknown>);

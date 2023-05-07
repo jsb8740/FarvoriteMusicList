@@ -7,11 +7,15 @@
         랜덤 재생
       </AppRandomButton>
     </div>
-    <ul class="listItem">
+
+    <ul v-if="playList.length !== 0" class="listItem">
       <li v-for="item in props.musicList" :key="item">
         <PlayerListItem :video-id="item"> </PlayerListItem>
       </li>
     </ul>
+    <div v-else class="notFound">
+      플레이리스트가 없어요. 노래를 추가해 주세요!
+    </div>
   </div>
 </template>
 
@@ -19,6 +23,7 @@
 import PlayerListItem from "@/components/player/PlayerListItem.vue";
 import AppRandomButton from "@/components/common/AppRandomButton.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
+import { storeToRefs } from "pinia";
 
 export interface Props {
   musicList: string[];
@@ -27,6 +32,7 @@ export interface Props {
 const props = defineProps<Props>();
 
 const musicStore = useMusicControllerStore();
+const { playList } = storeToRefs(musicStore);
 </script>
 
 <style scoped lang="scss">
@@ -65,6 +71,15 @@ const musicStore = useMusicControllerStore();
         border: none;
       }
     }
+  }
+  .notFound {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 500;
   }
 }
 
