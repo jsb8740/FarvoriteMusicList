@@ -46,7 +46,7 @@ onMounted(() => {});
 
 <style scoped lang="scss">
 .listItem {
-  margin: 0 3%;
+  margin: 0 1% 1.2% 1%;
   display: inline-block;
   width: 320px;
   .title {
