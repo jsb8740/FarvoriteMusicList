@@ -3,12 +3,12 @@ import { defineStore } from "pinia";
 import axios, { type AxiosResponse } from "axios";
 
 export const useSearchStore = defineStore("search", () => {
-  // const loading = ref<boolean>(false);
+  const loading = ref<boolean>(false);
   const searchResult = ref<AxiosResponse>();
 
   async function searchYoutube(keyWord: string) {
     try {
-      // loading.value = true;
+      loading.value = true;
       const params = {
         keyword: keyWord,
       };
@@ -18,9 +18,9 @@ export const useSearchStore = defineStore("search", () => {
     } catch (err) {
       console.error(err);
     } finally {
-      // loading.value = false;
+      loading.value = false;
     }
   }
 
-  return { searchResult, searchYoutube };
+  return { searchResult, searchYoutube, loading };
 });
