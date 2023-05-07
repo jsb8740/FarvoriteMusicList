@@ -1,18 +1,23 @@
 <template>
   <div class="playerArea">
     <div class="player">
-      <img :src="thumbnailURL" class="" />
+      <!-- thumbnail -->
+      <img v-if="playList.length !== 0" :src="thumbnailURL" class="" />
+      <div v-else class="notImg"></div>
 
+      <!-- title -->
       <AppMarquee is-play="play">
         <template #default>
           <div v-html="title" class="title"></div>
         </template>
       </AppMarquee>
 
+      <!-- Controller -->
       <PlayerController></PlayerController>
 
       <br />
 
+      <!-- time -->
       <div class="timeLine">
         <AppProgressBar
           v-model="currentTimePercent"
@@ -29,6 +34,7 @@
         </div>
       </div>
 
+      <!-- sound -->
       <div class="sound" @wheel.prevent>
         <PlayerSoundImg></PlayerSoundImg>
 
@@ -42,6 +48,7 @@
       </div>
     </div>
 
+    <!-- playlist -->
     <PlayerMusicList :music-list="playList"></PlayerMusicList>
   </div>
 </template>
@@ -159,6 +166,19 @@ onMounted(() => {
     justify-content: center;
     padding: 0 2rem;
     box-sizing: border-box;
+
+    .notImg {
+      width: 375px;
+      height: 280px;
+      background-image: linear-gradient(
+        45deg,
+        $footerColor,
+        $skeletonsColor,
+        $skeletonsColor2
+      );
+      border-radius: 2rem;
+    }
+
     .timeLine {
       width: 100%;
       .timeLineText {
