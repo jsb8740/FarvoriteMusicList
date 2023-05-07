@@ -16,10 +16,10 @@
 h1 {
   font-weight: 700px;
   color: white;
-  margin-left: 3%;
 }
 
 hr {
-  margin: 1rem 3% 3rem 3%;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
 }
 </style>
