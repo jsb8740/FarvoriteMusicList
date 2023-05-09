@@ -113,6 +113,9 @@ const onMouseWheel = ({ deltaY }: WheelEvent) => {
 };
 
 const onInput = (e: Event) => {
+  if (playList.value.length === 0) {
+    return;
+  }
   const value = Number((e.target as HTMLInputElement).value);
   musicStore.setCurrentTimeClick(value);
 };

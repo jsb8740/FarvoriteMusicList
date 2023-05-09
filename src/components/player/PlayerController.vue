@@ -4,7 +4,7 @@
       <PreviousIcon></PreviousIcon>
     </div>
 
-    <div class="paused" @click="musicStore.changePauseState">
+    <div class="paused" @click="playListCheck">
       <PlayIcon v-show="isPaused"></PlayIcon>
       <PausedIcon v-show="!isPaused"></PausedIcon>
     </div>
@@ -24,7 +24,15 @@ import { storeToRefs } from "pinia";
 import { useMusicControllerStore } from "@/stores/musicController";
 
 const musicStore = useMusicControllerStore();
-const { isPaused } = storeToRefs(musicStore);
+const { isPaused, playList } = storeToRefs(musicStore);
+
+const playListCheck = () => {
+  if (playList.value.length === 0) {
+    return;
+  } else {
+    musicStore.changePauseState();
+  }
+};
 
 const next = () => {
   console.log(musicStore.nextIndex());
