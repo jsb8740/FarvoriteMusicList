@@ -9,6 +9,8 @@
     <!-- display none -->
     <AppYoutube
       v-show="false"
+      :key="reload"
+      :video-id="videoID"
       @unstarted="unstarted"
       @ended="ended"
       @playing="playing"
@@ -24,7 +26,7 @@ import AppYoutube from "@/components/common/AppYoutube.vue";
 import TheHeader from "./components/layouts/TheHeader.vue";
 import TheView from "./components/layouts/TheView.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { useMusicControllerStore } from "./stores/musicController";
 import { useSoundControllerStore } from "./stores/soundController";
@@ -112,7 +114,7 @@ const ended = (player: YT.Player) => {
   // update video
   musicStore.nextIndex();
   const videoId = playList.value[currentIndex.value];
-  player.loadVideoById({ videoId });
+  player.loadVideoById(videoId);
   musicStore.setCurrentTime(0);
 };
 const playing = (player: YT.Player) => {
@@ -150,6 +152,18 @@ const ready = (player: YT.Player) => {
     player.unMute();
   }
 };
+
+const videoID = ref(playList.value[currentIndex.value]);
+const reload = ref(0);
+watch(
+  () => playList.value.length,
+  (newLength) => {
+    if (newLength === 1) {
+      reload.value++;
+    }
+    videoID.value = playList.value[currentIndex.value];
+  }
+);
 </script>
 
 <style scoped lang="scss">
