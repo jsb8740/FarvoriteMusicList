@@ -17,6 +17,12 @@ export const useMusicControllerStore = defineStore("music", () => {
   const getVideoId = computed(() => playList.value[currentIndex.value]);
 
   // methods
+
+  const rmPlayList = (videoId: string) => {
+    const index = playList.value.indexOf(videoId);
+    playList.value.splice(index, 1);
+  };
+
   const moveMusic = (videoId: string) => {
     // console.log(playList.value.findIndex((item) => item === videoId));
     const index = playList.value.findIndex((item) => item === videoId);
@@ -111,6 +117,7 @@ export const useMusicControllerStore = defineStore("music", () => {
     moveMusic,
     setCurrentTimePercent,
     setCurrentTimeClick,
+    rmPlayList,
     getVideoId,
   };
 });
