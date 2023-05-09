@@ -66,11 +66,11 @@ import usePressSpaceBar from "./composables/usePressSpaceBar";
 // //   };
 // // };
 
-const changePauseState = (e: KeyboardEvent) => {
-  musicStore.changePauseState();
-};
+// const changePauseState = (e: KeyboardEvent) => {
+//   musicStore.changePauseState();
+// };
 
-usePressSpaceBar(changePauseState);
+// usePressSpaceBar(changePauseState);
 onMounted(() => {
   store.updateFavList();
   // scroll();
