@@ -30,14 +30,16 @@ const store = useIndexedDBStore();
 const { favSongList } = storeToRefs(store);
 
 const musicStore = useMusicControllerStore();
-const { playList } = storeToRefs(musicStore);
+const { playList, isPaused } = storeToRefs(musicStore);
 
 const init = async () => {
   await musicStore.inputPlayList();
 };
 
 onMounted(() => {
-  init();
+  if (!isPaused) {
+    init();
+  }
   store.updateFavList();
   // console.log(favSongList.value);
 });
