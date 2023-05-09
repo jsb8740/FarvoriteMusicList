@@ -9,7 +9,7 @@ import { storeToRefs } from "pinia";
 import { useSoundControllerStore } from "@/stores/soundController";
 
 export interface Props {
-  videoId?: string;
+  videoId: string;
 }
 
 export interface Emits {
@@ -53,7 +53,7 @@ const createPlayer = () => {
   player.value = new YT.Player(playerElement, {
     height: 0,
     width: 0,
-    videoId: "x3MY6ueZNNA",
+    videoId: videoID,
     playerVars: { start: 0 },
     events: {
       onReady: onPlayerReady,
@@ -169,7 +169,7 @@ watch(playList, (newPlayList, oldPlayList) => {
     return;
   }
   const videoId = newPlayList[currentIndex.value];
-  (player.value as YT.Player).loadVideoById({ videoId });
+  (player.value as YT.Player).loadVideoById(videoId);
   setVideoPlay(isPaused.value);
 });
 
@@ -179,6 +179,15 @@ watch(isPaused, (newIsPaused) => {
   }
   setVideoPlay(newIsPaused);
 });
+
+watch(
+  () => playList.value.length,
+  (newLength) => {
+    if (newLength === 1) {
+      musicStore.inputPlayList();
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss"></style>
