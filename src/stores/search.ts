@@ -13,7 +13,10 @@ export const useSearchStore = defineStore("search", () => {
         keyword: keyWord,
       };
 
-      searchResult.value = await axios.get("/api/search", { params });
+      searchResult.value = await axios.get("http://localhost:3000/api/search", {
+        params,
+      });
+      // searchResult.value = await axios.get("/api/search", { params });
       console.log(searchResult.value);
     } catch (err) {
       console.error(err);
