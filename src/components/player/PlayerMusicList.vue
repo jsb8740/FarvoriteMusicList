@@ -8,9 +8,9 @@
       </AppRandomButton>
     </div>
 
-    <ul v-if="playList.length !== 0" class="listItem">
-      <li v-for="item in props.musicList" :key="item">
-        <PlayerListItem :video-id="item"> </PlayerListItem>
+    <ul v-if="props.musicList.length !== 0" class="listItem">
+      <li v-for="item in props.musicList">
+        <PlayerListItem :video-id="item" :key="item"> </PlayerListItem>
       </li>
     </ul>
     <div v-else class="notFound">
@@ -23,16 +23,13 @@
 import PlayerListItem from "@/components/player/PlayerListItem.vue";
 import AppRandomButton from "@/components/common/AppRandomButton.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
-import { storeToRefs } from "pinia";
 
 export interface Props {
   musicList: string[];
 }
 
 const props = defineProps<Props>();
-
 const musicStore = useMusicControllerStore();
-const { playList } = storeToRefs(musicStore);
 </script>
 
 <style scoped lang="scss">
