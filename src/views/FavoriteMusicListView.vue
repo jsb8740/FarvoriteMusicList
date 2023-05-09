@@ -24,7 +24,6 @@ import PlayListItem from "@/components/playList/PlayListItem.vue";
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useIndexedDBStore } from "@/stores/indexedDB";
-import AppPlayButton from "@/components/common/AppPlayButton.vue";
 import { useMusicControllerStore } from "@/stores/musicController";
 
 const store = useIndexedDBStore();
@@ -32,7 +31,13 @@ const { favSongList } = storeToRefs(store);
 
 const musicStore = useMusicControllerStore();
 const { playList } = storeToRefs(musicStore);
+
+const init = async () => {
+  await musicStore.inputPlayList();
+};
+
 onMounted(() => {
+  init();
   store.updateFavList();
   // console.log(favSongList.value);
 });
