@@ -24,8 +24,7 @@ import AppYoutube from "@/components/common/AppYoutube.vue";
 import TheHeader from "./components/layouts/TheHeader.vue";
 import TheView from "./components/layouts/TheView.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
-import { onBeforeMount, onMounted, ref } from "vue";
-import { Connector, type TableProperties } from "@/indexedDB/connector";
+import { onMounted, ref } from "vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
 import { useMusicControllerStore } from "./stores/musicController";
 import { useSoundControllerStore } from "./stores/soundController";
@@ -154,26 +153,6 @@ const ready = (player: YT.Player) => {
 </script>
 
 <style scoped lang="scss">
-// #container {
-//   // background-color: rgb(249, 249, 249);
-//   // width: 100%;
-//   // height: 100%;
-//   // margin: 0 auto;
-
-//   display: grid;
-//   grid-template-columns: 1fr 6fr;
-//   grid-template-rows: 7fr auto;
-//   height: 100dvh;
-
-//   .controller {
-//     grid-column: 1 / 3; // === grid-area: 2 / 1 / span 1 / span 2;
-//     // display: none;
-//   }
-
-//   main {
-//     overflow: hidden scroll;
-//   }
-// }
 #container {
   width: 100%;
   height: 100%;
