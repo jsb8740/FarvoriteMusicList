@@ -19,6 +19,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useIndexedDBStore } from "@/stores/indexedDB";
+import { useMusicControllerStore } from "@/stores/musicController";
+import { storeToRefs } from "pinia";
 
 export interface Props {
   videoId: string;
@@ -33,14 +35,15 @@ export interface DbField {
 const props = defineProps<Props>();
 
 const store = useIndexedDBStore();
-// const dataBase = DataBase.getInstance();
+const musicStore = useMusicControllerStore();
+const { playList } = storeToRefs(musicStore);
 const favorite = ref(false);
-let playList: string[];
+let copyPlayList: string[];
 
 const checkFavSong = async () => {
   // 원본 복사
-  playList = await store.getPlayList();
-  playList.find((videoId) => {
+  copyPlayList = await store.getPlayList();
+  copyPlayList.find((videoId) => {
     if (videoId === props.videoId) favorite.value = true;
   });
 };
@@ -55,6 +58,8 @@ const favoriteClick = async () => {
     //클릭을 했는데 해제하는 상태
     await store.removeSong(props.videoId);
     await store.updateFavList();
+    musicStore.rmPlayList(props.videoId);
+    await musicStore.inputPlayList();
   }
   await checkFavSong();
   // 2번체크해야 사라지는 걸 고처야함
