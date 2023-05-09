@@ -59,8 +59,8 @@ const favoriteClick = async () => {
     await store.removeSong(props.videoId);
     await store.updateFavList();
     musicStore.rmPlayList(props.videoId);
-    await musicStore.inputPlayList();
   }
+  await musicStore.inputPlayList();
   await checkFavSong();
   // 2번체크해야 사라지는 걸 고처야함
   // 비동기 문제였음 await로 해결
