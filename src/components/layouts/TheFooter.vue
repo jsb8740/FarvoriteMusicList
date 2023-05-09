@@ -14,9 +14,12 @@
       <div class="playerControl">
         <PlayerController></PlayerController>
         <div class="time">
-          {{ startTime }}
-          &nbsp;&nbsp;&nbsp;
-          {{ lastTime }}
+          <span>
+            {{ startTime }}
+          </span>
+          <span>
+            {{ lastTime }}
+          </span>
         </div>
       </div>
 
@@ -162,6 +165,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       gap: 1rem;
+
+      .time {
+        display: flex;
+        gap: 1rem;
+      }
     }
 
     // & div {
