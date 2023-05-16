@@ -2,6 +2,8 @@
 
 유튜브 플레이리스트를 만들고 싶어서 진행하게된 프로젝트
 
+사이트: http://www.qewr.xyz/
+
 > Typescript, Vue.js, Pinia, Scss를 사용함
 
 ---
