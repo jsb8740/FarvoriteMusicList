@@ -1,9 +1,17 @@
 <template>
   <div class="searching-box" ref="history" @click.stop>
-    <AppInput v-model:model-value="keyWord" @keydown.enter="saveHistory" @click="t"></AppInput>
+    <AppInput
+      v-model:model-value="keyWord"
+      @keydown.enter="
+        saveHistory();
+        movePage();
+      "
+      @click="t"
+    ></AppInput>
     <SearchingHistory
       :search-history="keyWordHistory"
-      @update="updateHistory"
+      @delete-history="updateHistory"
+      @update-history="updateHistory"
       v-show="showHistory"
     ></SearchingHistory>
   </div>
@@ -14,6 +22,9 @@ import AppInput from '@/components/common/AppInput.vue';
 import { onMounted, ref } from 'vue';
 import SearchingHistory from './SearchingHistory.vue';
 import useDetectOutsideClick from '../composable/DetectOutsideClick';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const keyWord = ref('');
 const keyWordHistory = ref<string[]>([]);
@@ -37,14 +48,34 @@ const saveHistory = () => {
     keyWordString = JSON.stringify(keyWordHistory.value);
   } else {
     keyWordHistory.value = JSON.parse(searchHistory);
-    keyWordHistory.value.push(keyWord.value);
+
+    // duplication remove array item
+    const index = keyWordHistory.value.indexOf(keyWord.value);
+    if (index !== -1) {
+      //success
+      keyWordHistory.value.splice(index, 1);
+    }
+
+    keyWordHistory.value.unshift(keyWord.value);
     keyWordString = JSON.stringify(keyWordHistory.value);
   }
   localStorage.setItem('history', keyWordString);
 };
 
+const movePage = () => {
+  router.push({
+    name: 'search',
+    query: {
+      keyword: keyWord.value
+    }
+  });
+};
+
 // emit
+
 const updateHistory = (history: string[]) => {
+  console.log(history);
+
   keyWordHistory.value = history;
 
   // update localStorage history
