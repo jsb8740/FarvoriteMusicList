@@ -10,12 +10,12 @@
       v-for="(item, index) in searchHistory"
       :key="index"
       class="history-list"
+      @click="updateHistory(item)"
     >
       {{ item }}
       <!-- <HistoryDeleteIcon @click="deleteHistory(item)"></HistoryDeleteIcon> -->
-      <HistoryDeleteIcon2 @click="deleteHistory(item)"></HistoryDeleteIcon2>
+      <HistoryDeleteIcon2 @click.prevent="deleteHistory(item)"></HistoryDeleteIcon2>
     </RouterLink>
-    <!-- <div v-for="(item, index) in searchHistory" :key="index" class="history-list"></div> -->
   </div>
 </template>
 
@@ -27,11 +27,30 @@ interface Props {
   searchHistory: string[];
 }
 interface Emit {
-  (e: 'update', history: string[]): void;
+  (e: 'deleteHistory', history: string[]): void;
+  (e: 'updateHistory', history: string[]): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
+
+const updateHistory = (item: string) => {
+  const searchHistory = localStorage.getItem('history');
+  if (searchHistory) {
+    const historyArray: string[] = JSON.parse(searchHistory);
+
+    // remove array item
+    const index = historyArray.indexOf(item);
+    if (index !== -1) {
+      //success
+      historyArray.splice(index, 1);
+    }
+
+    historyArray.unshift(item);
+
+    emit('updateHistory', historyArray);
+  }
+};
 
 const deleteHistory = (item: string) => {
   const searchHistory = localStorage.getItem('history');
@@ -42,7 +61,7 @@ const deleteHistory = (item: string) => {
     const index = historyArray.indexOf(item);
     historyArray.splice(index, 1);
 
-    emit('update', historyArray);
+    emit('deleteHistory', historyArray);
   }
 };
 </script>
